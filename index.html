@@ -477,7 +477,7 @@ async function playChannel(index) {
 
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-
+    updateEPG(channel);
     await player.unload();
 
     // ✅ Use keys parsed from playlist
@@ -577,6 +577,7 @@ function parseEPGTime(epgTime) {
 
 </body>
 </html>
+
 
 
 
