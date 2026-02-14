@@ -220,6 +220,27 @@ header {
     z-index: 90;
 }
 
+#epgContainer {
+    margin-top: 20px;
+    padding: 15px;
+    background: #111827;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+#epgNow {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#epgNext {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+
 /* Mobile */
 @media (max-width: 900px) {
 
@@ -291,13 +312,18 @@ header {
                 <button id="fullscreenBtn">⛶</button>
             </div>
         </div>
+        <div id="epgContainer">
+            <div id="epgNow"></div>
+            <div id="epgNext"></div>
+        </div>
     </div>
 </div>
 
 
 <script>
 const PLAYLIST_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev/playlist?token=mysecret123";
-
+const EPG_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev/epg?token=mysecret123";
+let epgData = null;
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
 const sidebar = document.getElementById('sidebar');
@@ -325,6 +351,15 @@ async function loadPlaylist() {
     parseM3U(text);
 }
 
+async function loadEPG() {
+    const res = await fetch(EPG_URL);
+    const text = await res.text();
+    const parser = new DOMParser();
+    epgData = parser.parseFromString(text, "text/xml");
+}
+
+loadEPG();
+
 function parseM3U(data) {
     const lines = data.split('\n');
     let currentChannel = null;
@@ -338,6 +373,7 @@ function parseM3U(data) {
             const name = line.split(',')[1] || "Channel";
             const groupMatch = line.match(/group-title="(.*?)"/);
             const logoMatch = line.match(/tvg-logo="(.*?)"/);
+            const idMatch = line.match(/tvg-id="(.*?)"/);
 
             if (!groupMatch || groupMatch[1].toLowerCase() === "other") {
                 currentChannel = null;
@@ -348,6 +384,7 @@ function parseM3U(data) {
                 name,
                 group: groupMatch[1],
                 logo: logoMatch ? logoMatch[1] : "",
+                tvgId: idMatch ? idMatch[1] : "",
                 keyId: "",
                 key: "",
                 url: ""
@@ -434,7 +471,7 @@ async function playChannelByObject(channel) {
 async function playChannel(index) {
     selectedIndex = index;
     const c = channels[index];
-
+    updateEPG(c);
     document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.channel')[index]?.classList.add('active');
 
@@ -495,6 +532,44 @@ fullscreenBtn.addEventListener("click", () => {
     }
 });
 
+function updateEPG(channel) {
+    if (!epgData || !channel.tvgId) return;
+
+    const now = new Date();
+    const programmes = epgData.querySelectorAll(`programme[channel="${channel.tvgId}"]`);
+
+    let current = null;
+    let next = null;
+
+    programmes.forEach(p => {
+        const start = parseEPGTime(p.getAttribute("start"));
+        const stop = parseEPGTime(p.getAttribute("stop"));
+
+        if (now >= start && now <= stop) {
+            current = p;
+        }
+
+        if (start > now && !next) {
+            next = p;
+        }
+    });
+
+    document.getElementById("epgNow").textContent =
+        current ? "NOW: " + current.querySelector("title").textContent : "No current program";
+
+    document.getElementById("epgNext").textContent =
+        next ? "NEXT: " + next.querySelector("title").textContent : "";
+}
+function parseEPGTime(epgTime) {
+    const year = epgTime.substring(0,4);
+    const month = epgTime.substring(4,6);
+    const day = epgTime.substring(6,8);
+    const hour = epgTime.substring(8,10);
+    const min = epgTime.substring(10,12);
+    const sec = epgTime.substring(12,14);
+
+    return new Date(`${year}-${month}-${day}T${hour}:${min}:${sec}`);
+}
 
 </script>
 
@@ -502,6 +577,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
