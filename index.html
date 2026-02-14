@@ -1,61 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>IPTV Player</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant IPTV Player</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
 
 <style>
-body {
-    margin: 0;
-    background: #111;
-    color: white;
-    font-family: Arial;
-    display: flex;
-    height: 100vh;
+:root {
+    --bg: #0f0f14;
+    --glass: rgba(255,255,255,0.05);
+    --accent: #6c5ce7;
 }
 
-#channels {
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #0f0f14, #1a1a2e);
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+#sidebar {
     width: 300px;
+    backdrop-filter: blur(15px);
+    background: var(--glass);
+    border-right: 1px solid rgba(255,255,255,0.1);
     overflow-y: auto;
-    background: #1a1a1a;
-    padding: 10px;
+    transition: 0.3s ease;
 }
 
 .channel {
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
     cursor: pointer;
-    border-bottom: 1px solid #333;
+    transition: 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .channel:hover {
-    background: #333;
+    background: rgba(255,255,255,0.08);
 }
 
-#player {
+.channel img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.channel span {
+    font-size: 14px;
+}
+
+/* Player Area */
+#main {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 video {
-    width: 90%;
-    max-width: 1000px;
+    width: 95%;
+    max-width: 1100px;
+    border-radius: 15px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #sidebar {
+        position: absolute;
+        width: 80%;
+        height: 100%;
+        z-index: 10;
+        transform: translateX(-100%);
+    }
+
+    #sidebar.active {
+        transform: translateX(0);
+    }
+
+    #menuBtn {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: var(--accent);
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 20;
+    }
 }
 </style>
 </head>
+
 <body>
 
-<div id="channels"></div>
+<div id="sidebar"></div>
 
-<div id="player">
+<div id="main">
+    <button id="menuBtn">☰</button>
     <video id="video" controls autoplay></video>
 </div>
 
 <script>
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
+const sidebar = document.getElementById('sidebar');
+const menuBtn = document.getElementById('menuBtn');
+
+menuBtn.onclick = () => {
+    sidebar.classList.toggle('active');
+};
 
 async function loadPlaylist() {
     const response = await fetch('playlist.m3u');
@@ -65,32 +130,37 @@ async function loadPlaylist() {
 
 function parseM3U(data) {
     const lines = data.split('\n');
-    let channelsDiv = document.getElementById('channels');
 
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].startsWith('#EXTINF')) {
 
-            let name = lines[i].split(',')[1];
-            let url = lines[i + 5] || lines[i + 1]; 
-            // Handles cases like yours with extra KODIPROP lines
+            let name = lines[i].split(',')[1] || "Channel";
+            let logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
+            let logo = logoMatch ? logoMatch[1] : "";
 
-            let clearKeyLine = lines[i + 4];
-            let keyMatch = clearKeyLine.match(/license_key=(.*)/);
-
+            let keyLine = lines.find(l => l.includes('license_key'));
             let keyId = "";
             let key = "";
 
-            if (keyMatch) {
-                let keys = keyMatch[1].split(':');
+            if (keyLine) {
+                let keys = keyLine.split('=')[1].split(':');
                 keyId = keys[0];
                 key = keys[1];
             }
 
+            let url = lines[i + 5] || lines[i + 1];
+
             let div = document.createElement('div');
-            div.className = 'channel';
-            div.innerText = name;
+            div.className = "channel";
+
+            div.innerHTML = `
+                ${logo ? `<img src="${logo}">` : ""}
+                <span>${name}</span>
+            `;
 
             div.onclick = async () => {
+                sidebar.classList.remove('active');
+
                 await player.unload();
 
                 player.configure({
@@ -104,7 +174,7 @@ function parseM3U(data) {
                 await player.load(url);
             };
 
-            channelsDiv.appendChild(div);
+            sidebar.appendChild(div);
         }
     }
 }
