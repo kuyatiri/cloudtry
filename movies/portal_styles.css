@@ -1,0 +1,130 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  color: #fff;
+}
+
+header {
+  background: #1f1f1f;
+  color: #fff;
+  padding: 1em;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.search-bar {
+  padding: 1em;
+  text-align: center;
+  background: #1a1a1a;
+}
+
+.search-bar input {
+  width: 80%;
+  max-width: 500px;
+  padding: 0.6em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  background: #2a2a2a;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.search-bar input::placeholder {
+  color: #a3a3a3;
+}
+
+.search-bar input:focus {
+  background: #333;
+}
+
+.section-title {
+  padding: 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  background: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1em;
+  padding: 1em;
+}
+
+.movie-card {
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.movie-card img {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #333;
+  object-fit: cover;
+  height: 240px;
+}
+
+.movie-card h4 {
+  margin: 0.5em;
+  font-size: 1em;
+  text-align: center;
+  color: #ddd;
+  flex: 0 0 auto;
+}
+
+.muted {
+  color: #9a9a9a;
+  padding: 0.8em;
+  text-align: center;
+}
+
+.error {
+  color: #ff8080;
+  padding: 0.8em;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .search-bar input {
+    width: 95%;
+  }
+
+  .movie-card h4 {
+    font-size: 0.9em;
+  }
+
+  .movie-card img {
+    height: 180px;
+  }
+}
+
+/* Movie page specific: keep here so single stylesheet works across pages */
+iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+}
+
+#videoContainer {
+  max-width: min(92vw, 1200px);
+  margin: 16px auto;
+}
