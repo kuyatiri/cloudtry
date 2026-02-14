@@ -303,7 +303,15 @@ async function playChannel(index) {
 
     const keys = await getKeys();
 
-    const channelKey = keys["oneph_sd"]; // match your channel ID
+    // 🔥 Remove query string
+    const cleanUrl = c.url.split('?')[0];
+
+    const channelKey = keys[cleanUrl];
+
+    if (!channelKey) {
+        console.error("No key found for:", cleanUrl);
+        return;
+    }
 
     await player.unload();
 
@@ -342,6 +350,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
