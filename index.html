@@ -53,6 +53,10 @@ body {
     transition: 0.2s;
 }
 
+header {
+    height: 70px;
+}
+
 #search:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-glow);
@@ -112,8 +116,8 @@ body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 30px;
+    align-items: flex-start;
+    padding: 0px;
 }
 
 /* Modern Video Card */
@@ -192,15 +196,25 @@ body {
 @media (max-width: 900px) {
 
     body {
+        display: flex;
         flex-direction: column;
     }
 
+    header {
+        flex-shrink: 0;
+    }
+
     #main {
+        flex: 1;
         padding: 0;
+        align-items: flex-start;
     }
 
     .video-wrapper {
+        width: 100%;
+        max-width:100%;
         border-radius: 0;
+        aspect-ratio: 16 / 9;
     }
 
     #sidebar {
@@ -209,6 +223,7 @@ body {
         height: 100%;
         left: -280px;
         top: 0;
+        transition: 0.3s;
         z-index: 150;
     }
 
@@ -433,6 +448,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
