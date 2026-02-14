@@ -8,29 +8,32 @@
 
 <style>
 :root {
-    --bg: #0f0f14;
-    --glass: rgba(255,255,255,0.05);
-    --accent: #6c5ce7;
+    --bg-dark: #0d1117;
+    --panel: #161b22;
+    --panel-hover: #1f2937;
+    --accent: #7c3aed;
+    --text-muted: #9ca3af;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: linear-gradient(135deg, #0f0f14, #1a1a2e);
     font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top left, #111827, #0d1117);
     color: white;
-    display: flex;
     height: 100vh;
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: 280px 1fr;
 }
 
 /* Sidebar */
 #sidebar {
-    width: 300px;
-    backdrop-filter: blur(15px);
-    background: var(--glass);
-    border-right: 1px solid rgba(255,255,255,0.1);
+    background: var(--panel);
+    border-right: 1px solid rgba(255,255,255,0.05);
     overflow-y: auto;
-    transition: 0.3s ease;
 }
 
 .channel {
@@ -43,14 +46,15 @@ body {
 }
 
 .channel:hover {
-    background: rgba(255,255,255,0.08);
+    background: var(--panel-hover);
 }
 
 .channel img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     object-fit: contain;
     margin-right: 10px;
+    border-radius: 6px;
 }
 
 .channel span {
@@ -59,56 +63,67 @@ body {
 
 /* Player Area */
 #main {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    padding: 20px;
 }
 
 video {
-    width: 95%;
-    max-width: 1100px;
-    border-radius: 15px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 1200px;
+    border-radius: 14px;
+    background: black;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
 }
 
-/* Mobile */
-@media (max-width: 768px) {
+/* Mobile & Landscape Fix */
+@media (max-width: 900px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
     #sidebar {
-        position: absolute;
-        width: 80%;
+        position: fixed;
+        width: 260px;
         height: 100%;
-        z-index: 10;
-        transform: translateX(-100%);
+        left: -260px;
+        top: 0;
+        transition: 0.3s;
+        z-index: 100;
     }
 
     #sidebar.active {
-        transform: translateX(0);
+        left: 0;
     }
 
     #menuBtn {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: var(--accent);
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 20;
+        display: block;
     }
+}
+
+#menuBtn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 200;
 }
 </style>
 </head>
 
 <body>
 
+<button id="menuBtn">☰</button>
 <div id="sidebar"></div>
 
 <div id="main">
-    <button id="menuBtn">☰</button>
     <video id="video" controls autoplay></video>
 </div>
 
@@ -160,7 +175,6 @@ function parseM3U(data) {
 
             div.onclick = async () => {
                 sidebar.classList.remove('active');
-
                 await player.unload();
 
                 player.configure({
