@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>-->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<title>WatchNow TV by TIRI PISO WIFI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .video-container {
+    max-width: 800px;
+    width: 100%;
+    background-color: #D4D0D0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  video {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+  }
+  .video-title {
+    text-align: center;
+    font-size: 24px;
+    padding: 15px;
+    background-color: #D4D0D0;
+    color: white;
+    border-radius: 0 0 10px 10px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background-color: #D4D0D0;
+    border-radius: 0 0 10px 10px;
+  }
+  button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  /* Hide the default play/pause button, progress bar, and time display */
+  video::-webkit-media-controls-play-button,
+  video::-webkit-media-controls-start-playback-button,
+  video::-webkit-media-controls-timeline,
+  video::-webkit-media-controls-current-time-display,
+  video::-webkit-media-controls-time-remaining-display,
+  video::-webkit-media-controls-seek-back-button,
+  video::-webkit-media-controls-seek-forward-button {
+    display: none;
+  }
+  /* Custom play/pause button */
+  .play-pause-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    display: none; /* Initially hidden */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  .play-pause-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  /* Logo overlay */
+  .logo {
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    height: 50px;
+	width: 70px;
+    z-index: 10;
+  }
+</style>
+</head>
+<body oncontextmenu="return false;" onkeydown="return disableShortcuts(event);">
+
+<div class="video-container">
+  <div class="video-title" id="videoTitle">NBA Philippines</div>
+  <video id="videoPlayer" controls autoplay muted playsinline></video>
+  <img id="logo" class="logo" src="" alt="Logo">
+  <button id="playPauseButton" class="play-pause-button">Pause</button>
+  
+  <div class="button-container">
+    <button onclick="changeVideo('prev')">Previous</button>
+    <button onclick="changeVideo('next')">Next</button>
+  </div>
+</div>
+
+<script>
+  var videoIndex = 0; // Starting index of the video sources
+  var videoSources = [
+  //===============SPORTS CHANNEL==============SPORTS CHANNEL=========SPORTS CHANNEL======SPORTS CHANNEL======SPORTS CHANNEL========SPORTS CHANNEL=======
+    {//===============SPORTS CHANNEL==============SPORTS CHANNEL=========SPORTS CHANNEL======SPORTS CHANNEL======SPORTS CHANNEL========SPORTS CHANNEL=======
+      src: 'http://45.89.149.184:9111/stream/kapamilya/nbaphilippines/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'NBA Philippines',
+      logo: 'https://i.imgur.com/Hk4XhHR.png'
+    },
+    {
+      src: 'https://qp-pldt-live-grp-03-prod.akamaized.net/out/u/onesportsplushd_qp_6.m3u8',
+      title: 'ONE SPORTS+',
+      logo: 'https://i.imgur.com/ZoBDuxO.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/pbarush/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'PBA Rush',
+      logo: 'https://i.imgur.com/clzVWmF.png'
+    },
+    {
+      src: 'http://portal.magic8kip.tv:80/play/live.php?mac=00:1A:79:F2:D0:BB&stream=926145&extension=ts&play_token=7zUiU66uXB',
+      title: 'UAAP VARSITY',
+      logo: 'https://i.imgur.com/kiyqvrU.png'
+    },
+    {
+      src: 'https://dice-live-ap.akamaized.net/hls/live/2102446/220944-271466/exchange220944dfagp_220944_1400/chunklist.m3u8?hdntl=exp=1717856823~acl=%2f*~id=a20f7161-06a7-48f7-a45a-bd9df7d55493~data=hdntl,dWlkPTY5azlzaXw3MDg1YzRjYS03NWMwLTQwMjItOTZmNC0xODQ1NjZjNWVmYmYmaXA9MTM2LjE1OC40Ni4xMzMmZXhwPTE3MTc4NTY4NTImZWlkPTIyMDk0NCZjaWQ9ZGNlLnRhcGdvJm9pZD0zMjU~hmac=23d3ee4804f8a76e22f43051e56605f2ad2e5c9b29e8c1a7d7bd63425993c14a',
+      title: 'PREMIER SPORTS',
+      logo: 'https://i.imgur.com/QWunFo1.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/tapsports/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'TAP SPORT',
+      logo: 'https://i.imgur.com/aeRpXyj.png'
+    },//===============LOCAL CHANNEL=============LOCAL CHANNEL=========LOCAL CHANNEL=====LOCAL CHANNEL======LOCAL CHANNEL========LOCAL CHANNEL=======
+    {//===============LOCAL CHANNEL==============LOCAL CHANNEL=========LOCAL CHANNEL======LOCAL CHANNEL======LOCAL CHANNEL========LOCAL CHANNEL=======
+      src: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5_qp.m3u8',
+      title: 'TV5',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/9/95/TV5_HD_2024.svg'
+    },
+    {
+      src: 'http://myteve.online:8080/live/GenIptv2023/XkgMCdR7PJzShK5m/276531.ts',
+      title: 'VIVA CINEMA',
+      logo: 'https://i.imgur.com/8y3fc3F.png'
+    },
+    {
+      src: 'https://ancglobal-abscbn-ono.amagi.tv/playlist270_p.m3u8',
+      title: 'ANC HD',
+      logo: 'https://i.imgur.com/sT3dZP5.png'
+    },
+    {
+      src: 'https://cinemaone-abscbn-ono.amagi.tv/index_3.m3u8',//https://cinemaone-abscbn-ono.amagi.tv/index.m3u8
+      title: 'Cinema One',
+      logo: 'https://i.imgur.com/tDB6DHB.png'
+    },
+    {
+      src: 'https://cinemo-abscbn-ono.amagi.tv/playlist720_p.m3u8',
+      title: 'Cinemo',
+      logo: 'https://i.imgur.com/2Jn7QHG.png'
+    },
+    {
+      src: 'https://teleradyo-abscbn-ono.amagi.tv/playlist720_p.m3u8',//https://teleradyo-abscbn-ono.amagi.tv/playlist.m3u8
+      title: 'Teleradyo',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/TeleRadyo_Logo.svg'
+    },
+    {
+      src: 'https://host.enicsnet.com/hls/gtvnixigncode/index.m3u8',
+      title: 'GTV',
+      logo: 'https://i.imgur.com/yMK7Fd5.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/kapamilyachannel/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41', //'http://portal.magic8kip.tv:80/play/live.php?mac=00:1A:79:F2:D0:BB&stream=731786&extension=ts&play_token=LysvJONdV9',
+      title: 'Kapamilya Online Live',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Kapamilya_channel.png'
+    },
+    {
+      src: 'https://host.enicsnet.com/hls/gmanixigncode/index.m3u8',
+      title: 'GMA TV',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/GMA_Network_logo.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/a2z/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'A2Z TV',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/A2Z_Channel_11_Logo.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/rptv/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'RPTV',
+      logo: 'https://i.imgur.com/ifzuml4.png'
+    },
+    {
+      src: 'https://ssh101-fl.bozztv.com/ssh101/dreamtvph/index.m3u8',
+      title: 'DREAM TV',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/pbo/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'PBO',
+      logo: 'https://i.imgur.com/709Uy7N.png'
+    },
+    {
+      src: 'https://myxnola-abscbn-ono.amagi.tv/index_3.m3u8',
+      title: 'Myx',
+      logo: 'https://i.imgur.com/XcBH2Bh.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/buko/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'BUKO CHANNEL',
+      logo: 'https://i.imgur.com/Du6LQCi.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/sarisari/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'SARI-SARI',
+      logo: 'https://i.imgur.com/oyiY5BK.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/ptv4/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'PTV',
+      logo: 'https://i.imgur.com/YBkxJWe.png'
+    },
+    {
+      src: 'http://user.scalecdn.co:8080/live/BK012ee1/993c950e60/567719.ts',
+      title: 'IBC 13',
+      logo: 'https://i.imgur.com/Org4yTu.png'
+    },
+    {
+      src: 'https://api.new.livestream.com/accounts/19079954/events/7831871/live.m3u8',
+      title: 'SMNI',
+      logo: 'https://i.imgur.com/Org4yTu.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/oneph/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'ONE PH',
+      logo: 'https://i.imgur.com/9dMuFE1.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/onenews/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'ONE NEWS',
+      logo: 'https://i.imgur.com/bmP06bk.png'
+    },
+    {
+      src: 'https://ythls.armelin.one/channel/UCcTiBX8js_djhSSlmJRI99A.m3u8',
+      title: 'DZRH TV',
+      logo: 'https://i.imgur.com/P1mCl2k.png'
+    },//===================KIDS TV=========================KIDS TV==================KIDS TV================KIDS TV======================KIDS TV=============
+    {//===================KIDS TV=========================KIDS TV==================KIDS TV================KIDS TV======================KIDS TV=============
+      src: 'https://www.youtube.com/embed/-VBxijFm50Y',
+      title: 'COCOMELON TV',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://cdn1.skygo.mn/live/disk1/Boomerang/HLS-FTA/Boomerang.m3u8',
+      title: 'CARTOONITO',
+      logo: 'https://i.imgur.com/kHhmOMp.png'
+    },
+    {
+      src: 'https://2-fss-2.streamhoster.com/pl_140/amlst:200914-1298290/playlist.m3u8',
+      title: 'PBS KIDS',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://moonbug-rokuus.amagi.tv/playlist404-p.m3u8',
+      title: 'MOONBUG (KIDS)',
+      logo: 'https://i.imgur.com/v4ZYiUL.png'
+    },
+    {
+      src: 'https://zoomoo-samsungau.amagi.tv/playlist720p.m3u8',
+      title: 'ZOOMOO (KIDS)',
+      logo: 'https://i.imgur.com/daHHNzj.png'
+    },
+    {
+      src: 'https://cdn1.skygo.mn/live/disk1/Cartoon_Network/HLS-FTA/Cartoon_Network.m3u8',
+      title: 'CARTOON NETWORK',
+      logo: 'https://i.imgur.com/Offhcm1.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/dreamworkstagalog/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'DREAMWORK TAGALOG',
+      logo: 'https://i.imgur.com/Iy35n22.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/nickelodeon/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'NICKELODEON',
+      logo: 'https://i.imgur.com/5Nsw6N3.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/60754.ts',
+      title: 'NICK TOONS',
+      logo: 'https://i.imgur.com/3LT5ThH.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/nickjr/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'Nick Jr.',
+      logo: 'https://i.imgur.com/dgaQ1xt.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/animax/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'Animax',
+      logo: 'https://i.imgur.com/QxTehhs.png'
+    },//=================MOVIE CHANNELS===================MOVIE CHANNELS============MOVIE CHANNELS========MOVIE CHANNELS=========MOVIE CHANNELSTV===========
+    {//=================MOVIE CHANNELS===================MOVIE CHANNELS============MOVIE CHANNELS========MOVIE CHANNELS=========MOVIE CHANNELSTV===========
+      src: 'https://cdn1.skygo.mn/live/disk1/Lotus/HLS-FTA/Lotus.m3u8',
+      title: 'LOTUS MACAU',
+      logo: 'https://i.imgur.com/SNc90AX.png'
+    },
+    {
+      src: 'http://user.scalecdn.co:8080/live/BK012ee1/993c950e60/567696.ts',
+      title: 'AXN',
+      logo: 'https://i.imgur.com/tDbuoAU.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/tmc/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'TMC',
+      logo: 'https://i.imgur.com/ZbrvQpg.png'
+    },
+    {
+      src: 'https://rakuten-actionmovies-1-eu.rakuten.wurl.tv/2000.m3u8',
+      title: 'RAKUTEN TV MOVIE',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://moviesphereuk-samsunguk.amagi.tv/playlist.m3u8',
+      title: 'MOVIE SPHERE',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://cdn.klowdtv.net/803B48A/n1.klowdtv.net/live1/smc_720p/playlist.m3u8',
+      title: 'Sony Movies',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://spotlight-redbox.amagi.tv/playlist.m3u8',
+      title: 'REDBOX MOVIES',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/hbofamily/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'HBO FAMILY',
+      logo: 'https://i.imgur.com/Zy3pvJV.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/hbohd/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'HBO HD',
+      logo: 'https://i.imgur.com/pa2SF5Z.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/hbosignature/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'HBO SIGNATURE',
+      logo: 'https://i.imgur.com/3BOoqQn.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/hbohits/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'HBO HITS',
+      logo: 'https://i.imgur.com/pZn9JHj.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/cinemax/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'CINEMAX',
+      logo: 'https://i.imgur.com/FPQpnLt.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/tapmovies/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'TAP MOVIES',
+      logo: 'https://i.imgur.com/3RVA5mV.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/50117.ts',
+      title: 'TAP ACTION FLIX',
+      logo: 'https://i.imgur.com/2kwXRSR.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/warnertv/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'WARNER TV',
+      logo: 'https://i.imgur.com/K5wLIm0.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/tvnmoviespinoy/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'TVN PINOY',
+      logo: 'https://i.imgur.com/54uYqVk.png'
+    },
+    {
+      src: 'http://38.41.8.1:8000/play/a00d',
+      title: 'HBO POP',
+      logo: 'https://i.imgur.com/5cyxZeb.png'
+    },
+    {
+      src: 'https://livecdn-iptv001.rumsport.com/stream/14839/tracks-v1a1/mono.m3u8',
+      title: 'PARAMOUNT ENTERTAINMENT',
+      logo: 'https://i.imgur.com/XNCoX74.png'
+    },
+    {
+      src: 'http://user.scalecdn.co:8080/live/BK012ee1/993c950e60/567745.ts', //http://115.146.176.131:80/TimRizal/TimRizal/13.ts
+      title: 'THRILL',
+      logo: 'https://i.imgur.com/mNmRiMA.png'
+    },//===============FOREIGN NEWS CHANNELS========FOREIGN NEWS CHANNELS======FOREIGN NEWS CHANNELS====FOREIGN NEWS CHANNELS===FOREIGN NEWS CHANNELS======
+    {//===============FOREIGN NEWS CHANNELS========FOREIGN NEWS CHANNELS======FOREIGN NEWS CHANNELS====FOREIGN NEWS CHANNELS===FOREIGN NEWS CHANNELS======
+      src: 'https://live-hls-web-aje.getaj.net/AJE/02.m3u8',
+      title: 'AL JAZEERA',
+      logo: 'https://i.imgur.com/9Apnk5O.jpg'
+    },
+    {
+      src: 'https://fox-foxnewsnow-vizio.amagi.tv/playlist.m3u8',
+      title: 'FOX NEWS',
+      logo: 'https://i.imgur.com/yyoRhjH.png'
+    },
+    {
+      src: 'https://nhkwlive-ojp.akamaized.net/hls/live/2003459/nhkwlive-ojp-en/index.m3u8',
+      title: 'NHK WORLD',
+      logo: 'https://i.imgur.com/WX0fL1C.png'
+    },
+    {
+      src: 'https://cnn-cnninternational-1-eu.rakuten.wurl.tv/f93b9a949a4a8651dd5a2f42e3a2b6f9.m3u8',
+      title: 'CNN HD',
+      logo: 'https://i.imgur.com/17aSGgP.png'
+    },
+    {
+      src: 'https://liveprodapnortheast.akamaized.net/ap1/Channel-APTVqvs-AWS-Tokyo-2/Source-APTVqvs-10000-1-swyg20-BP-HD-5-Y6282hwqf3C7_live.m3u8',
+      title: 'BLOOMBERG',
+      logo: 'https://i.imgur.com/La3o9MU.png'
+    },//===============ENTERTAINMENT CHANNELS========ENTERTAINMENT CHANNELS====ENTERTAINMENT CHANNELS====ENTERTAINMENT CHANNELS===ENTERTAINMENT CHANNELS=====
+    {//===============ENTERTAINMENT CHANNELS========ENTERTAINMENT CHANNELS====ENTERTAINMENT CHANNELS====ENTERTAINMENT CHANNELS===ENTERTAINMENT CHANNELS=====
+      src: 'https://dplus.gammacdn.workers.dev/videos/110.m3u8',
+      title: 'TRAVEL CHANNEL',
+      logo: 'https://i.imgur.com/LplHeem.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/112.m3u8',
+      title: 'FOOD NETWORK',
+      logo: 'https://i.imgur.com/7KRgWo5.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/111.m3u8',
+      title: 'HGTV',
+      logo: 'https://i.imgur.com/LOoJAvM.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/55352.ts',
+      title: 'NATIONAL GEOGRAPHIC',
+      logo: 'https://i.imgur.com/2TeKCBK.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/112.m3u8',
+      title: 'ASIAN FOOD NETWORK',
+      logo: 'https://i.imgur.com/yACFJ8Q.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/99.m3u8',
+      title: 'ANIMAL PLANET',
+      logo: 'https://i.imgur.com/zN1lnxC.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/71137.ts',
+      title: 'GLOBAL TREKKER',
+      logo: 'https://i.imgur.com/8VsCN1h.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/71141.ts',
+      title: 'LOVE NATURE',
+      logo: 'https://i.imgur.com/YZzpZx1.png'
+    },
+    {
+      src: 'https://fash1043.cloudycdn.services/slive/_definst_/ftv_pg13_hd_gmt__vm6_43433_default_1597_hls.smil/playlist.m3u8',
+      title: 'FASHION TV',
+      logo: 'https://i.imgur.com/KON8EBL.png'
+    },
+    {
+      src: 'http://45.89.149.184:9111/stream/kapamilya/history/master.m3u8?u=enicsv2&p=84567e56fceb1e86d447133230091b15271b1fec187396930f700374f982fb41',
+      title: 'HISTORY',
+      logo: 'https://i.imgur.com/z9fsJ2L.png'
+    },
+    {
+      src: 'http://vo01.mohdtv.com:8880/live/ALLChannels681def0087c7/81216685/71120.ts',
+      title: 'BBC LIFESTYLE',
+      logo: 'https://i.imgur.com/ipKlaA4.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/96.m3u8',
+      title: 'DISCOVERY SCIENCE',
+      logo: 'https://i.imgur.com/0Ct5ZlG.png'
+    },
+    {
+      src: 'https://cdn1.skygo.mn/live/disk1/Discovery_Asia/HLS-FTA/Discovery_Asia.m3u8',
+      title: 'DISCOVERY ASIA',
+      logo: 'https://i.imgur.com/kftMPcc.png'
+    },
+    {
+      src: 'http://user.scalecdn.co:8080/live/51206997/60571600/567707.ts',
+      title: 'DISCOVERY CHANNEL',
+      logo: 'https://i.imgur.com/axS65wv.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/97.m3u8',
+      title: 'TLC',
+      logo: 'https://i.imgur.com/r4NrQ84.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/101.m3u8',
+      title: 'INVESTIGATION DISCOVERY',
+      logo: 'https://i.imgur.com/TMoQyh2.png'
+    },
+    {
+      src: 'https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg00718-outdoorchannela-outdoortvnz-samsungnz/playlist.m3u8',
+      title: 'OUTDOOR CHANNEL',
+      logo: 'https://i.imgur.com/aFYv5DG.png'
+    },
+    {
+      src: 'https://thedesignnetwork-pluto.amagi.tv/playlist720p.m3u8',
+      title: 'DESIGN TV',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://kbsworld-ott.akamaized.net/hls/live/2002341/kbsworld/master.m3u8',
+      title: 'KBS WORLD',
+      logo: 'https://i.imgur.com/m5ABJbq.png'
+    },
+    {
+      src: 'https://amdlive-ch03-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/chunklist_b2256000_sleng.m3u8',
+      title: 'ARIRANG',
+      logo: 'https://i.imgur.com/spsqFNP.png'
+    },
+    {
+      src: 'http://portal.magic8kip.tv/play/live.php?mac=00:1A:79:F2:D0:BB&stream=107496&extension=ts',
+      title: 'E! ENTERTAINMENT',
+      logo: 'https://i.imgur.com/En7uedb.png'
+    },
+    {
+      src: 'https://amg01201-cinedigmenterta-asiancrush-cineverse-x701o.amagi.tv/playlist/amg01201-cinedigmenterta-asiancrush-cineverse/cb543d1b796c668c84cb3f62cef049a2f9421fde1d6988693eb5518975d1073edce2a59caa08ff16388f1ede7f0a66413a3e951fda77118fd87eb141453c5728cfffe729a2c05616b7db083429b56a062a866a68ac39437ed0e21f48a238b6720a5aa82a66443d80b846ac7756db80148e782a8eb3dc68306d390ec90c1fbcbf5ba0f8ff5e43ca78a3b51a4b902910e39f429d8118a681d50ec85e8f25f4118095a1d88017d38f9437f852b7061632571541527ee9ab6d9e98f15931957d21560e5ce8a6808c2156e466702c337b56dd1f9b32dd8024fb115f7bc49f3def019f6eb006a9a16da9b9a29d3529c64c6f381345f0b5dae6d63027af69bb8fe8d37a7098bc721223983c89737979f897ba896357ae21976ea5cdecad7a7b0867a5bdf8e8cea3844bd308cbc9fd943c789c026e16ab52b89361d728922de69e53696b444aa99542d7c6f76a70331fc8d005942412b78ddfd89f166d9e295b7bf870d55e3269ce1f6568aa78aacd723fdf6642ae1d09d67479c04ef5b329b580dee60d34fc9ee44aed60e2b04583a756e73d720c55e0a7620e1c153de3ef600c22708c10b78484b2217b75869dfaf7ce5737102a57035cf985c944dbdf90674d6c823940477b1f109a01ac19fc085b0f23cc5e9eec3e7d8b022e3af5e558795f7f9ddcbe918db59b12e767b2a90e151a88cffbf5d1232a4e5e745aa3/162/1280x720_3329040/index.m3u8',
+      title: 'ASIAN CRUSH',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://5def33c73f084e11a19ca77697d6b413.mediatailor.us-east-1.amazonaws.com/v1/manifest/44f73ba4d03e9607dcd9bebdcb8494d86964f1d8/Plex_AMCPresents/216bee0d-1060-4ea2-b595-e6ebabde2d1c/2.m3u8',
+      title: 'AMC',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://dplus.gammacdn.workers.dev/videos/109.m3u8',
+      title: 'DMAX',
+      logo: 'https://i.imgur.com/hnAhfYs.png'
+    },
+    {
+      src: 'https://lnc-vice.tubi.video/playlist.m3u8',
+      title: 'VICE',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://d28edobz3hqdpi.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-shs19slqofvwj-ssai-prd/d8d12863-13ac-4eb8-82cd-4a83187f601f/0.m3u8',
+      title: 'VEVO',
+      logo: 'https://path/to/example_logo.png'
+    },
+    {
+      src: 'https://livedoc.cgtn.com/1000d/prog_index.m3u8',
+      title: 'CTGN',
+      logo: 'https://path/to/example_logo.png'
+    }
+  ];
+
+  var videoPlayer = document.getElementById('videoPlayer');
+  var videoTitle = document.getElementById('videoTitle');
+  var playPauseButton = document.getElementById('playPauseButton');
+  var logo = document.getElementById('logo');
+  var hls = new Hls();
+
+  function loadVideo(source, title, logoSrc) {
+    videoTitle.textContent = title;
+    logo.src = logoSrc;
+
+    if (Hls.isSupported()) {
+      hls.loadSource(source);
+      hls.attachMedia(videoPlayer);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        videoPlayer.play();
+        setTimeout(() => {
+          videoPlayer.muted = false;
+        }, 1000);
+      });
+    } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+      videoPlayer.src = source;
+      videoPlayer.addEventListener('loadedmetadata', function () {
+        videoPlayer.play();
+        setTimeout(() => {
+          videoPlayer.muted = false;
+        }, 1000);
+      });
+    } else {
+      console.error('This browser does not support HLS.');
+    }
+  }
+
+  function changeVideo(direction) {
+    if (direction === 'next') {
+      videoIndex = (videoIndex + 1) % videoSources.length;
+    } else if (direction === 'prev') {
+      videoIndex = (videoIndex - 1 + videoSources.length) % videoSources.length;
+    }
+    var currentVideo = videoSources[videoIndex];
+    loadVideo(currentVideo.src, currentVideo.title, currentVideo.logo);
+    console.log('Changing video to:', currentVideo.title);
+  }
+
+  // Load the initial video and auto-play
+  loadVideo(videoSources[videoIndex].src, videoSources[videoIndex].title, videoSources[videoIndex].logo);
+
+  videoPlayer.onerror = function() {
+    console.error('Error playing video:', videoSources[videoIndex].src);
+  };
+
+  // Play/Pause functionality
+  playPauseButton.addEventListener('click', function() {
+    if (videoPlayer.paused) {
+      videoPlayer.play();
+      playPauseButton.textContent = 'Pause';
+    } else {
+      videoPlayer.pause();
+      playPauseButton.textContent = 'Play';
+    }
+  });
+
+  // Show/Hide Play/Pause button on video click
+  videoPlayer.addEventListener('click', function() {
+    if (playPauseButton.style.display === 'none') {
+      playPauseButton.style.display = 'block';
+      playPauseButton.style.transform = 'translate(-50%, -50%) scale(1.2)';
+    } else {
+      playPauseButton.style.display = 'none';
+      playPauseButton.style.transform = 'translate(-50%, -50%) scale(1)';
+    }
+  });
+
+  // Ensure the video auto-plays on load and button updates accordingly
+  videoPlayer.addEventListener('play', function() {
+    playPauseButton.textContent = 'Pause';
+  });
+
+  videoPlayer.addEventListener('pause', function() {
+    playPauseButton.textContent = 'Play';
+  });
+
+  // Disable common shortcuts
+  function disableShortcuts(event) {
+    const forbiddenKeys = ['F12', 'I', 'C', 'J', 'U'];
+    if (event.ctrlKey && forbiddenKeys.includes(event.key.toUpperCase())) {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    }
+    return true;
+  }
+</script>
+
+</body>
+</html>
