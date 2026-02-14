@@ -185,7 +185,6 @@ const searchInput = document.getElementById('search');
 
 let channels = [];
 let selectedIndex = 0;
-let keyCache = null;
 
 menuBtn.onclick = () => {
     sidebar.classList.toggle('active');
@@ -282,14 +281,6 @@ function renderChannels(filter="") {
         channelsDiv.appendChild(div);
     });
 }
-    
-async function getKeys() {
-    if (keyCache) return keyCache;
-
-    const res = await fetch("https://premiumiptv.tiri-piso-wifi.workers.dev/keys?token=mysecret123");
-    keyCache = await res.json();
-    return keyCache;
-}
 
 async function playChannel(index) {
     selectedIndex = index;
@@ -301,30 +292,20 @@ async function playChannel(index) {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
 
-    const keys = await getKeys();
-
-    // 🔥 Remove query string
-    const cleanUrl = c.url.split('?')[0];
-
-    const channelKey = keys[cleanUrl];
-
-    if (!channelKey) {
-        console.error("No key found for:", cleanUrl);
-        return;
-    }
-
     await player.unload();
 
+    // ✅ Use keys parsed from playlist
     player.configure({
         drm: {
             clearKeys: {
-                [channelKey.keyId]: channelKey.key
+                [c.keyId]: c.key
             }
         }
     });
 
     await player.load(c.url);
 }
+
 
 /* Search */
 searchInput.addEventListener("input", e => {
@@ -350,6 +331,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
