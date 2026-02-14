@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Watch Movie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="portal_styles.css" rel="stylesheet"/>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background:#0b0d13; color:#eee; }
+    .movie-details { margin-top: 20px; display:flex; gap:16px; }
+    .movie-details img { width: 200px; border-radius: 8px; }
+    .movie-info { flex:1; }
+    .loading { text-align:center; padding:12px; font-style:italic; color:#aaa; }
+    @media (max-width: 600px) {
+      .movie-details { flex-direction: column; align-items:center; }
+      .movie-details img { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- If this div gets removed by mistake, ensureContainer() will recreate it. -->
+  <div id="videoContainer"></div>
+
+  <div class="movie-details">
+    <img alt="Poster" id="poster" src=""/>
+    <div class="movie-info">
+      <h2 id="title"></h2>
+      <p id="description"></p>
+    </div>
+  </div>
+
+  <!-- ========== Provider Catalog + Candidate Builder ========== -->
+  <script>
+    // Helpers
+    function normalizeImdb(id) {
+      if (!id) return '';
+      const trimmed = String(id).trim();
+      return /^tt/i.test(trimmed) ? trimmed : `tt${trimmed}`;
+    }
+    function has(v) { return v != null && String(v).trim().length > 0; }
+
+    // Provider catalog with priority & timeouts
+    const PROVIDERS = [
+      // Prefer IMDb-capable providers
+      {
+        name: 'vidsrc.to',
+        buildImdb: (imdb) => `https://vidsrc.to/embed/movie/${imdb}`,
+        buildTitle: (title) => `https://vidsrc.to/embed/movie?title=${encodeURIComponent(title)}`,
+        priority: 100, timeoutMs: 20000
+      },
+      {
+        name: 'embed.su',
+        buildImdb: (imdb) => `https://embed.su/embed/${imdb}`,
+        buildTitle: (title) => `https://embed.su/embed?title=${encodeURIComponent(title)}`,
+        priority: 95, timeoutMs: 20000
+      },
+      {
+        name: '2embed.cc',
+        buildImdb: (imdb) => `https://www.2embed.cc/embed/${imdb}`,
+        priority: 90, timeoutMs: 18000
+      },
+      {
+        name: 'autoembed.cc',
+        buildImdb: (imdb) => `https://autoembed.cc/embed/${imdb}`,
+        buildTitle: (title) => `https://autoembed.cc/embed?title=${encodeURIComponent(title)}`,
+        priority: 85, timeoutMs: 20000
+      },
+
+      // Title-only fallbacks (ordered by rough reliability)
+      { name: 'vidsrc.vip',  buildTitle: (title) => `https://vidsrc.vip/embed/movie?title=${encodeURIComponent(title)}`,  priority: 70, timeoutMs: 16000 },
+      { name: 'vidsrc.cc',   buildTitle: (title) => `https://vidsrc.cc/embed/movie?title=${encodeURIComponent(title)}`,   priority: 68, timeoutMs: 16000 },
+      { name: 'vidfast.pro', buildTitle: (title) => `https://vidfast.pro/embed/movie?title=${encodeURIComponent(title)}`, priority: 66, timeoutMs: 16000 },
+      { name: 'vidlink.pro', buildTitle: (title) => `https://vidlink.pro/embed/movie?title=${encodeURIComponent(title)}`, priority: 64, timeoutMs: 16000 },
+      { name: 'videasy.net', buildTitle: (title) => `https://videasy.net/embed/movie?title=${encodeURIComponent(title)}`, priority: 62, timeoutMs: 16000 },
+      { name: 'vidzee.wtf',  buildTitle: (title) => `https://vidzee.wtf/embed/movie?title=${encodeURIComponent(title)}`,  priority: 60, timeoutMs: 16000 },
+      { name: 'vidjoy.pro',  buildTitle: (title) => `https://vidjoy.pro/embed/movie?title=${encodeURIComponent(title)}`,  priority: 58, timeoutMs: 16000 },
+      { name: 'vidora.su',   buildTitle: (title) => `https://vidora.su/embed/movie?title=${encodeURIComponent(title)}`,   priority: 56, timeoutMs: 16000 },
+      { name: 'vidify.top',  buildTitle: (title) => `https://vidify.top/embed/movie?title=${encodeURIComponent(title)}`,  priority: 54, timeoutMs: 16000 },
+      { name: 'vidapi.xyz',  buildTitle: (title) => `https://vidapi.xyz/embed/movie?title=${encodeURIComponent(title)}`,  priority: 52, timeoutMs: 16000 },
+
+      // More fallbacks
+      { name: 'play.123embed.net', buildTitle: (title) => `https://play.123embed.net/embed?title=${encodeURIComponent(title)}`, priority: 48, timeoutMs: 16000 },
+      { name: 'anyembed.xyz',      buildTitle: (title) => `https://anyembed.xyz/embed?title=${encodeURIComponent(title)}`,      priority: 46, timeoutMs: 16000 },
+      { name: 'spencerdevs.xyz',   buildTitle: (title) => `https://spencerdevs.xyz/embed?title=${encodeURIComponent(title)}`,   priority: 44, timeoutMs: 16000 },
+
+      // Other autoembed variants (title)
+      { name: 'autoembed.co',  buildTitle: (title) => `https://autoembed.co/embed?title=${encodeURIComponent(title)}`,  priority: 42, timeoutMs: 16000 },
+      { name: 'autoembed.pro', buildTitle: (title) => `https://autoembed.pro/embed?title=${encodeURIComponent(title)}`, priority: 40, timeoutMs: 16000 },
+
+      // Misc
+      { name: 'godriveplayer.com', buildTitle: (title) => `https://gdriveplayer.to/embed2.php?title=${encodeURIComponent(title)}`, priority: 36, timeoutMs: 20000 },
+      { name: '111movies.com',     buildTitle: (title) => `https://111movies.com/embed?title=${encodeURIComponent(title)}`,        priority: 34, timeoutMs: 16000 },
+      { name: 'moviesapi.to',      buildTitle: (title) => `https://moviesapi.to/embed?title=${encodeURIComponent(title)}`,         priority: 32, timeoutMs: 16000 },
+      { name: 'filmku.stream',     buildTitle: (title) => `https://filmku.stream/embed?title=${encodeURIComponent(title)}`,        priority: 30, timeoutMs: 16000 },
+      { name: 'flicky.host',       buildTitle: (title) => `https://flicky.host/embed?title=${encodeURIComponent(title)}`,          priority: 28, timeoutMs: 16000 },
+      { name: 'nontongo.win',      buildTitle: (title) => `https://www.nontongo.win/embed?title=${encodeURIComponent(title)}`,     priority: 26, timeoutMs: 16000 },
+      { name: 'rivestream.org',    buildTitle: (title) => `https://rivestream.org/embed?title=${encodeURIComponent(title)}`,       priority: 24, timeoutMs: 16000 },
+      { name: 'vidstream.site',    buildTitle: (title) => `https://vidstream.site/embed?title=${encodeURIComponent(title)}`,       priority: 22, timeoutMs: 16000 }
+    ];
+
+    /**
+     * Build an ordered, de-duplicated list of candidates based on available inputs.
+     * - Prefers IMDb builders when IMDb is provided, else falls back to title builders.
+     * - Sorts by priority (desc) and keeps best per host.
+     */
+    function buildCandidates({ title, imdb }) {
+      const t = has(title) ? String(title).trim() : '';
+      const imdbId = normalizeImdb(imdb);
+      const hostOf = (url) => { try { return new URL(url).host; } catch { return url; } };
+
+      const raw = [];
+      for (const p of PROVIDERS) {
+        let url = null;
+        if (has(imdbId) && typeof p.buildImdb === 'function') {
+          url = p.buildImdb(imdbId);
+        } else if (has(t) && typeof p.buildTitle === 'function') {
+          url = p.buildTitle(t);
+        }
+        if (url) {
+          raw.push({
+            name: p.name,
+            url,
+            priority: p.priority ?? 0,
+            timeoutMs: p.timeoutMs ?? 12000,
+            host: hostOf(url)
+          });
+        }
+      }
+
+      // De-dup hosts; keep highest priority per host
+      const bestByHost = new Map();
+      for (const c of raw) {
+        const existing = bestByHost.get(c.host);
+        if (!existing || c.priority > existing.priority) {
+          bestByHost.set(c.host, c);
+        }
+      }
+      return Array.from(bestByHost.values()).sort((a, b) => b.priority - a.priority);
+    }
+  </script>
+
+  <!-- ========== Auto Failover (with DOM-ready & container safety) ========== -->
+  <script>
+    // Ensure we always have a container even if it was removed/renamed.
+    function ensureContainer() {
+      let el = document.getElementById("videoContainer");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "videoContainer";
+        document.body.prepend(el);
+        console.warn('[watch] #videoContainer was missing; created a new one at top of <body>.');
+      }
+      return el;
+    }
+
+    (function(){
+      let candidates = [];
+      let iframe, statusBox;
+      let idx = 0;
+      let failTimer = null, stabilizeTimer = null;
+      let locked = false, loadCount = 0;
+      const defaultTimeoutMs = 12000;
+      const stabilizeMs = 3000;         // time after a load with no further navs => lock success
+      const maxLoadsPerProvider = 3;    // skip if too many redirects
+
+      window.initProviderAuto = function(realTitle, realImdb){
+        candidates = buildCandidates({ title: realTitle, imdb: realImdb });
+        startAuto();
+      }
+
+      function startAuto(){
+        const container = ensureContainer();
+        container.innerHTML = "";
+
+        statusBox = document.createElement("div");
+        statusBox.className = "loading";
+        statusBox.textContent = "Preparing sources…";
+        container.appendChild(statusBox);
+
+        const frameWrap = document.createElement("div");
+        iframe = document.createElement("iframe");
+        iframe.allowFullscreen = true;
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+        iframe.referrerPolicy = "no-referrer";
+        iframe.style.width = "100%";
+        iframe.style.height = "60vh";
+        iframe.style.border = "0";
+        frameWrap.appendChild(iframe);
+        container.appendChild(frameWrap);
+
+        // Clear failover when frame loads; then wait to ensure it stabilizes (avoid interstitial loops)
+        iframe.addEventListener('load', () => {
+          clearTimeout(failTimer);
+          loadCount++;
+          setStatus(`✅ Loaded ${candidates[idx]?.name || ''} (nav ${loadCount})`);
+          if (!locked && loadCount >= maxLoadsPerProvider) {
+            setStatus(`⚠️ ${candidates[idx]?.name || 'Source'} keeps redirecting, trying next…`);
+            return load(idx + 1);
+          }
+          clearTimeout(stabilizeTimer);
+          stabilizeTimer = setTimeout(() => {
+            lockSuccess();
+            setStatus(`🎬 Playing from ${candidates[idx]?.name || ''}`);
+          }, stabilizeMs);
+        });
+
+        if (!candidates.length) {
+          setStatus("❌ No providers available for this title/IMDb.");
+          return;
+        }
+        load(0);
+      }
+
+      function load(i){
+        const container = ensureContainer(); // defensive
+        if (i >= candidates.length) {
+          setStatus("❌ All sources failed.");
+          return;
+        }
+        idx = i; locked = false; loadCount = 0;
+        clearTimeout(failTimer);
+        clearTimeout(stabilizeTimer);
+
+        setStatus("⏳ Loading from " + candidates[i].name + "…");
+        // Create iframe if user removed it
+        if (!iframe || !iframe.parentNode) {
+          iframe = document.createElement("iframe");
+          iframe.allowFullscreen = true;
+          iframe.setAttribute('allowfullscreen', 'true');
+          iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+          iframe.referrerPolicy = "no-referrer";
+          iframe.style.width = "100%";
+          iframe.style.height = "60vh";
+          iframe.style.border = "0";
+          container.appendChild(iframe);
+        }
+        iframe.src = candidates[i].url;
+
+        armFailover();
+      }
+
+      function armFailover(){
+        clearTimeout(failTimer);
+        if (locked) return;
+        const ms = candidates[idx]?.timeoutMs || defaultTimeoutMs;
+        failTimer = setTimeout(() => {
+          console.warn("Source failed/slow, switching…");
+          load(idx + 1);
+        }, ms);
+      }
+
+      function lockSuccess(){
+        locked = true;
+        clearTimeout(failTimer);
+        clearTimeout(stabilizeTimer);
+      }
+
+      function setStatus(text){
+        const container = ensureContainer(); // defensive
+        if (!statusBox) {
+          statusBox = document.createElement('div');
+          statusBox.className = 'loading';
+          container.prepend(statusBox);
+        }
+        statusBox.textContent = text;
+      }
+
+      // --- Run TMDB fetch only after DOM is ready so #videoContainer exists ---
+      document.addEventListener('DOMContentLoaded', () => {
+        const apiKey = '840070ae68682e88ec98c835bf40c5e9';
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('id');
+
+        const vc = ensureContainer();
+        if (!movieId) {
+          vc.innerHTML = '<div class="loading">❌ Add <code>?id=&lt;tmdb_movie_id&gt;</code> to the URL.</div>';
+          return;
+        }
+
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`)
+          .then(res => res.json())
+          .then(movie => {
+            if (!movie || movie.success === false) throw new Error('TMDB movie not found');
+            const poster = document.getElementById('poster');
+            const titleEl = document.getElementById('title');
+            const descEl = document.getElementById('description');
+
+            if (poster) poster.src = movie.poster_path ? ('https://image.tmdb.org/t/p/w300' + movie.poster_path) : '';
+            if (titleEl) titleEl.textContent = movie.title || '';
+            if (descEl) descEl.textContent = movie.overview || '';
+
+            const movieTitle = movie.title || '';
+
+            return fetch(`https://api.themoviedb.org/3/movie/${movieId}/external_ids?api_key=${apiKey}`)
+              .then(res => res.json())
+              .then(ids => {
+                const imdbId = ids && ids.imdb_id ? ids.imdb_id : '';
+                initProviderAuto(movieTitle, imdbId);
+              });
+          })
+          .catch(err => {
+            console.error(err);
+            const container = ensureContainer();
+            container.innerHTML = '<div class="loading">❌ Failed to load movie data from TMDB.</div>';
+          });
+      });
+    })();
+  </script>
+</body>
+</html>
