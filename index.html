@@ -151,6 +151,8 @@ video {
 </div>
 
 <script>
+const PLAYLIST_URL = "https://raw.githubusercontent.com/ryansnetcafe/ott-playlist/refs/heads/main/ryansnetcafe.m3u";
+
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
 const sidebar = document.getElementById('sidebar');
@@ -173,46 +175,53 @@ overlay.onclick = () => {
 };
 
 async function loadPlaylist() {
-    const res = await fetch('playlist.m3u');
+    const res = await fetch(PLAYLIST_URL);
     const text = await res.text();
     parseM3U(text);
 }
 
 function parseM3U(data) {
     const lines = data.split('\n');
+    let currentChannel = null;
 
-    for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith('#EXTINF')) {
+    lines.forEach(line => {
 
-            const name = lines[i].split(',')[1] || "Channel";
-            const groupMatch = lines[i].match(/group-title="(.*?)"/);
-            const logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
+        line = line.trim();
 
-            // ❌ Skip if no group or group is "Other"
-            if (!groupMatch || groupMatch[1].toLowerCase() === "other") continue;
+        if (line.startsWith('#EXTINF')) {
 
-            const group = groupMatch[1];
-            const url = lines[i + 5] || lines[i + 1];
+            const name = line.split(',')[1] || "Channel";
+            const groupMatch = line.match(/group-title="(.*?)"/);
+            const logoMatch = line.match(/tvg-logo="(.*?)"/);
 
-            let keyLine = lines.slice(i, i+6).find(l => l.includes('license_key'));
-            let keyId = "", key = "";
-
-            if (keyLine) {
-                let keys = keyLine.split('=')[1].split(':');
-                keyId = keys[0];
-                key = keys[1];
+            if (!groupMatch || groupMatch[1].toLowerCase() === "other") {
+                currentChannel = null;
+                return;
             }
 
-            channels.push({
+            currentChannel = {
                 name,
-                group,
+                group: groupMatch[1],
                 logo: logoMatch ? logoMatch[1] : "",
-                url,
-                keyId,
-                key
-            });
+                keyId: "",
+                key: "",
+                url: ""
+            };
         }
-    }
+
+        else if (line.includes('license_key') && currentChannel) {
+            const keys = line.split('=')[1].split(':');
+            currentChannel.keyId = keys[0];
+            currentChannel.key = keys[1];
+        }
+
+        else if (line && !line.startsWith('#') && currentChannel) {
+            currentChannel.url = line;
+            channels.push(currentChannel);
+            currentChannel = null;
+        }
+
+    });
 
     renderChannels();
 
@@ -295,5 +304,7 @@ loadPlaylist();
 </script>
 
 
+
 </body>
 </html>
+
