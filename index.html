@@ -453,7 +453,7 @@ async function playChannelByObject(channel) {
     selectedIndex = channels.indexOf(channel);
 
     document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
-
+    updateEPG(channel);
     await player.unload();
 
     player.configure({
@@ -577,6 +577,7 @@ function parseEPGTime(epgTime) {
 
 </body>
 </html>
+
 
 
 
