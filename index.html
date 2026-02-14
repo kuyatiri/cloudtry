@@ -12,7 +12,6 @@
     --panel: #161b22;
     --panel-hover: #1f2937;
     --accent: #7c3aed;
-    --text-muted: #9ca3af;
 }
 
 * {
@@ -27,13 +26,15 @@ body {
     height: 100vh;
     display: grid;
     grid-template-columns: 280px 1fr;
+    overflow: hidden;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 #sidebar {
     background: var(--panel);
     border-right: 1px solid rgba(255,255,255,0.05);
     overflow-y: auto;
+    z-index: 100;
 }
 
 .channel {
@@ -57,16 +58,13 @@ body {
     border-radius: 6px;
 }
 
-.channel span {
-    font-size: 14px;
-}
-
-/* Player Area */
+/* MAIN PLAYER */
 #main {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    position: relative;
 }
 
 video {
@@ -77,8 +75,33 @@ video {
     box-shadow: 0 15px 50px rgba(0,0,0,0.6);
 }
 
-/* Mobile & Landscape Fix */
+/* MENU BUTTON (hidden on desktop) */
+#menuBtn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 200;
+}
+
+/* OVERLAY */
+#overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+}
+
+/* MOBILE */
 @media (max-width: 900px) {
+
     body {
         grid-template-columns: 1fr;
     }
@@ -89,8 +112,7 @@ video {
         height: 100%;
         left: -260px;
         top: 0;
-        transition: 0.3s;
-        z-index: 100;
+        transition: 0.3s ease;
     }
 
     #sidebar.active {
@@ -100,20 +122,10 @@ video {
     #menuBtn {
         display: block;
     }
-}
 
-#menuBtn {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: var(--accent);
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 200;
+    #overlay.active {
+        display: block;
+    }
 }
 </style>
 </head>
@@ -121,6 +133,7 @@ video {
 <body>
 
 <button id="menuBtn">☰</button>
+<div id="overlay"></div>
 <div id="sidebar"></div>
 
 <div id="main">
@@ -132,9 +145,16 @@ const video = document.getElementById('video');
 const player = new shaka.Player(video);
 const sidebar = document.getElementById('sidebar');
 const menuBtn = document.getElementById('menuBtn');
+const overlay = document.getElementById('overlay');
 
 menuBtn.onclick = () => {
     sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+};
+
+overlay.onclick = () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
 };
 
 async function loadPlaylist() {
@@ -175,6 +195,8 @@ function parseM3U(data) {
 
             div.onclick = async () => {
                 sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+
                 await player.unload();
 
                 player.configure({
