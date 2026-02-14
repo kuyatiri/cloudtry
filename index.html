@@ -3,79 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elegant IPTV Player</title>
+<title>Premium IPTV</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
 
 <style>
 :root {
-    --bg-dark: #0d1117;
-    --panel: #161b22;
-    --panel-hover: #1f2937;
-    --accent: #7c3aed;
+    --bg: #0b0f1a;
+    --panel: #111827;
+    --hover: #1f2937;
+    --accent: #e50914;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at top left, #111827, #0d1117);
+    font-family: Arial, sans-serif;
+    background: var(--bg);
     color: white;
-    height: 100vh;
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 300px 1fr;
+    height: 100vh;
     overflow: hidden;
 }
 
-/* SIDEBAR */
+/* Sidebar */
 #sidebar {
     background: var(--panel);
-    border-right: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#search {
+    padding: 12px;
+    border: none;
+    outline: none;
+    background: #0f172a;
+    color: white;
+    font-size: 14px;
+}
+
+#channels {
+    flex: 1;
     overflow-y: auto;
-    z-index: 100;
+}
+
+.group-title {
+    padding: 10px;
+    font-size: 12px;
+    opacity: 0.6;
+    text-transform: uppercase;
 }
 
 .channel {
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 10px;
     cursor: pointer;
     transition: 0.2s;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.channel:hover {
-    background: var(--panel-hover);
+.channel:hover { background: var(--hover); }
+
+.channel.active {
+    background: var(--accent);
 }
 
 .channel img {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     margin-right: 10px;
     border-radius: 6px;
 }
 
-/* MAIN PLAYER */
+/* Main */
 #main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
     position: relative;
 }
 
 video {
-    width: 100%;
+    width: 95%;
     max-width: 1200px;
     border-radius: 14px;
     background: black;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
 }
 
-/* MENU BUTTON (hidden on desktop) */
+/* Mobile */
 #menuBtn {
     display: none;
     position: fixed;
@@ -83,49 +101,37 @@ video {
     left: 15px;
     background: var(--accent);
     border: none;
-    color: white;
     padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
+    color: white;
     z-index: 200;
+    border-radius: 8px;
 }
 
-/* OVERLAY */
 #overlay {
     display: none;
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.6);
-    z-index: 90;
+    z-index: 100;
 }
 
-/* MOBILE */
 @media (max-width: 900px) {
-
-    body {
-        grid-template-columns: 1fr;
-    }
+    body { grid-template-columns: 1fr; }
 
     #sidebar {
         position: fixed;
-        width: 260px;
+        width: 280px;
         height: 100%;
-        left: -260px;
-        top: 0;
-        transition: 0.3s ease;
+        left: -280px;
+        transition: 0.3s;
+        z-index: 150;
     }
 
-    #sidebar.active {
-        left: 0;
-    }
+    #sidebar.active { left: 0; }
 
-    #menuBtn {
-        display: block;
-    }
+    #menuBtn { display: block; }
 
-    #overlay.active {
-        display: block;
-    }
+    #overlay.active { display: block; }
 }
 </style>
 </head>
@@ -134,7 +140,11 @@ video {
 
 <button id="menuBtn">☰</button>
 <div id="overlay"></div>
-<div id="sidebar"></div>
+
+<div id="sidebar">
+    <input type="text" id="search" placeholder="Search channels...">
+    <div id="channels"></div>
+</div>
 
 <div id="main">
     <video id="video" controls autoplay></video>
@@ -144,8 +154,13 @@ video {
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
 const sidebar = document.getElementById('sidebar');
-const menuBtn = document.getElementById('menuBtn');
 const overlay = document.getElementById('overlay');
+const menuBtn = document.getElementById('menuBtn');
+const channelsDiv = document.getElementById('channels');
+const searchInput = document.getElementById('search');
+
+let channels = [];
+let selectedIndex = 0;
 
 menuBtn.onclick = () => {
     sidebar.classList.toggle('active');
@@ -158,24 +173,28 @@ overlay.onclick = () => {
 };
 
 async function loadPlaylist() {
-    const response = await fetch('playlist.m3u');
-    const text = await response.text();
+    const res = await fetch('playlist.m3u');
+    const text = await res.text();
     parseM3U(text);
 }
 
 function parseM3U(data) {
     const lines = data.split('\n');
+    let currentGroup = "";
 
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].startsWith('#EXTINF')) {
 
-            let name = lines[i].split(',')[1] || "Channel";
-            let logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
-            let logo = logoMatch ? logoMatch[1] : "";
+            const name = lines[i].split(',')[1] || "Channel";
+            const groupMatch = lines[i].match(/group-title="(.*?)"/);
+            const logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
 
-            let keyLine = lines.find(l => l.includes('license_key'));
-            let keyId = "";
-            let key = "";
+            currentGroup = groupMatch ? groupMatch[1] : "Other";
+
+            const url = lines[i + 5] || lines[i + 1];
+
+            let keyLine = lines.slice(i, i+6).find(l => l.includes('license_key'));
+            let keyId = "", key = "";
 
             if (keyLine) {
                 let keys = keyLine.split('=')[1].split(':');
@@ -183,37 +202,94 @@ function parseM3U(data) {
                 key = keys[1];
             }
 
-            let url = lines[i + 5] || lines[i + 1];
-
-            let div = document.createElement('div');
-            div.className = "channel";
-
-            div.innerHTML = `
-                ${logo ? `<img src="${logo}">` : ""}
-                <span>${name}</span>
-            `;
-
-            div.onclick = async () => {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-
-                await player.unload();
-
-                player.configure({
-                    drm: {
-                        clearKeys: {
-                            [keyId]: key
-                        }
-                    }
-                });
-
-                await player.load(url);
-            };
-
-            sidebar.appendChild(div);
+            channels.push({
+                name,
+                group: currentGroup,
+                logo: logoMatch ? logoMatch[1] : "",
+                url,
+                keyId,
+                key
+            });
         }
     }
+
+    renderChannels();
 }
+
+function renderChannels(filter="") {
+    channelsDiv.innerHTML = "";
+    let lastGroup = "";
+
+    channels
+        .filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
+        .forEach((c, index) => {
+
+        if (c.group !== lastGroup) {
+            let groupTitle = document.createElement('div');
+            groupTitle.className = "group-title";
+            groupTitle.innerText = c.group;
+            channelsDiv.appendChild(groupTitle);
+            lastGroup = c.group;
+        }
+
+        let div = document.createElement('div');
+        div.className = "channel";
+        div.innerHTML = `
+            ${c.logo ? `<img src="${c.logo}">` : ""}
+            <span>${c.name}</span>
+        `;
+
+        div.onclick = () => playChannel(index);
+
+        channelsDiv.appendChild(div);
+    });
+}
+
+async function playChannel(index) {
+    selectedIndex = index;
+    const c = channels[index];
+
+    document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.channel')[index]?.classList.add('active');
+
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+
+    await player.unload();
+
+    player.configure({
+        drm: {
+            clearKeys: {
+                [c.keyId]: c.key
+            }
+        }
+    });
+
+    await player.load(c.url);
+}
+
+/* Search */
+searchInput.addEventListener("input", e => {
+    renderChannels(e.target.value);
+});
+
+/* Keyboard / TV Remote */
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") {
+        selectedIndex = (selectedIndex + 1) % channels.length;
+        playChannel(selectedIndex);
+    }
+    if (e.key === "ArrowUp") {
+        selectedIndex = (selectedIndex - 1 + channels.length) % channels.length;
+        playChannel(selectedIndex);
+    }
+});
+
+/* Auto-hide sidebar in fullscreen landscape */
+video.addEventListener("fullscreenchange", () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+});
 
 loadPlaylist();
 </script>
