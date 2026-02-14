@@ -173,7 +173,7 @@ video {
 
 
 <script>
-const PLAYLIST_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev?token=mysecret123";
+const PLAYLIST_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev/playlist?token=mysecret123";
 
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
@@ -281,6 +281,11 @@ function renderChannels(filter="") {
         channelsDiv.appendChild(div);
     });
 }
+    
+async function getKeys() {
+    const res = await fetch("https://yourworker.workers.dev/keys?token=mysecret123");
+    return await res.json();
+}
 
 async function playChannel(index) {
     selectedIndex = index;
@@ -292,12 +297,16 @@ async function playChannel(index) {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
 
+    const keys = await getKeys();
+
+    const channelKey = keys["oneph_sd"]; // match your channel ID
+
     await player.unload();
 
     player.configure({
         drm: {
             clearKeys: {
-                [c.keyId]: c.key
+                [channelKey.keyId]: channelKey.key
             }
         }
     });
@@ -329,6 +338,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
