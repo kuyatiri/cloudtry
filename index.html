@@ -471,13 +471,12 @@ async function playChannelByObject(channel) {
 async function playChannel(index) {
     selectedIndex = index;
     const c = channels[index];
-    updateEPG(c);
+    updateEPG(channel);
     document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.channel')[index]?.classList.add('active');
 
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-    updateEPG(channel);
     await player.unload();
 
     // ✅ Use keys parsed from playlist
@@ -577,6 +576,7 @@ function parseEPGTime(epgTime) {
 
 </body>
 </html>
+
 
 
 
