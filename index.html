@@ -486,12 +486,15 @@ muteBtn.addEventListener("click", () => {
 });
 
 fullscreenBtn.addEventListener("click", () => {
+    const wrapper = document.querySelector(".video-wrapper");
+
     if (!document.fullscreenElement) {
-        video.requestFullscreen();
+        wrapper.requestFullscreen();
     } else {
         document.exitFullscreen();
     }
 });
+
 
 </script>
 
@@ -499,6 +502,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
