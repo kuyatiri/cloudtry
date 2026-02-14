@@ -21,10 +21,9 @@ body {
     font-family: Arial, sans-serif;
     background: var(--bg);
     color: white;
+    min-height: 100dvh; /* dynamic viewport fix */
     display: grid;
     grid-template-columns: 300px 1fr;
-    height: 100vh;
-    overflow: hidden;
 }
 
 /* Sidebar */
@@ -135,23 +134,47 @@ video {
 }
 
 @media (max-width: 900px) {
-    body { grid-template-columns: 1fr; }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #main {
+        order: 1;
+        width: 100%;
+        padding: 0;
+    }
+
+    .video-wrapper {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+    }
 
     #sidebar {
         position: fixed;
         width: 280px;
         height: 100%;
         left: -280px;
+        top: 0;
         transition: 0.3s;
         z-index: 150;
     }
 
-    #sidebar.active { left: 0; }
+    #sidebar.active {
+        left: 0;
+    }
 
-    #menuBtn { display: block; }
+    #menuBtn {
+        display: block;
+    }
 
-    #overlay.active { display: block; }
+    #overlay.active {
+        display: block;
+    }
 }
+
 </style>
 </head>
 
@@ -331,6 +354,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
