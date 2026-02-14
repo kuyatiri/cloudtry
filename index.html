@@ -301,8 +301,11 @@ function parseM3U(data) {
 
     // ✅ AUTO PLAY FIRST CHANNEL
     if (channels.length > 0) {
+    setTimeout(() => {
         playChannel(0);
+    }, 300);
     }
+
 }
 
 function renderChannels(filter = "") {
@@ -406,6 +409,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
