@@ -304,13 +304,15 @@ function parseM3U(data) {
     }
 }
 
-function renderChannels(filter="") {
+function renderChannels(filter = "") {
     channelsDiv.innerHTML = "";
     let lastGroup = "";
 
-    channels
-        .filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
-        .forEach((c, index) => {
+    const filtered = channels.filter(c =>
+        c.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    filtered.forEach((c) => {
 
         if (c.group !== lastGroup) {
             let groupTitle = document.createElement('div');
@@ -327,11 +329,32 @@ function renderChannels(filter="") {
             <span>${c.name}</span>
         `;
 
-        div.onclick = () => playChannel(index);
+        // ✅ Pass actual channel object
+        div.onclick = () => playChannelByObject(c);
 
         channelsDiv.appendChild(div);
     });
 }
+
+async function playChannelByObject(channel) {
+
+    selectedIndex = channels.indexOf(channel);
+
+    document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
+
+    await player.unload();
+
+    player.configure({
+        drm: {
+            clearKeys: {
+                [channel.keyId]: channel.key
+            }
+        }
+    });
+
+    await player.load(channel.url);
+}
+
 
 async function playChannel(index) {
     selectedIndex = index;
@@ -382,6 +405,7 @@ loadPlaylist();
 
 </body>
 </html>
+
 
 
 
