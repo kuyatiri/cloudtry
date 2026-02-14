@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play DASH Stream with ClearKey DRM</title>
+</head>
+<body>
+  <h1>Play DASH Stream with ClearKey DRM</h1>
+  <video id="video" width="640" controls></video>
+
+  <!-- Move Shaka Player script to the bottom of the body -->
+  <script src="https://unpkg.com/shaka-player@latest/dist/shaka-player.compiled.js"></script>
+
+  <script>
+    // Ensure Shaka Player is loaded only after the DOM and Shaka script have fully loaded
+    window.addEventListener('load', function() {
+      if (shaka && shaka.log) {
+        // Enable verbose logging
+        shaka.log.setLevel(shaka.log.Level.V2);
+      } else {
+        console.error('Shaka Player library not loaded.');
+        return; // Exit if Shaka isn't loaded
+      }
+
+      // Initialize the player after confirming Shaka is loaded
+      initApp();
+    });
+
+    function initApp() {
+      shaka.polyfill.installAll();
+
+      if (shaka.Player.isBrowserSupported()) {
+        initPlayer();
+      } else {
+        console.error('Browser not supported!');
+      }
+    }
+
+    function initPlayer() {
+      const video = document.getElementById('video');
+      const player = new shaka.Player(video);
+
+      // Listen for error events
+      player.addEventListener('error', onErrorEvent);
+
+      // ClearKey DRM configuration
+      player.configure({
+        drm: {
+          clearKeys: {
+            '227ffaf09bec4a889e0e0988704d52a2': 'b2d0dce5c486891997c1c92ddaca2cd2'
+          }
+        }
+      });
+
+      // Attempt to load the DASH manifest
+      player.load('https://qp-pldt-live-grp-05-prod.akamaized.net/out/u/bilyonaryoch.mpd').then(() => {
+        console.log('The video has been loaded successfully!');
+      }).catch(onError);
+    }
+
+    function onErrorEvent(event) {
+      onError(event.detail);
+    }
+
+    function onError(error) {
+      console.error('Error code', error.code, 'object', error);
+
+      // Check for network-related errors
+      if (error.code === 6002) {
+        console.error('Manifest load failed. Possible reasons: network issues, incorrect URL, or CORS restrictions.');
+      }
+    }
+  </script>
+</body>
+</html>
