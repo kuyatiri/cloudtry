@@ -1,54 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>ClearKey MPD Player</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
-    <style>
-        body {
-            background: #111;
-            color: white;
-            text-align: center;
-            font-family: Arial;
-        }
-        video {
-            width: 80%;
-            max-width: 900px;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>IPTV Player</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
+
+<style>
+body {
+    margin: 0;
+    background: #111;
+    color: white;
+    font-family: Arial;
+    display: flex;
+    height: 100vh;
+}
+
+#channels {
+    width: 300px;
+    overflow-y: auto;
+    background: #1a1a1a;
+    padding: 10px;
+}
+
+.channel {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+}
+
+.channel:hover {
+    background: #333;
+}
+
+#player {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+video {
+    width: 90%;
+    max-width: 1000px;
+}
+</style>
 </head>
 <body>
 
-<h2>One PH Player</h2>
+<div id="channels"></div>
 
-<video id="video" controls autoplay></video>
+<div id="player">
+    <video id="video" controls autoplay></video>
+</div>
 
 <script>
-async function init() {
-    const video = document.getElementById('video');
-    const player = new shaka.Player(video);
+const video = document.getElementById('video');
+const player = new shaka.Player(video);
 
-    // ClearKey configuration
-    player.configure({
-        drm: {
-            clearKeys: {
-                // KEYID : KEY
-                "b1c7e9d24f8a4d6c9e337a2f1c5b8d60":
-                "8ff2e524cc1e028f2a4d4925e860c796"
+async function loadPlaylist() {
+    const response = await fetch('playlist.m3u');
+    const text = await response.text();
+    parseM3U(text);
+}
+
+function parseM3U(data) {
+    const lines = data.split('\n');
+    let channelsDiv = document.getElementById('channels');
+
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('#EXTINF')) {
+
+            let name = lines[i].split(',')[1];
+            let url = lines[i + 5] || lines[i + 1]; 
+            // Handles cases like yours with extra KODIPROP lines
+
+            let clearKeyLine = lines[i + 4];
+            let keyMatch = clearKeyLine.match(/license_key=(.*)/);
+
+            let keyId = "";
+            let key = "";
+
+            if (keyMatch) {
+                let keys = keyMatch[1].split(':');
+                keyId = keys[0];
+                key = keys[1];
             }
-        }
-    });
 
-    try {
-        await player.load("https://qp-pldt-live-bpk-02-prod.akamaized.net/bpk-tv/oneph_sd/default/index.mpd");
-        console.log("Video loaded!");
-    } catch (e) {
-        console.error("Error loading video", e);
+            let div = document.createElement('div');
+            div.className = 'channel';
+            div.innerText = name;
+
+            div.onclick = async () => {
+                await player.unload();
+
+                player.configure({
+                    drm: {
+                        clearKeys: {
+                            [keyId]: key
+                        }
+                    }
+                });
+
+                await player.load(url);
+            };
+
+            channelsDiv.appendChild(div);
+        }
     }
 }
 
-init();
+loadPlaylist();
 </script>
 
 </body>
