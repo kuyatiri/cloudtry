@@ -1,11 +1,9 @@
 exports.handler = async (event) => {
-  const path = event.path.replace("/.netlify/functions/proxy/", "");
-
+  const path = event.path.replace("/proxy/", "");
   const targetUrl = "http://" + path;
 
   try {
     const response = await fetch(targetUrl);
-
     const buffer = await response.arrayBuffer();
 
     return {
@@ -18,9 +16,6 @@ exports.handler = async (event) => {
       isBase64Encoded: true
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: "Proxy error"
-    };
+    return { statusCode: 500, body: "Proxy error" };
   }
 };
