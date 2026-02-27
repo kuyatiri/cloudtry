@@ -1,22 +1,25 @@
 exports.handler = async (event) => {
   try {
-    // Remove "/proxy/" from beginning
     let fullUrl = event.path.replace(/^\/proxy\//, "");
 
-    // Add query string back if exists
     if (event.rawQuery) {
       fullUrl += "?" + event.rawQuery;
     }
 
-    // Decode in case browser encoded parts
     fullUrl = decodeURIComponent(fullUrl);
 
-    // If protocol missing, assume http
-    if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
+    if (!fullUrl.startsWith("http")) {
       fullUrl = "http://" + fullUrl;
     }
 
-    const response = await fetch(fullUrl);
+    const response = await fetch(fullUrl, {
+      headers: {
+        "User-Agent": event.headers["user-agent"] || "",
+        "Referer": fullUrl,
+        "Accept": "*/*",
+        "Connection": "keep-alive"
+      }
+    });
 
     const buffer = await response.arrayBuffer();
 
