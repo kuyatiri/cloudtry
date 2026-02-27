@@ -448,6 +448,38 @@ function renderChannels(filter = "") {
     });
 }
 
+function resolveStreamUrl(channel) {
+    try {
+        const url = new URL(channel.url);
+
+        const isHttp = url.protocol === "http:";
+        const hasClearKey = channel.keyId && channel.key;
+
+        // Only proxy if:
+        // - HTTP stream
+        // - No ClearKey
+        if (isHttp && !hasClearKey) {
+
+            const hostPort = url.port
+                ? url.hostname + "%3A" + url.port
+                : url.hostname;
+
+            return window.location.origin +
+                "/proxy/" +
+                hostPort +
+                url.pathname +
+                url.search;
+        }
+
+        // Otherwise load directly
+        return channel.url;
+
+    } catch (err) {
+        console.error("URL resolve error:", err);
+        return channel.url;
+    }
+}
+
 async function playChannelByObject(channel) {
 
     selectedIndex = channels.indexOf(channel);
@@ -464,7 +496,7 @@ async function playChannelByObject(channel) {
         }
     });
 
-    await player.load(channel.url);
+    await player.load(resolveStreamUrl(channel));
 }
 
 
@@ -489,7 +521,7 @@ async function playChannel(index) {
         }
     });
 
-    await player.load(c.url);
+    await player.load(resolveStreamUrl(c));
 }
 
 
@@ -577,6 +609,7 @@ function parseEPGTime(epgTime) {
 
 </body>
 </html>
+
 
 
 
