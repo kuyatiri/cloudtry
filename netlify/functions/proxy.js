@@ -1,13 +1,12 @@
 exports.handler = async (event) => {
-  const url = event.queryStringParameters.url;
+  const path = event.path.replace("/.netlify/functions/proxy/", "");
 
-  if (!url) {
-    return { statusCode: 400, body: "Missing URL" };
-  }
+  const targetUrl = "http://" + path;
 
   try {
-    const response = await fetch(url);
-    const body = await response.arrayBuffer();
+    const response = await fetch(targetUrl);
+
+    const buffer = await response.arrayBuffer();
 
     return {
       statusCode: response.status,
@@ -15,10 +14,13 @@ exports.handler = async (event) => {
         "Content-Type": response.headers.get("content-type") || "application/octet-stream",
         "Access-Control-Allow-Origin": "*"
       },
-      body: Buffer.from(body).toString("base64"),
+      body: Buffer.from(buffer).toString("base64"),
       isBase64Encoded: true
     };
   } catch (err) {
-    return { statusCode: 500, body: "Proxy error" };
+    return {
+      statusCode: 500,
+      body: "Proxy error"
+    };
   }
 };
