@@ -1,21 +1,29 @@
 exports.handler = async (event) => {
-  const path = event.path.replace("/proxy/", "");
-  const targetUrl = "http://" + path;
+  const url = event.queryStringParameters.url;
 
-  try {
-    const response = await fetch(targetUrl);
-    const buffer = await response.arrayBuffer();
+  const response = await fetch(url);
+  let text = await response.text();
 
-    return {
-      statusCode: response.status,
-      headers: {
-        "Content-Type": response.headers.get("content-type") || "application/octet-stream",
-        "Access-Control-Allow-Origin": "*"
-      },
-      body: Buffer.from(buffer).toString("base64"),
-      isBase64Encoded: true
-    };
-  } catch (err) {
-    return { statusCode: 500, body: "Proxy error" };
-  }
+  // Extract base directory from original URL
+  const baseDir = url.substring(0, url.lastIndexOf("/") + 1);
+
+  // Create proxy base
+  const proxyBase =
+    "https://tiriwifi.netlify.app/.netlify/functions/proxy?url=" +
+    encodeURIComponent(baseDir);
+
+  // Inject BaseURL after <Period>
+  text = text.replace(
+    "<Period",
+    `<BaseURL>${proxyBase}</BaseURL>\n<Period`
+  );
+
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/dash+xml",
+      "Access-Control-Allow-Origin": "*"
+    },
+    body: text
+  };
 };
