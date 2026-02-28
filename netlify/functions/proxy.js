@@ -1,23 +1,25 @@
 exports.handler = async (event) => {
   try {
-    // Get everything after /proxy/
-    const splat = event.path.replace(
-      "/.netlify/functions/proxy/",
-      ""
-    );
+    // Remove function prefix
+    const prefix = "/.netlify/functions/proxy/";
+    let encodedUrl = event.path.startsWith(prefix)
+      ? event.path.slice(prefix.length)
+      : "";
 
-    if (!splat) {
-      return { statusCode: 400, body: "Missing target" };
+    if (!encodedUrl) {
+      return { statusCode: 400, body: "Missing target URL" };
     }
 
-    // Decode
-    const fullUrl = decodeURIComponent(splat);
+    // Decode full target
+    const fullUrl = decodeURIComponent(encodedUrl);
+
+    console.log("Fetching:", fullUrl);
 
     const response = await fetch(fullUrl);
 
     const contentType = response.headers.get("content-type") || "";
 
-    // MPD
+    // MPD (text)
     if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
       const text = await response.text();
       return {
@@ -44,7 +46,10 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error(err);
-    return { statusCode: 500, body: "Proxy error" };
+    console.error("Proxy error:", err);
+    return {
+      statusCode: 500,
+      body: "Proxy error"
+    };
   }
 };
