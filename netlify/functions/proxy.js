@@ -15,16 +15,38 @@ exports.handler = async (event) => {
 
     const response = await fetch(fullUrl);
 
+    const contentType = response.headers.get("content-type") || "";
+
+    // 🔥 If MPD (text)
+    if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
+
+      const text = await response.text();
+
+      return {
+        statusCode: response.status,
+        headers: {
+          "Content-Type": contentType,
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: text
+      };
+    }
+
+    // 🔥 If segment (binary)
+    const buffer = await response.arrayBuffer();
+
     return {
       statusCode: response.status,
       headers: {
-        "Content-Type": response.headers.get("content-type") || "application/octet-stream",
+        "Content-Type": contentType || "application/octet-stream",
         "Access-Control-Allow-Origin": "*"
       },
-      body: await response.text(), // ⚠ MPD only
+      body: Buffer.from(buffer).toString("base64"),
+      isBase64Encoded: true
     };
 
   } catch (err) {
+    console.error(err);
     return {
       statusCode: 500,
       body: "Proxy error"
