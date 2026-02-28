@@ -1,20 +1,18 @@
 exports.handler = async (event) => {
   try {
-    // Remove /proxy/ prefix
     let fullUrl = event.path.replace(/^\/proxy\//, "");
 
-    // Re-attach original query string
     if (event.rawQuery) {
       fullUrl += "?" + event.rawQuery;
     }
 
-    // Decode only encoded parts (like %3A)
     fullUrl = decodeURIComponent(fullUrl);
 
-    // Add protocol if missing
     if (!fullUrl.startsWith("http")) {
       fullUrl = "http://" + fullUrl;
     }
+
+    console.log("Fetching:", fullUrl);
 
     const response = await fetch(fullUrl, {
       headers: {
@@ -41,12 +39,11 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
+    console.error("Proxy error:", err);
+
     return {
-  statusCode: response.status,
-  headers: {
-    "Content-Type": contentType,
-    "Access-Control-Allow-Origin": "*"
-  },
-  body: await response.text()
-};
+      statusCode: 500,
+      body: "Proxy error: " + err.message
+    };
+  }
 };
