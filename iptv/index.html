@@ -513,30 +513,12 @@ function renderChannels(filter = "") {
    RESOLVE STREAM URL
 ========================================= */
 function resolveStreamUrl(channel) {
-    try {
-        const url = new URL(channel.url);
-
-        if (url.protocol === "http:") {
-
-            const hostPort = url.port
-                ? url.hostname + "%3A" + url.port
-                : url.hostname;
-
-            return (
-                window.location.origin +
-                "/proxy/" +
-                hostPort +
-                url.pathname +
-                url.search
-            );
-        }
-
-        return channel.url;
-
-    } catch (err) {
-        console.error("Resolve error:", err);
-        return channel.url;
+function resolveStreamUrl(channel) {
+    if (channel.url.startsWith("http://")) {
+        const encoded = encodeURIComponent(channel.url);
+        return window.location.origin + "/proxy?url=" + encoded;
     }
+    return channel.url;
 }
 /* =========================================
    PLAY CHANNEL
@@ -640,6 +622,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
