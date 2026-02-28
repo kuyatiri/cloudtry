@@ -1,27 +1,18 @@
 exports.handler = async (event) => {
   try {
-
-    let fullUrl = event.path.replace(/^\/proxy\//, "");
-
-    if (event.rawQuery) {
-      fullUrl += "?" + event.rawQuery;
+    const target = event.queryStringParameters?.url;
+    if (!target) {
+      return { statusCode: 400, body: "Missing url" };
     }
 
-    fullUrl = decodeURIComponent(fullUrl);
-
-    if (!fullUrl.startsWith("http")) {
-      fullUrl = "http://" + fullUrl;
-    }
+    const fullUrl = decodeURIComponent(target);
 
     const response = await fetch(fullUrl);
 
     const contentType = response.headers.get("content-type") || "";
 
-    // 🔥 If MPD (text)
-    if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
-
+    if (contentType.includes("mpd")) {
       const text = await response.text();
-
       return {
         statusCode: response.status,
         headers: {
@@ -32,7 +23,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🔥 If segment (binary)
     const buffer = await response.arrayBuffer();
 
     return {
@@ -46,7 +36,6 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error(err);
     return {
       statusCode: 500,
       body: "Proxy error"
