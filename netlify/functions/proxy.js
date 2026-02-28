@@ -42,8 +42,11 @@ exports.handler = async (event) => {
 
   } catch (err) {
     return {
-      statusCode: 500,
-      body: "Proxy error"
-    };
-  }
+  statusCode: response.status,
+  headers: {
+    "Content-Type": contentType,
+    "Access-Control-Allow-Origin": "*"
+  },
+  body: await response.text()
+};
 };
