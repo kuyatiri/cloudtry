@@ -1,6 +1,8 @@
 exports.handler = async (event) => {
   try {
-    const prefix = "/.netlify/functions/proxy/";
+
+    // Remove /proxy/ from path
+    const prefix = "/proxy/";
     let encodedUrl = event.path.startsWith(prefix)
       ? event.path.slice(prefix.length)
       : "";
@@ -11,7 +13,7 @@ exports.handler = async (event) => {
 
     const fullUrl = decodeURIComponent(encodedUrl);
 
-    console.log("Decoded URL:", fullUrl);
+    console.log("Fetching:", fullUrl);
 
     const response = await fetch(fullUrl);
 
@@ -30,7 +32,7 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error("REAL ERROR:", err);
+    console.error("Proxy error:", err);
     return {
       statusCode: 500,
       body: "ERROR: " + err.message
