@@ -1,5 +1,16 @@
 exports.handler = async (event) => {
   try {
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS"
+        }
+      };
+    }
+
     let fullUrl = event.path.replace(/^\/proxy\//, "");
 
     if (event.rawQuery) {
@@ -13,11 +24,13 @@ exports.handler = async (event) => {
     }
 
     const response = await fetch(fullUrl, {
+      method: "GET",
       headers: {
-        "User-Agent": event.headers["user-agent"] || "",
+        "User-Agent": event.headers["user-agent"] || "Mozilla/5.0",
         "Referer": fullUrl,
         "Accept": "*/*",
-        "Connection": "keep-alive"
+        "Range": event.headers["range"] || "",
+        "Origin": event.headers["origin"] || ""
       }
     });
 
@@ -28,14 +41,21 @@ exports.handler = async (event) => {
       headers: {
         "Content-Type":
           response.headers.get("content-type") || "application/octet-stream",
-        "Access-Control-Allow-Origin": "*"
+        "Content-Length": buffer.byteLength,
+        "Accept-Ranges": "bytes",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-cache"
       },
       body: Buffer.from(buffer).toString("base64"),
       isBase64Encoded: true
     };
+
   } catch (err) {
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
       body: "Proxy error"
     };
   }
