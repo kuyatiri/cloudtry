@@ -337,41 +337,52 @@ const searchInput = document.getElementById('search');
 let channels = [];
 let selectedIndex = 0;
 
-/* =========================
-   🔥 REDIRECT DETECTION
-========================= */
+/* =========================================
+   🔥 REDIRECT DETECTION (SESSION UPDATE)
+========================================= */
 player.getNetworkingEngine().registerResponseFilter((type, response) => {
 
     if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST) {
 
         const finalUrl = response.uri;
+        const current = channels[selectedIndex];
 
-        if (channels[selectedIndex]) {
-            console.log("Redirect detected → Using new URL:", finalUrl);
-            channels[selectedIndex].url = finalUrl;
+        if (current && finalUrl && finalUrl !== current.url) {
+
+            console.log("Redirect detected → Updating session URL");
+
+            current.url = finalUrl; // use moved session URL
         }
     }
 
 });
 
-/* =========================
-   🔥 AUTO RECOVER ON ERROR
-========================= */
+/* =========================================
+   🔥 AUTO RECOVER IF SESSION EXPIRES
+========================================= */
 player.addEventListener('error', async (event) => {
+
+    const current = channels[selectedIndex];
+    if (!current) return;
 
     console.log("Player error:", event.detail);
 
-    // Session expired / forbidden
+    // 1002 = network error
+    // 3016 = forbidden
     if (event.detail.code === 1002 || event.detail.code === 3016) {
-        console.log("Session expired → Reloading original...");
+
+        console.log("Session expired → Reverting to original URL");
+
+        current.url = current.originalUrl; // reset
+
         await playChannel(selectedIndex);
     }
 
 });
 
-/* =========================
+/* =========================================
    MENU
-========================= */
+========================================= */
 menuBtn.onclick = () => {
     sidebar.classList.toggle('active');
     overlay.classList.toggle('active');
@@ -382,18 +393,18 @@ overlay.onclick = () => {
     overlay.classList.remove('active');
 };
 
-/* =========================
+/* =========================================
    LOAD PLAYLIST
-========================= */
+========================================= */
 async function loadPlaylist() {
     const res = await fetch(PLAYLIST_URL);
     const text = await res.text();
     parseM3U(text);
 }
 
-/* =========================
+/* =========================================
    LOAD EPG
-========================= */
+========================================= */
 async function loadEPG() {
     const res = await fetch(EPG_URL);
     const text = await res.text();
@@ -403,9 +414,9 @@ async function loadEPG() {
 
 loadEPG();
 
-/* =========================
+/* =========================================
    PARSE M3U
-========================= */
+========================================= */
 function parseM3U(data) {
 
     const lines = data.split('\n');
@@ -435,7 +446,7 @@ function parseM3U(data) {
                 keyId: "",
                 key: "",
                 url: "",
-                originalUrl: "" // 👈 store original
+                originalUrl: ""
             };
         }
 
@@ -447,7 +458,7 @@ function parseM3U(data) {
 
         else if (line && !line.startsWith('#') && currentChannel) {
             currentChannel.url = line;
-            currentChannel.originalUrl = line; // 👈 store original
+            currentChannel.originalUrl = line;
             channels.push(currentChannel);
             currentChannel = null;
         }
@@ -457,15 +468,13 @@ function parseM3U(data) {
     renderChannels();
 
     if (channels.length > 0) {
-        setTimeout(() => {
-            playChannel(0);
-        }, 300);
+        setTimeout(() => playChannel(0), 300);
     }
 }
 
-/* =========================
+/* =========================================
    RENDER CHANNELS
-========================= */
+========================================= */
 function renderChannels(filter = "") {
 
     channelsDiv.innerHTML = "";
@@ -493,17 +502,22 @@ function renderChannels(filter = "") {
         `;
 
         div.onclick = () => playChannelByObject(c);
-
         channelsDiv.appendChild(div);
     });
 }
 
-/* =========================
+/* =========================================
    RESOLVE STREAM URL
-========================= */
+========================================= */
 function resolveStreamUrl(channel) {
 
     try {
+
+        // Prevent double proxy wrapping
+        if (channel.url.includes("/proxy/")) {
+            return channel.url;
+        }
+
         const url = new URL(channel.url);
         const isHttp = url.protocol === "http:";
         const hasClearKey = channel.keyId && channel.key;
@@ -529,9 +543,9 @@ function resolveStreamUrl(channel) {
     }
 }
 
-/* =========================
+/* =========================================
    PLAY CHANNEL
-========================= */
+========================================= */
 async function playChannelByObject(channel) {
 
     selectedIndex = channels.indexOf(channel);
@@ -579,16 +593,16 @@ async function playChannel(index) {
     updateEPG(c);
 }
 
-/* =========================
+/* =========================================
    SEARCH
-========================= */
+========================================= */
 searchInput.addEventListener("input", e => {
     renderChannels(e.target.value);
 });
 
-/* =========================
+/* =========================================
    KEYBOARD NAVIGATION
-========================= */
+========================================= */
 document.addEventListener("keydown", e => {
 
     if (e.key === "ArrowDown") {
@@ -605,9 +619,9 @@ document.addEventListener("keydown", e => {
 
 loadPlaylist();
 
-/* =========================
+/* =========================================
    CONTROLS
-========================= */
+========================================= */
 const muteBtn = document.getElementById("muteBtn");
 const fullscreenBtn = document.getElementById("fullscreenBtn");
 
@@ -631,6 +645,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
