@@ -24,15 +24,12 @@ exports.handler = async (event) => {
     }
 
     const response = await fetch(fullUrl, {
-      method: "GET",
-      headers: {
-        "User-Agent": event.headers["user-agent"] || "Mozilla/5.0",
-        "Referer": fullUrl,
-        "Accept": "*/*",
-        "Range": event.headers["range"] || "",
-        "Origin": event.headers["origin"] || ""
-      }
-    });
+  headers: {
+    "User-Agent": "Mozilla/5.0",
+    "Referer": fullUrl,
+    "Accept": "*/*"
+  }
+});
 
     const buffer = await response.arrayBuffer();
 
