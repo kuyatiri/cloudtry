@@ -513,10 +513,9 @@ function renderChannels(filter = "") {
    RESOLVE STREAM URL
 ========================================= */
 function resolveStreamUrl(channel) {
-
     try {
 
-        // Prevent double proxy wrapping
+        // If already proxied, return as-is
         if (channel.url.includes("/proxy/")) {
             return channel.url;
         }
@@ -527,15 +526,9 @@ function resolveStreamUrl(channel) {
 
         if (isHttp && !hasClearKey) {
 
-            const hostPort = url.port
-                ? url.hostname + "%3A" + url.port
-                : url.hostname;
+            const encoded = encodeURIComponent(channel.url);
 
-            return window.location.origin +
-                "/proxy/" +
-                hostPort +
-                url.pathname +
-                url.search;
+            return window.location.origin + "/proxy/" + encoded;
         }
 
         return channel.url;
@@ -545,7 +538,6 @@ function resolveStreamUrl(channel) {
         return channel.url;
     }
 }
-
 /* =========================================
    PLAY CHANNEL
 ========================================= */
@@ -648,6 +640,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
