@@ -1,5 +1,6 @@
 exports.handler = async (event) => {
   try {
+
     const target = event.queryStringParameters?.url;
     if (!target) {
       return { statusCode: 400, body: "Missing url" };
@@ -8,21 +9,41 @@ exports.handler = async (event) => {
     const fullUrl = decodeURIComponent(target);
 
     const response = await fetch(fullUrl);
-
     const contentType = response.headers.get("content-type") || "";
 
-    if (contentType.includes("mpd")) {
-      const text = await response.text();
+    // 🔥 If MPD → rewrite BaseURL
+    if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
+
+      let xml = await response.text();
+
+      // Extract base path from original URL
+      const urlObj = new URL(fullUrl);
+      const basePath = fullUrl.substring(0, fullUrl.lastIndexOf("/") + 1);
+
+      const proxyBase =
+        event.headers["x-forwarded-proto"] +
+        "://" +
+        event.headers.host +
+        "/proxy?url=" +
+        encodeURIComponent(basePath);
+
+      // Inject BaseURL after <MPD ...>
+      xml = xml.replace(
+        /(<MPD[^>]*>)/,
+        `$1\n<BaseURL>${proxyBase}</BaseURL>\n`
+      );
+
       return {
-        statusCode: response.status,
+        statusCode: 200,
         headers: {
-          "Content-Type": contentType,
+          "Content-Type": "application/dash+xml",
           "Access-Control-Allow-Origin": "*"
         },
-        body: text
+        body: xml
       };
     }
 
+    // 🔥 Segments (binary)
     const buffer = await response.arrayBuffer();
 
     return {
@@ -35,6 +56,14 @@ exports.handler = async (event) => {
       isBase64Encoded: true
     };
 
+  } catch (err) {
+    console.error(err);
+    return {
+      statusCode: 500,
+      body: "Proxy error"
+    };
+  }
+};
   } catch (err) {
     return {
       statusCode: 500,
