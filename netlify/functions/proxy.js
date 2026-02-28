@@ -1,9 +1,12 @@
 exports.handler = async (event) => {
   try {
-
     const target = event.queryStringParameters?.url;
+
     if (!target) {
-      return { statusCode: 400, body: "Missing url" };
+      return {
+        statusCode: 400,
+        body: "Missing url parameter"
+      };
     }
 
     const fullUrl = decodeURIComponent(target);
@@ -11,27 +14,41 @@ exports.handler = async (event) => {
     const response = await fetch(fullUrl);
     const contentType = response.headers.get("content-type") || "";
 
-    // 🔥 If MPD → rewrite BaseURL
+    /* =====================================================
+       🔥 IF MPD → Rewrite all segment URLs to proxy
+    ====================================================== */
     if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
 
       let xml = await response.text();
 
-      // Extract base path from original URL
-      const urlObj = new URL(fullUrl);
+      // Base path of original MPD
       const basePath = fullUrl.substring(0, fullUrl.lastIndexOf("/") + 1);
 
-      const proxyBase =
-        event.headers["x-forwarded-proto"] +
-        "://" +
-        event.headers.host +
-        "/proxy?url=" +
-        encodeURIComponent(basePath);
+      // Helper to build proxified URL
+      const makeProxyUrl = (relativePath) => {
+        const absolute = basePath + relativePath;
 
-      // Inject BaseURL after <MPD ...>
-      xml = xml.replace(
-        /(<MPD[^>]*>)/,
-        `$1\n<BaseURL>${proxyBase}</BaseURL>\n`
-      );
+        return (
+          event.headers["x-forwarded-proto"] +
+          "://" +
+          event.headers.host +
+          "/proxy?url=" +
+          encodeURIComponent(absolute)
+        );
+      };
+
+      // Remove ALL existing BaseURL tags (important)
+      xml = xml.replace(/<BaseURL>.*?<\/BaseURL>/g, "");
+
+      // Rewrite media=
+      xml = xml.replace(/media="([^"]+)"/g, (match, p1) => {
+        return `media="${makeProxyUrl(p1)}"`;
+      });
+
+      // Rewrite initialization=
+      xml = xml.replace(/initialization="([^"]+)"/g, (match, p1) => {
+        return `initialization="${makeProxyUrl(p1)}"`;
+      });
 
       return {
         statusCode: 200,
@@ -43,7 +60,10 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🔥 Segments (binary)
+    /* =====================================================
+       🔥 SEGMENTS (Binary)
+    ====================================================== */
+
     const buffer = await response.arrayBuffer();
 
     return {
@@ -57,14 +77,7 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error(err);
-    return {
-      statusCode: 500,
-      body: "Proxy error"
-    };
-  }
-};
-  } catch (err) {
+    console.error("Proxy error:", err);
     return {
       statusCode: 500,
       body: "Proxy error"
