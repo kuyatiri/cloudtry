@@ -515,25 +515,25 @@ function renderChannels(filter = "") {
 function resolveStreamUrl(channel) {
     try {
 
-        if (channel.url.includes("/proxy/")) {
-            return channel.url;
-        }
-
         const url = new URL(channel.url);
-        const isHttp = url.protocol === "http:";
-        const hasClearKey = channel.keyId && channel.key;
 
-        if (isHttp && !hasClearKey) {
+        if (url.protocol === "http:") {
 
-            const encoded = encodeURIComponent(channel.url);
+            const hostPort = url.port
+                ? url.hostname + "%3A" + url.port
+                : url.hostname;
 
-            return window.location.origin + "/proxy/" + encoded;
+            return window.location.origin +
+                "/proxy/" +
+                hostPort +
+                url.pathname +
+                url.search;
         }
 
         return channel.url;
 
     } catch (err) {
-        console.error("URL resolve error:", err);
+        console.error(err);
         return channel.url;
     }
 }
@@ -639,6 +639,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
