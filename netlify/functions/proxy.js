@@ -1,39 +1,59 @@
 exports.handler = async (event) => {
   try {
 
-    // Remove "/proxy/" from path
     let fullUrl = event.path.replace(/^\/proxy\//, "");
 
-    // Append original query string
     if (event.rawQuery) {
       fullUrl += "?" + event.rawQuery;
     }
 
-    // Decode URL (so %3A becomes :)
     fullUrl = decodeURIComponent(fullUrl);
 
-    // Re-add http if missing
     if (!fullUrl.startsWith("http")) {
       fullUrl = "http://" + fullUrl;
     }
 
-    console.log("Fetching:", fullUrl);
+    const response = await fetch(fullUrl);
 
-    const response = await fetch(fullUrl, {
-      headers: {
-        "User-Agent": event.headers["user-agent"] || "Mozilla/5.0",
-        "Accept": "*/*",
-        "Referer": fullUrl
-      }
-    });
+    const contentType = response.headers.get("content-type") || "";
 
+    // 🔥 If MPD file → rewrite
+    if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
+
+      let text = await response.text();
+
+      const basePath = event.path.replace(/\/manifest\.mpd.*$/, "");
+
+      // Rewrite initialization
+      text = text.replace(
+        /initialization="([^"]+)"/g,
+        (match, p1) => `initialization="${basePath}/${p1}"`
+      );
+
+      // Rewrite media
+      text = text.replace(
+        /media="([^"]+)"/g,
+        (match, p1) => `media="${basePath}/${p1}"`
+      );
+
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "application/dash+xml",
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: text
+      };
+    }
+
+    // 🔥 Otherwise return binary (segments)
     const buffer = await response.arrayBuffer();
 
     return {
       statusCode: response.status,
       headers: {
         "Content-Type":
-          response.headers.get("content-type") || "application/octet-stream",
+          contentType || "application/octet-stream",
         "Access-Control-Allow-Origin": "*"
       },
       body: Buffer.from(buffer).toString("base64"),
