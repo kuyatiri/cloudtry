@@ -514,7 +514,6 @@ function renderChannels(filter = "") {
 ========================================= */
 function resolveStreamUrl(channel) {
     try {
-
         const url = new URL(channel.url);
 
         if (url.protocol === "http:") {
@@ -523,17 +522,19 @@ function resolveStreamUrl(channel) {
                 ? url.hostname + "%3A" + url.port
                 : url.hostname;
 
-            return window.location.origin +
+            return (
+                window.location.origin +
                 "/proxy/" +
                 hostPort +
                 url.pathname +
-                url.search;
+                url.search
+            );
         }
 
         return channel.url;
 
     } catch (err) {
-        console.error(err);
+        console.error("Resolve error:", err);
         return channel.url;
     }
 }
@@ -639,6 +640,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
