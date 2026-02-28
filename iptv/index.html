@@ -515,7 +515,6 @@ function renderChannels(filter = "") {
 function resolveStreamUrl(channel) {
     try {
 
-        // If already proxied, return as-is
         if (channel.url.includes("/proxy/")) {
             return channel.url;
         }
@@ -640,6 +639,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
