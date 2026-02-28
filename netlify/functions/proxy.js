@@ -1,7 +1,6 @@
 exports.handler = async (event) => {
   try {
 
-    // Remove /proxy/ from path
     const prefix = "/proxy/";
     let encodedUrl = event.path.startsWith(prefix)
       ? event.path.slice(prefix.length)
@@ -12,13 +11,42 @@ exports.handler = async (event) => {
     }
 
     const fullUrl = decodeURIComponent(encodedUrl);
-
-    console.log("Fetching:", fullUrl);
-
     const response = await fetch(fullUrl);
-
     const contentType = response.headers.get("content-type") || "";
 
+    // If MPD → rewrite segment URLs
+    if (contentType.includes("mpd") || fullUrl.endsWith(".mpd")) {
+
+      let xml = await response.text();
+
+      const basePath = fullUrl.substring(0, fullUrl.lastIndexOf("/") + 1);
+
+      const makeProxyUrl = (relative) => {
+        const absolute = basePath + relative;
+        return "/proxy/" + encodeURIComponent(absolute);
+      };
+
+      // Rewrite media=
+      xml = xml.replace(/media="([^"]+)"/g, (m, p1) => {
+        return `media="${makeProxyUrl(p1)}"`;
+      });
+
+      // Rewrite initialization=
+      xml = xml.replace(/initialization="([^"]+)"/g, (m, p1) => {
+        return `initialization="${makeProxyUrl(p1)}"`;
+      });
+
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "application/dash+xml",
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: xml
+      };
+    }
+
+    // Binary segment
     const buffer = await response.arrayBuffer();
 
     return {
@@ -32,10 +60,10 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error("Proxy error:", err);
+    console.error(err);
     return {
       statusCode: 500,
-      body: "ERROR: " + err.message
+      body: "Proxy error"
     };
   }
 };
