@@ -1,1 +1,1 @@
-/proxy   /.netlify/functions/proxy   200
+/proxy/*   /.netlify/functions/proxy/:splat   200
