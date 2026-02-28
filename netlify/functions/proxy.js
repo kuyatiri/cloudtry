@@ -1,1 +1,25 @@
-exports.handler = async (event) => { try { let fullUrl = event.path.replace(/^\/proxy\//, ""); if (event.rawQuery) { fullUrl += "?" + event.rawQuery; } fullUrl = decodeURIComponent(fullUrl); if (!fullUrl.startsWith("http")) { fullUrl = "http://" + fullUrl; } const response = await fetch(fullUrl, { headers: { "User-Agent": event.headers["user-agent"] || "", "Referer": fullUrl, "Accept": "*/*", "Connection": "keep-alive" } }); const buffer = await response.arrayBuffer(); return { statusCode: response.status, headers: { "Content-Type": response.headers.get("content-type") || "application/octet-stream", "Access-Control-Allow-Origin": "*" }, body: Buffer.from(buffer).toString("base64"), isBase64Encoded: true }; } catch (err) { return { statusCode: 500, body: "Proxy error" }; } };
+function resolveStreamUrl(channel) {
+    try {
+
+        const url = new URL(channel.url);
+
+        if (url.protocol === "http:") {
+
+            const hostPort = url.port
+                ? url.hostname + "%3A" + url.port
+                : url.hostname;
+
+            return window.location.origin +
+                "/proxy/" +
+                hostPort +
+                url.pathname +
+                url.search;
+        }
+
+        return channel.url;
+
+    } catch (err) {
+        console.error(err);
+        return channel.url;
+    }
+}
