@@ -323,9 +323,11 @@ header {
 <script>
 const PLAYLIST_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev/playlist?token=mysecret123";
 const EPG_URL = "https://premiumiptv.tiri-piso-wifi.workers.dev/epg?token=mysecret123";
+
 let epgData = null;
 const video = document.getElementById('video');
 const player = new shaka.Player(video);
+
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const menuBtn = document.getElementById('menuBtn');
@@ -335,6 +337,41 @@ const searchInput = document.getElementById('search');
 let channels = [];
 let selectedIndex = 0;
 
+/* =========================
+   🔥 REDIRECT DETECTION
+========================= */
+player.getNetworkingEngine().registerResponseFilter((type, response) => {
+
+    if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST) {
+
+        const finalUrl = response.uri;
+
+        if (channels[selectedIndex]) {
+            console.log("Redirect detected → Using new URL:", finalUrl);
+            channels[selectedIndex].url = finalUrl;
+        }
+    }
+
+});
+
+/* =========================
+   🔥 AUTO RECOVER ON ERROR
+========================= */
+player.addEventListener('error', async (event) => {
+
+    console.log("Player error:", event.detail);
+
+    // Session expired / forbidden
+    if (event.detail.code === 1002 || event.detail.code === 3016) {
+        console.log("Session expired → Reloading original...");
+        await playChannel(selectedIndex);
+    }
+
+});
+
+/* =========================
+   MENU
+========================= */
 menuBtn.onclick = () => {
     sidebar.classList.toggle('active');
     overlay.classList.toggle('active');
@@ -345,12 +382,18 @@ overlay.onclick = () => {
     overlay.classList.remove('active');
 };
 
+/* =========================
+   LOAD PLAYLIST
+========================= */
 async function loadPlaylist() {
     const res = await fetch(PLAYLIST_URL);
     const text = await res.text();
     parseM3U(text);
 }
 
+/* =========================
+   LOAD EPG
+========================= */
 async function loadEPG() {
     const res = await fetch(EPG_URL);
     const text = await res.text();
@@ -360,7 +403,11 @@ async function loadEPG() {
 
 loadEPG();
 
+/* =========================
+   PARSE M3U
+========================= */
 function parseM3U(data) {
+
     const lines = data.split('\n');
     let currentChannel = null;
 
@@ -387,7 +434,8 @@ function parseM3U(data) {
                 tvgId: idMatch ? idMatch[1] : "",
                 keyId: "",
                 key: "",
-                url: ""
+                url: "",
+                originalUrl: "" // 👈 store original
             };
         }
 
@@ -399,6 +447,7 @@ function parseM3U(data) {
 
         else if (line && !line.startsWith('#') && currentChannel) {
             currentChannel.url = line;
+            currentChannel.originalUrl = line; // 👈 store original
             channels.push(currentChannel);
             currentChannel = null;
         }
@@ -407,16 +456,18 @@ function parseM3U(data) {
 
     renderChannels();
 
-    // ✅ AUTO PLAY FIRST CHANNEL
     if (channels.length > 0) {
-    setTimeout(() => {
-        playChannel(0);
-    }, 300);
+        setTimeout(() => {
+            playChannel(0);
+        }, 300);
     }
-
 }
 
+/* =========================
+   RENDER CHANNELS
+========================= */
 function renderChannels(filter = "") {
+
     channelsDiv.innerHTML = "";
     let lastGroup = "";
 
@@ -441,23 +492,22 @@ function renderChannels(filter = "") {
             <span>${c.name}</span>
         `;
 
-        // ✅ Pass actual channel object
         div.onclick = () => playChannelByObject(c);
 
         channelsDiv.appendChild(div);
     });
 }
 
+/* =========================
+   RESOLVE STREAM URL
+========================= */
 function resolveStreamUrl(channel) {
+
     try {
         const url = new URL(channel.url);
-
         const isHttp = url.protocol === "http:";
         const hasClearKey = channel.keyId && channel.key;
 
-        // Only proxy if:
-        // - HTTP stream
-        // - No ClearKey
         if (isHttp && !hasClearKey) {
 
             const hostPort = url.port
@@ -471,7 +521,6 @@ function resolveStreamUrl(channel) {
                 url.search;
         }
 
-        // Otherwise load directly
         return channel.url;
 
     } catch (err) {
@@ -480,72 +529,85 @@ function resolveStreamUrl(channel) {
     }
 }
 
+/* =========================
+   PLAY CHANNEL
+========================= */
 async function playChannelByObject(channel) {
 
     selectedIndex = channels.indexOf(channel);
 
     document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
-    updateEPG(channel);
+
     await player.unload();
 
     player.configure({
         drm: {
-            clearKeys: {
+            clearKeys: channel.keyId ? {
                 [channel.keyId]: channel.key
-            }
+            } : {}
         }
     });
 
     await player.load(resolveStreamUrl(channel));
+
+    updateEPG(channel);
 }
 
-
 async function playChannel(index) {
+
     selectedIndex = index;
     const c = channels[index];
-    
+
     document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.channel')[index]?.classList.add('active');
 
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-    updateEPG(c);
+
     await player.unload();
 
-    // ✅ Use keys parsed from playlist
     player.configure({
         drm: {
-            clearKeys: {
+            clearKeys: c.keyId ? {
                 [c.keyId]: c.key
-            }
+            } : {}
         }
     });
 
     await player.load(resolveStreamUrl(c));
+
+    updateEPG(c);
 }
 
-
-/* Search */
+/* =========================
+   SEARCH
+========================= */
 searchInput.addEventListener("input", e => {
     renderChannels(e.target.value);
 });
 
-/* Arrow navigation */
+/* =========================
+   KEYBOARD NAVIGATION
+========================= */
 document.addEventListener("keydown", e => {
+
     if (e.key === "ArrowDown") {
         selectedIndex = (selectedIndex + 1) % channels.length;
         playChannel(selectedIndex);
     }
+
     if (e.key === "ArrowUp") {
         selectedIndex = (selectedIndex - 1 + channels.length) % channels.length;
         playChannel(selectedIndex);
     }
+
 });
 
 loadPlaylist();
 
-
-
+/* =========================
+   CONTROLS
+========================= */
 const muteBtn = document.getElementById("muteBtn");
 const fullscreenBtn = document.getElementById("fullscreenBtn");
 
@@ -563,52 +625,13 @@ fullscreenBtn.addEventListener("click", () => {
         document.exitFullscreen();
     }
 });
-
-function updateEPG(channel) {
-    if (!epgData || !channel.tvgId) return;
-
-    const now = new Date();
-    const programmes = epgData.querySelectorAll(`programme[channel="${channel.tvgId}"]`);
-
-    let current = null;
-    let next = null;
-
-    programmes.forEach(p => {
-        const start = parseEPGTime(p.getAttribute("start"));
-        const stop = parseEPGTime(p.getAttribute("stop"));
-
-        if (now >= start && now <= stop) {
-            current = p;
-        }
-
-        if (start > now && !next) {
-            next = p;
-        }
-    });
-
-    document.getElementById("epgNow").textContent =
-        current ? "NOW: " + current.querySelector("title").textContent : "No current program";
-
-    document.getElementById("epgNext").textContent =
-        next ? "NEXT: " + next.querySelector("title").textContent : "";
-}
-function parseEPGTime(epgTime) {
-    const year = epgTime.substring(0,4);
-    const month = epgTime.substring(4,6);
-    const day = epgTime.substring(6,8);
-    const hour = epgTime.substring(8,10);
-    const min = epgTime.substring(10,12);
-    const sec = epgTime.substring(12,14);
-
-    return new Date(`${year}-${month}-${day}T${hour}:${min}:${sec}`);
-}
-
 </script>
 
 
 
 </body>
 </html>
+
 
 
 
