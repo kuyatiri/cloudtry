@@ -345,13 +345,16 @@ player.getNetworkingEngine().registerResponseFilter((type, response) => {
     if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST) {
 
         const finalUrl = response.uri;
-        const current = channels[selectedIndex];
 
-        if (current && finalUrl && finalUrl !== current.url) {
+        console.log("Original URL:", channels[selectedIndex]?.originalUrl);
+        console.log("Redirected URL:", finalUrl);
 
-            console.log("Redirect detected → Updating session URL");
+        // Show on screen (optional)
+        document.getElementById("epgNext").textContent =
+            "Redirected URL: " + finalUrl;
 
-            current.url = finalUrl; // use moved session URL
+        if (channels[selectedIndex] && finalUrl) {
+            channels[selectedIndex].url = finalUrl;
         }
     }
 
@@ -645,6 +648,7 @@ fullscreenBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
