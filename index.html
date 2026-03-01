@@ -1,160 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIRI PISO WIFI | High-Speed Access</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg-deep: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-
-        header {
-            position: fixed; width: 100%; top: 0; padding: 20px 0;
-            backdrop-filter: blur(12px); background: rgba(15, 23, 42, 0.8);
-            z-index: 1000;
-        }
-
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: -1px; }
-        nav a { color: var(--text-main); text-decoration: none; margin-left: 25px; font-size: 0.9rem; opacity: 0.8; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
-
-        section { padding: 100px 0; }
-        h2 { font-size: 2.5rem; margin-bottom: 40px; text-align: center; }
-
-        /* Hero */
-        .hero { min-height: 80vh; display: flex; align-items: center; }
-        .hero-text h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; }
-        .hero-text span { color: var(--accent); }
-        .hero-text p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px; max-width: 500px; }
-
-        .btn {
-            display: inline-block; padding: 15px 35px; background: var(--accent);
-            color: #000; font-weight: 600; border-radius: 8px; text-decoration: none;
-            transition: 0.3s transform ease;
-        }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-
-        /* Grids */
-        .card-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
-        }
-
-        .card {
-            background: var(--bg-card); padding: 30px; border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .card h3 { margin-bottom: 10px; color: var(--accent); }
-
-        /* About Section */
-        #about { text-align: center; }
-        #about p { max-width: 700px; margin: 0 auto; color: var(--text-muted); }
-
-        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TIRI PISO WIFI | Fast & Reliable Piso WiFi</title>
+  <meta name="description" content="Affordable, high-speed Piso WiFi for students, gamers, and remote workers in Laoingen, Philippines." />
+  <meta property="og:title" content="TIRI PISO WIFI | Fast & Reliable Piso WiFi" />
+  <meta property="og:description" content="Affordable, high-speed internet access for your community." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071028;
+      --card: rgba(255,255,255,0.04);
+      --muted:#9aa9bf;
+      --accent-1:#38bdf8;
+      --accent-2:#7dd3fc;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(180deg,#041026 0%, #071028 60%);
+      color:#eef6ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+    }
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:24px}
+    header{
+      position:sticky;top:12px;backdrop-filter:blur(8px);
+      background:linear-gradient(90deg, rgba(7,16,40,0.55), rgba(7,16,40,0.35));
+      border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 6px 18px rgba(2,6,23,0.6);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo {
+      width:44px;height:44px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#012;
+      box-shadow:0 6px 18px rgba(56,189,248,0.12);
+      font-size:1.05rem;
+    }
+    .brand h1{font-size:1rem;margin:0;color:var(--accent-2);letter-spacing:-0.4px}
+    nav[aria-label] a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:600;font-size:0.92rem}
+    nav[aria-label] a:hover{color:var(--accent-1)}
+    /* Hero */
+    .hero{display:flex;align-items:center;gap:36px;padding:56px 0}
+    .hero-left{flex:1}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(61,153,255,0.12), rgba(125,211,252,0.08));color:var(--accent-2);padding:6px 10px;border-radius:999px;font-weight:600;font-size:0.82rem;margin-bottom:14px}
+    .hero h2{font-size:2.6rem;line-height:1.05;margin-bottom:12px}
+    .hero p{color:var(--muted);max-width:640px;margin-bottom:20px}
+    .cta{display:inline-flex;gap:12px;align-items:center}
+    .btn-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#012;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;box-shadow:0 8px 30px rgba(56,189,248,0.12)}
+    .btn-ghost{border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:10px 16px;border-radius:10px;text-decoration:none}
+    /* Cards grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:28px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03)}
+    .card h3{color:var(--accent-1);margin-bottom:8px}
+    /* Pricing */
+    .pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:18px}
+    .price{padding:18px;border-radius:12px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);text-align:center}
+    .price strong{display:block;font-size:1.25rem;color:var(--accent-2);margin-bottom:6px}
+    .popular{box-shadow:0 12px 40px rgba(56,189,248,0.08);border:1px solid rgba(125,211,252,0.12);transform:translateY(-6px)}
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
+    .contact-card{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
+    .small{font-size:0.9rem;color:var(--muted)}
+    footer{margin-top:36px;padding:18px;text-align:center;color:var(--muted);font-size:0.85rem}
+    /* Responsive */
+    @media (max-width:880px){
+      .hero{flex-direction:column;align-items:flex-start}
+      .contact-grid{grid-template-columns:1fr}
+      header{flex-direction:column;gap:10px}
+    }
+    /* Focus */
+    a:focus, button:focus, input:focus, textarea:focus{outline:3px solid rgba(56,189,248,0.12);outline-offset:3px}
+    /* Tiny helpers */
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:600}
+  </style>
 </head>
-
 <body>
-
-<header>
-    <div class="container nav">
-        <div class="logo">TIRI PISO WIFI</div>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </div>
-</header>
-
-<section id="home" class="hero">
-    <div class="container">
-        <div class="hero-text">
-            <h1>Fast & Reliable <span>Piso WiFi</span></h1>
-            <p>Affordable, high-speed internet access for your community. Perfect for students, gamers, and remote workers.</p>
-            <a href="#pricing" class="btn">View Pricing</a>
+  <div class="wrap">
+    <header role="banner" aria-label="Top header">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div>
+          <h1>TIRI PISO WIFI</h1>
+          <div class="small muted">Fast & Reliable Piso WiFi</div>
         </div>
-    </div>
-</section>
+      </div>
 
-<section id="services">
-    <div class="container">
-        <h2>Our Services</h2>
-        <div class="card-container">
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero" aria-labelledby="home-title">
+        <div class="hero-left">
+          <span class="eyebrow">Community Internet</span>
+          <h2 id="home-title">Fast, reliable, and affordable Piso WiFi for your neighborhood</h2>
+          <p>Affordable, high-speed internet access for students, gamers, and remote workers. Pay only for the time you need and enjoy stable connections for streaming and work.</p>
+          <div class="cta">
+            <a class="btn-primary" href="#pricing">View Pricing</a>
+            <a class="btn-ghost" href="#contact">Contact Us</a>
+          </div>
+
+          <div class="grid" style="margin-top:22px">
             <div class="card">
-                <h3>High Speed</h3>
-                <p>Stable and reliable connection for streaming, gaming, and working.</p>
+              <h3>High Speed</h3>
+              <p class="small">Stable connection optimized for streaming and gaming with fair usage policies.</p>
             </div>
             <div class="card">
-                <h3>24/7 Access</h3>
-                <p>Automated service available whenever you need it.</p>
+              <h3>24/7 Access</h3>
+              <p class="small">Automated service available whenever you need it, with simple top-up options.</p>
             </div>
             <div class="card">
-                <h3>Low Cost</h3>
-                <p>Budget-friendly rates tailored for the community.</p>
+              <h3>Low Cost</h3>
+              <p class="small">Budget-friendly rates tailored for the community with clear pricing tiers.</p>
             </div>
+          </div>
         </div>
-    </div>
-</section>
 
-<section id="pricing">
-    <div class="container">
-        <h2>Pricing Plans</h2>
-        <div class="card-container">
-            <div class="card"><h3>₱1</h3><p>10 Minutes Access</p></div>
-            <div class="card"><h3>₱5</h3><p>1 Hour Access</p></div>
-            <div class="card"><h3>₱10</h3><p>3 Hours Access</p></div>
-            <div class="card"><h3>₱20</h3><p>24 Hours Access</p></div>
-            <div class="card"><h3>₱50</h3><p>4 Days Access</p></div>
-            <div class="card"><h3>₱100</h3><p>8 Days Access</p></div>
-            <div class="card"><h3>₱300</h3><p>1 Month Access</p></div>
+        <aside class="card" style="width:320px;min-width:260px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+              <div class="muted small">Location</div>
+              <div style="font-weight:700">Laoingen, Philippines</div>
+            </div>
+            <div class="pill">Trusted</div>
+          </div>
+
+          <div style="margin-top:8px">
+            <div class="muted small">Contact</div>
+            <div style="margin-top:6px">
+              <div><a href="tel:+639351180083" style="color:var(--accent-2);text-decoration:none;font-weight:700">0935 118 0083</a></div>
+              <div style="margin-top:6px"><a href="mailto:tiripisowifi@tiriwifi.qzz.io" style="color:var(--muted);text-decoration:none">tiripisowifi@tiriwifi.qzz.io</a></div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px">
+            <a class="btn-primary" href="#pricing" style="width:100%;display:inline-block;text-align:center">Get Started</a>
+          </div>
+        </aside>
+      </section>
+
+      <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:28px 0">
+
+      <section id="pricing" aria-labelledby="pricing-title">
+        <h2 id="pricing-title" style="margin-bottom:12px">Pricing Plans</h2>
+        <div class="pricing">
+          <div class="price"><strong>₱1</strong><span class="small">10 Minutes</span></div>
+          <div class="price"><strong>₱5</strong><span class="small">1 Hour</span></div>
+          <div class="price"><strong>₱10</strong><span class="small">3 Hours</span></div>
+          <div class="price popular"><strong>₱20</strong><span class="small">24 Hours</span><div class="small muted" style="margin-top:8px">Most popular</div></div>
+          <div class="price"><strong>₱50</strong><span class="small">4 Days</span></div>
+          <div class="price"><strong>₱100</strong><span class="small">8 Days</span></div>
+          <div class="price"><strong>₱300</strong><span class="small">1 Month</span></div>
         </div>
-    </div>
-</section>
+      </section>
 
-<section id="about">
-    <div class="container">
-        <h2>About TIRI PISO WIFI</h2>
-        <p>TIRI PISO WIFI is committed to delivering affordable and reliable internet access to local communities. Our goal is to make internet connectivity accessible to everyone at a very low cost.</p>
-    </div>
-</section>
+      <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:28px 0">
 
-<section id="contact">
-    <div class="container">
-        <h2>Contact Us</h2>
-        <div class="card-container">
-            <div class="card"><h3>Location</h3><p>Laoingen, Philippines</p></div>
-            <div class="card"><h3>Phone</h3><p>09351180083</p></div>
-            <div class="card"><h3>Email</h3><p>tiripisowifi@tiriwifi.qzz.io</p></div>
+      <section id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About TIRI PISO WIFI</h2>
+        <p class="small" style="margin-top:10px;max-width:780px">TIRI PISO WIFI is committed to delivering affordable and reliable internet access to local communities. Our goal is to make internet connectivity accessible to everyone at a very low cost.</p>
+      </section>
+
+      <section id="contact" style="margin-top:18px" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact Us</h2>
+        <div class="contact-grid" style="margin-top:12px">
+          <div class="contact-card">
+            <h3>Reach out</h3>
+            <p class="small">Phone and email are the fastest ways to get support or ask about installation.</p>
+            <ul style="margin-top:12px;list-style:none;padding-left:0">
+              <li style="margin-bottom:8px"><strong>Phone</strong><br><a href="tel:+639351180083" style="color:var(--accent-2);text-decoration:none">0935 118 0083</a></li>
+              <li style="margin-bottom:8px"><strong>Email</strong><br><a href="mailto:tiripisowifi@tiriwifi.qzz.io" style="color:var(--muted);text-decoration:none">tiripisowifi@tiriwifi.qzz.io</a></li>
+              <li><strong>Location</strong><br><span class="small">Laoingen, Philippines</span></li>
+            </ul>
+          </div>
+
+          <form class="contact-card" aria-label="Contact form" onsubmit="event.preventDefault(); alert('Form submission placeholder — integrate with backend to capture leads');">
+            <label class="small" for="name">Name</label>
+            <input id="name" name="name" required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+            <label class="small" for="email" style="margin-top:10px;display:block">Email or Phone</label>
+            <input id="email" name="email" required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+            <label class="small" for="message" style="margin-top:10px;display:block">Message</label>
+            <textarea id="message" name="message" rows="4" style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit"></textarea>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button class="btn-primary" type="submit" style="flex:1">Send</button>
+              <a class="btn-ghost" href="tel:+639351180083" style="display:inline-flex;align-items:center;padding:10px 14px;border-radius:10px">Call</a>
+            </div>
+          </form>
         </div>
-    </div>
-</section>
+      </section>
 
-<footer>
-    <div class="container">
-        <p>© 2026 TIRI PISO WIFI | All Rights Reserved</p>
-    </div>
-</footer>
-
+      <footer>
+        <div>© 2026 TIRI PISO WIFI | All Rights Reserved</div>
+      </footer>
+    </main>
+  </div>
 </body>
 </html>
