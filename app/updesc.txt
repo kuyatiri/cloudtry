@@ -1,0 +1,5 @@
+"What’s New in TIRI IPTV\n\n" +
+        "• Optimized channel switching speed\n" +
+        "• Enhanced video playback stability\n" +
+        "• General bug fixes and performance improvements\n\n" +
+        "We’re constantly working to improve your viewing experience."
