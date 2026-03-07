@@ -1,6 +1,7 @@
-TIRI IPTV v1.0.10 
+TIRI IPTV v1.1.0 
 
   • General bug fixes and performance improvements  
   • Fixed security vulnerability
 
 I am constantly working to improve your viewing experience.
+GCash#: 09351180083
