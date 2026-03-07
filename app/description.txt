@@ -1,0 +1,7 @@
+What’s New in TIRI IPTV v1.0.6
+
+        • Optimized channel switching speed
+        • Enhanced video playback stability
+        • General bug fixes and performance improvements
+
+We’re constantly working to improve your viewing experience.
