@@ -1,4 +1,4 @@
-"com.guoshi.httpcanary", "com.guoshi.httpcanary.premium", "app.greyshirts.sslfilter",
+"com.gmail.heagoo.apkeditor.pro","com.guoshi.httpcanary", "com.guoshi.httpcanary.premium", "app.greyshirts.sslfilter",
         "com.minhui.networkcapture", "com.evbadroid.proxymon", "com.evbadroid.wicap",
         "com.egorovandreyev.packetcapture", "com.packetsniffer.netanalyzer",
         "com.emanuelef.remote_packet_sniffer", "com.emanuelef.remote_capture",
