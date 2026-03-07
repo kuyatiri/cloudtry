@@ -37,4 +37,3 @@
         "dev.ukanth.ufirewall", "com.security.exploit", "com.metasploit.stage",
         "com.kali.nethunter", "com.termux", "com.offsec.nethunter", "org.proxydroid",
         "com.sand.vmos", "com.security.attack", "com.titaniumtrack.titaniumbackup"
-    )
