@@ -62,5 +62,3 @@
 "com.bluestacks.home","com.bluestacks.settings","com.genymotion.genymotion",
 "com.genymotion.superuser",
 
-// Android Debug
-//"com.android.development","com.android.debug","com.android.shell"
