@@ -1,7 +1,7 @@
 TIRI IPTV v1.0.10
-• Optimized channel switching speed  
-• Enhanced video playback stability  
-• General bug fixes and performance improvements  
-• Fixed security vulnerability
+  • Optimized channel switching speed  
+  • Enhanced video playback stability  
+  • General bug fixes and performance improvements  
+  • Fixed security vulnerability
 I am constantly working to improve your viewing experience.
 Donation: GCash #: 09351180083
