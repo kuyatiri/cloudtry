@@ -63,4 +63,4 @@
 "com.genymotion.superuser",
 
 // Android Debug
-"com.android.development","com.android.debug","com.android.shell"
+//"com.android.development","com.android.debug","com.android.shell"
