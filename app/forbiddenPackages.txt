@@ -1,24 +1,24 @@
-"com.gmail.heagoo.apkeditor","com.gmail.heagoo.apkeditor.pro","com.zhangzhifu.sdk.modifier","com.apktool.apkeditor",
-"com.apk.editor","com.apkeditor","org.jf.baksmali","org.jf.smali","com.reandroid.apkeditor","com.reandroid.apkeditor.pro",
-"com.skylot.jadx","com.github.skylot.jadx","com.iobot.apktool",
+"com.gmail.heagoo.apkeditor","com.gmail.heagoo.apkeditor.pro","com.apk.editor","com.apkeditor",
+"com.apktool.apkeditor","com.zhangzhifu.sdk.modifier","com.reandroid.apkeditor","com.reandroid.apkeditor.pro",
+"com.skylot.jadx","com.skylot.jadx.gui","com.github.skylot.jadx","org.jf.baksmali","org.jf.smali",
+"com.iobot.apktool","com.modder.apkeditor","com.apkmod.editor",
 
-// Packet Sniffers & Proxy Tools
-"com.guoshi.httpcanary","com.guoshi.httpcanary.premium","app.greyshirts.sslfilter","app.greyshirts.sslcapture",
-"com.minhui.networkcapture","com.evbadroid.proxymon","com.evbadroid.wicap",
-"com.egorovandreyev.packetcapture","com.packetsniffer.netanalyzer",
-"com.emanuelef.remote_packet_sniffer","com.emanuelef.remote_capture",
+// Packet Sniffers & Interceptors
+"com.guoshi.httpcanary","com.guoshi.httpcanary.premium","com.guoshi.httpcanary.pro",
+"app.greyshirts.sslfilter","app.greyshirts.sslcapture","com.minhui.networkcapture",
+"com.evbadroid.proxymon","com.evbadroid.wicap","com.egorovandreyev.packetcapture",
+"com.packetsniffer.netanalyzer","com.emanuelef.remote_packet_sniffer","com.emanuelef.remote_capture",
 "com.netresec.pcapdroid","com.http.debugger","com.charles.proxy","com.telerik.fiddler",
 "com.fiddler.proxy","com.wireshark.android","com.tcpdump.android","org.proxyman.android",
-"com.burp.suite","com.postman.android","com.owasp.zap","com.zimperium.zanti",
-"org.proxydroid",
+"com.burp.suite","com.postman.android","com.owasp.zap","com.zimperium.zanti","org.proxydroid",
 
-// Frida / Hooking Frameworks
+// Frida / Hooking
 "re.frida.server","com.frida.server","com.frida.injector","com.frida.helper",
 "com.frida.android","org.frida.client","de.robv.android.xposed.installer",
 "org.lsposed.manager","org.meowcat.edxposed.manager","com.solohsu.android.edxp.manager",
-"com.saurik.substrate","com.ceco.r.gravitybox",
+"com.saurik.substrate","com.saurik.substrate.tools","com.ceco.r.gravitybox",
 
-// Root Managers & Related Tools
+// Root Managers
 "com.topjohnwu.magisk","com.topjohnwu.magisk.canary","com.topjohnwu.magisk.debug",
 "com.topjohnwu.magisk.alpha","io.github.huskydg.magisk","io.github.huskydg.magisk.delta",
 "com.formyhm.hideroot","com.devadvance.rootcloak","com.devadvance.rootcloakplus",
@@ -27,38 +27,67 @@
 "com.gentlecat.superuser","com.kingroot.kinguser","com.kingo.root",
 "com.smedialink.oneclickroot","com.mgyun.shua.su","com.geohot.towelroot",
 "com.scottyab.rootchecker.v2","com.joeykrim.rootcheck","io.github.vvb2060.magiskdetector",
-"com.koushikdutta.rommanager","com.jrummy.root.browserfree",
+"com.koushikdutta.rommanager","com.jrummy.root.browserfree","com.jrummy.busybox.installer",
 
-// Game Modifiers & Cheating Tools
+// Root Utilities
+"stericson.busybox","com.busybox.root","com.rootchecker","com.root.manager",
+"com.rootexplorer","com.speedsoftware.rootexplorer",
+
+// Game Modding
 "com.chelpus.lackypatch","com.dimonvideo.luckypatcher","cc.madkite.freedom",
 "com.zachareewilt.modit","com.gameguardian.android","com.gamecih.android",
 "com.cheatengine.android","com.sbgamehacker","com.modcombo","com.modcombo.app",
 "com.mod.apk","org.creapp.mod","com.happymod.apk","com.pandahelp.android",
 "com.tutuapp.android","com.acmarket.store","com.acmarket.app","com.blackmartalpha",
 
-// App Cloners & Sandboxes
-"com.lbe.parallel.intl","com.parallel.space","com.parallel.space.lite",
-"com.dualspace.multispace","com.cloneapp.parallel.space","com.multi.parallel.clone",
-"com.vxp.clone","com.excelliance.multiaccounts","com.polestar.multi.account",
-"com.virtualapp","com.lody.virtual","com.f1player","com.x8sandbox","com.x8zs.sandbox",
-"com.vphonegaga.android","com.vphonegaga.titan","com.vmos.app","com.vmos.pro","com.vmos.global",
+// Mod Stores
+"com.apkpure.aegon","com.apkpure.a3","com.apkmirror.helper","com.apkdone.store",
+"com.revdl.android","com.modhub.market","com.apkaward.store",
 
-// VPN & Proxy Tools
+// Virtual Android
+"com.vphonegaga.android","com.vphonegaga.titan","com.vmos.app","com.vmos.pro",
+"com.vmos.global","com.vmos.sand","com.vmos.lite","com.vmos.cloud",
+
+// VPN
 "com.strongvpn.android","com.nordvpn.android","com.expressvpn.vpn",
 "com.surfshark.vpnclient.android","com.cyberghost.vpn","com.tunnelbear.android",
 "com.protonvpn.android","com.windscribe.vpn","com.privateinternetaccess.android",
+"com.hotspotshield.android","com.tigervpns.android","com.psiphon3",
 
-// System Modification & Pentesting
-"dev.ukanth.ufirewall","com.security.exploit","com.security.attack",
-"com.metasploit.stage","com.kali.nethunter","com.offsec.nethunter",
-"org.kali.nethunter","com.termux","com.termux.api","com.termux.boot",
-"com.termux.styling",
+// Pentesting
+"com.kali.nethunter","org.kali.nethunter","com.offsec.nethunter",
+"com.metasploit.stage","com.security.exploit","com.security.attack",
+"com.hacker.toolbox","com.hacker.tools","com.zimperium.zanti",
 
-// Backup & System Tools
+// Terminal Tools
+"com.termux","com.termux.api","com.termux.boot","com.termux.styling",
+"com.termux.tasker","jackpal.androidterm","jackpal.androidterm2",
+
+// System Mods
+"dev.ukanth.ufirewall","eu.chainfire.supersu","com.chainfire.supersu",
 "com.titaniumtrack.titaniumbackup","com.keramidas.TitaniumBackup",
-"com.jrummy.busybox.installer","stericson.busybox",
 
-// Emulator / Automation
-"com.bluestacks.home","com.bluestacks.settings","com.genymotion.genymotion",
-"com.genymotion.superuser",
+// Emulator
+"com.bluestacks.home","com.bluestacks.settings","com.bluestacks.appmart",
+"com.genymotion.genymotion","com.genymotion.superuser","com.microvirt.launcher",
+"com.microvirt.tools","com.nox.mopen.app","com.bignox.app",
 
+// Automation / Bots
+"net.dinglisch.android.taskerm","com.llamalab.automate","com.macrodroid",
+"com.ifttt.ifttt","com.automate.bot","com.botmaker.android",
+
+// Additional Reverse Tools
+"com.reverse.engineering","com.dexeditor","com.dexeditor.pro",
+"com.bytecode.viewer","com.bytecode.viewer.android","com.dexplorer.tool",
+
+// More Sniffers
+"com.packetcapture.full","com.packetcapture.lite","com.pcapdroid.full",
+"com.networksniffer","com.sniffer.packet","com.decrypt.ssl",
+
+// Extra Hook Frameworks
+"org.lsposed.hidden","org.lsposed.daemon","org.edxposed.manager",
+"com.xposed.module","com.xposed.hidden","com.xposed.tools",
+
+// Misc
+"com.rootcloak","com.rootcloak2","com.rootcloak3","com.hidemagisk",
+"com.hide.root","com.hide.xposed","com.security.patch","com.security.mod"
