@@ -1,0 +1,40 @@
+"com.guoshi.httpcanary", "com.guoshi.httpcanary.premium", "app.greyshirts.sslfilter",
+        "com.minhui.networkcapture", "com.evbadroid.proxymon", "com.evbadroid.wicap",
+        "com.egorovandreyev.packetcapture", "com.packetsniffer.netanalyzer",
+        "com.emanuelef.remote_packet_sniffer", "com.emanuelef.remote_capture",
+        "com.vnet.vnet_a", "com.vps.vps_a", "com.decrypt.ssl", "com.sniffer.packet",
+        "com.http.debugger", "com.charles.proxy", "com.fiddler.proxy", "com.wireshark.android",
+        "com.tcpdump.android", "org.proxyman.android", "com.burp.suite", "com.postman.android",
+        "com.owasp.zap", "com.packet.analyzer", "com.network.sniffer",
+        
+        // Root Managers & Related Tools
+        "com.topjohnwu.magisk", "com.solohsu.android.edxp.manager", "org.meowcat.edxposed.manager",
+        "org.lsposed.manager", "com.saurik.substrate", "com.formyhm.hideroot", "com.devadvance.rootcloak",
+        "com.devadvance.rootcloakplus", "com.amphoras.superuser", "com.noshufou.android.su",
+        "com.thirdparty.superuser", "com.koushikdutta.superuser", "com.zap.main.superuser",
+        "com.bitcup.superuser", "com.gentlecat.superuser", "com.kingroot.kinguser",
+        "com.kingo.root", "com.smedialink.oneclickroot", "com.mgyun.shua.su", "com.geohot.towelroot",
+        "com.scottyab.rootchecker.v2", "com.joeykrim.rootcheck", "io.github.vvb2060.magiskdetector",
+        "com.topjohnwu.magisk.canary", "com.koushikdutta.rommanager", "com.jrummy.root.browserfree",
+        
+        // Game Modifiers & Cheating Tools
+        "com.chelpus.lackypatch", "com.dimonvideo.luckypatcher", "cc.madkite.freedom",
+        "com.zachareewilt.modit", "com.gameguardian.android", "com.gamecih.android",
+        "com.cheatengine.android", "com.formyhm.hideroot", "com.apkpure.a3", "com.mod.apk",
+        "org.creapp.mod", "com.happymod.apk", "com.pandahelp.android", "com.tutuapp.android",
+        
+        // App Cloners & Sandboxes (Often used to hide sniffers/root)
+        "com.lbe.parallel.intl", "com.parallel.space.lite", "com.dualspace.multispace",
+        "com.cloneapp.parallel.space", "com.multi.parallel.clone", "com.vxp.clone",
+        "com.excelliance.multiaccounts", "com.polestar.multi.account", "com.vphonegaga.android",
+        "com.vmos.app", "com.vmos.pro", "com.sand.vmos",
+        
+        // VPN & Proxy Tools (If relevant to geo-bypass)
+        "com.strongvpn.android", "com.nordvpn.android", "com.expressvpn.android",
+        "com.surfshark.vpnclient.android", "com.cyberghost.vpn", "com.tunnelbear.android",
+        
+        // System Modification & Debugging
+        "dev.ukanth.ufirewall", "com.security.exploit", "com.metasploit.stage",
+        "com.kali.nethunter", "com.termux", "com.offsec.nethunter", "org.proxydroid",
+        "com.sand.vmos", "com.security.attack", "com.titaniumtrack.titaniumbackup"
+    )
