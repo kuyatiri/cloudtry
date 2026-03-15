@@ -385,13 +385,40 @@ Revenue
 
 <button onclick="closeModal()">Cancel</button>
 
-<button onclick="document.getElementById('addPlanModal').style.display='flex'">
-Add Plan
-</button>
+<button onclick="addPlan()">Add Plan</button>
 
 </div>
 
 </div>
+<!-- EDIT PLAN MODAL -->
+  
+<div class="modal" id="editPlanModal">
+
+<div class="modalBox">
+
+<h3>Edit Plan</h3>
+
+<input id="editPlanId" type="hidden">
+
+<input id="editPlanName" placeholder="Plan Name">
+<input id="editPlanDevices" type="number" placeholder="Devices">
+<input id="editPlanDuration" type="number" placeholder="Duration (days)">
+<input id="editPlanPrice" type="number" placeholder="Price">
+
+<textarea id="editPlanDescription" placeholder="Description"></textarea>
+
+<div class="modalActions">
+
+<button onclick="closeModal()">Cancel</button>
+<button onclick="updatePlan()">Update Plan</button>
+
+</div>
+
+</div>
+
+</div>
+
+  
 
 </div>
 
@@ -855,66 +882,58 @@ loadActive()
 
 function openAddPlan(){
 
-const name=prompt("Plan name")
-const devices=prompt("Devices")
-const price=prompt("Price")
-const description=prompt("Description")
+document.getElementById("planName").value=""
+document.getElementById("planDevices").value=""
+document.getElementById("planDuration").value=""
+document.getElementById("planPrice").value=""
+document.getElementById("planDescription").value=""
 
-if(!name) return
-
-fetch(API+"/add-plan",{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-Authorization:token
-},
-body:JSON.stringify({
-name,
-devices,
-price,
-description
-})
-})
-.then(()=>{
-
-notify("Plan added")
-
-loadPlans()
-
-})
+document.getElementById("addPlanModal").style.display="flex"
 
 }
 
 /* EDIT PLAN */
 
-function openEditPlan(id,name,devices,price,desc){
+async function updatePlan(){
 
-const newName=prompt("Plan name",name)
-const newDevices=prompt("Devices",devices)
-const newPrice=prompt("Price",price)
-const newDesc=prompt("Description",desc)
+const id=document.getElementById("editPlanId").value
+const name=document.getElementById("editPlanName").value
+const devices=document.getElementById("editPlanDevices").value
+const duration=document.getElementById("editPlanDuration").value
+const price=document.getElementById("editPlanPrice").value
+const description=document.getElementById("editPlanDescription").value
 
-fetch(API+"/update-plan",{
+const res=await fetch(API+"/update-plan",{
 method:"POST",
 headers:{
-"Content-Type":"application/json",
-Authorization:token
+Authorization:token,
+"Content-Type":"application/json"
 },
 body:JSON.stringify({
 id,
-name:newName,
-devices:newDevices,
-price:newPrice,
-description:newDesc
+name,
+devices,
+duration_days:duration,
+price,
+description
 })
 })
-.then(()=>{
 
-notify("Plan updated")
+const data=await res.json()
+
+if(data.status){
+
+notify("Plan updated successfully")
+
+closeModal()
 
 loadPlans()
 
-})
+}else{
+
+notify(data.error || "Update failed")
+
+}
 
 }
 
