@@ -13,6 +13,43 @@ background:#f3f4f6;
 display:flex
 }
 
+/* LOGIN */
+
+#loginPage{
+position:fixed;
+width:100%;
+height:100%;
+background:#111827;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white
+}
+
+.login-box{
+background:#1f2937;
+padding:40px;
+border-radius:8px;
+width:300px
+}
+
+.login-box input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border:none;
+border-radius:4px
+}
+
+.login-box button{
+width:100%;
+padding:10px;
+background:#22c55e;
+border:none;
+color:white;
+cursor:pointer
+}
+
 /* SIDEBAR */
 
 .sidebar{
@@ -60,7 +97,7 @@ margin-bottom:25px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1)
 }
 
-/* STATS */
+/* CARDS */
 
 .cards{
 display:flex;
@@ -71,8 +108,7 @@ gap:20px
 flex:1;
 background:#f9fafb;
 padding:20px;
-border-radius:6px;
-font-size:18px
+border-radius:6px
 }
 
 /* TABLE */
@@ -137,6 +173,27 @@ margin-bottom:10px
 </head>
 
 <body>
+
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+<div class="login-box">
+
+<h2>Admin Login</h2>
+
+<input id="adminUser" placeholder="Username">
+<input id="adminPass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+
+<div id="panel" style="display:none;width:100%;">
 
 <div class="sidebar">
 
@@ -219,74 +276,49 @@ Revenue
 
 </div>
 
-<!-- EDIT USER MODAL -->
-
-<div class="modal" id="editUserModal">
-
-<div class="modal-box">
-
-<h3>Edit User</h3>
-
-<input id="editName" placeholder="Name">
-<input id="editEmail" placeholder="Email">
-<input id="editPassword" placeholder="Password">
-
-<button onclick="saveUser()">Save</button>
-<button onclick="closeModal()">Cancel</button>
-
-</div>
-
-</div>
-
-<!-- ADD PLAN MODAL -->
-
-<div class="modal" id="addPlanModal">
-
-<div class="modal-box">
-
-<h3>Add Plan</h3>
-
-<input id="planName" placeholder="Name">
-<input id="planDevices" placeholder="Devices">
-<input id="planPrice" placeholder="Price">
-<textarea id="planDesc" placeholder="Description"></textarea>
-
-<button onclick="addPlan()">Save</button>
-<button onclick="closeModal()">Cancel</button>
-
-</div>
-
-</div>
-
-<!-- EDIT PLAN MODAL -->
-
-<div class="modal" id="editPlanModal">
-
-<div class="modal-box">
-
-<h3>Edit Plan</h3>
-
-<input id="editPlanId" type="hidden">
-<input id="editPlanName">
-<input id="editPlanDevices">
-<input id="editPlanPrice">
-<textarea id="editPlanDesc"></textarea>
-
-<button onclick="savePlan()">Save</button>
-<button onclick="closeModal()">Cancel</button>
-
-</div>
-
 </div>
 
 <script>
 
 const API="https://admin.tiriwifi.qzz.io"
 
-let token=prompt("Admin Token")
+let token=""
 let editingUser=null
 
-/* NAVIGATION */
+/* LOGIN */
+
+async function login(){
+
+const res=await fetch(API+"/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:document.getElementById("adminUser").value,
+password:document.getElementById("adminPass").value
+})
+})
+
+const data=await res.json()
+
+if(data.token){
+
+token=data.token
+
+document.getElementById("loginPage").style.display="none"
+document.getElementById("panel").style.display="flex"
+
+loadStats()
+loadUsers()
+loadPlans()
+loadActive()
+
+}else{
+alert("Invalid login")
+}
+
+}
+
+/* NAV */
 
 function show(id){
 
@@ -341,8 +373,6 @@ table.innerHTML+=`
 <td>${formatExpiry(u.subscription_expiry)}</td>
 
 <td>
-
-<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">Update</button>
 
 <button onclick="upgrade('${u.email}')">Upgrade</button>
 
@@ -413,7 +443,6 @@ table.innerHTML=`
 <th>Devices</th>
 <th>Price</th>
 <th>Description</th>
-<th>Action</th>
 </tr>
 `
 
@@ -427,14 +456,6 @@ table.innerHTML+=`
 <td>${p.price}</td>
 <td>${p.description||""}</td>
 
-<td>
-
-<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">Update</button>
-
-<button onclick="removePlan(${p.id})">Remove</button>
-
-</td>
-
 </tr>
 `
 
@@ -442,172 +463,7 @@ table.innerHTML+=`
 
 }
 
-/* MODALS */
-
-function openAddPlan(){
-addPlanModal.style.display="flex"
-}
-
-function openEditPlan(id,name,devices,price,desc){
-
-editPlanId.value=id
-editPlanName.value=name
-editPlanDevices.value=devices
-editPlanPrice.value=price
-editPlanDesc.value=desc
-
-editPlanModal.style.display="flex"
-
-}
-
-function openEditUser(id,name,email){
-
-editingUser=id
-
-editName.value=name
-editEmail.value=email
-
-editUserModal.style.display="flex"
-
-}
-
-function closeModal(){
-
-document.querySelectorAll(".modal")
-.forEach(m=>m.style.display="none")
-
-}
-
-/* USER SAVE */
-
-async function saveUser(){
-
-await fetch(API+"/update-user",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-id:editingUser,
-name:editName.value,
-email:editEmail.value,
-password:editPassword.value
-})
-})
-
-closeModal()
-loadUsers()
-
-}
-
-/* PLAN ACTIONS */
-
-async function addPlan(){
-
-await fetch(API+"/add-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-name:planName.value,
-devices:planDevices.value,
-price:planPrice.value,
-description:planDesc.value
-})
-})
-
-closeModal()
-loadPlans()
-
-}
-
-async function savePlan(){
-
-await fetch(API+"/update-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-id:editPlanId.value,
-name:editPlanName.value,
-devices:editPlanDevices.value,
-price:editPlanPrice.value,
-description:editPlanDesc.value
-})
-})
-
-closeModal()
-loadPlans()
-
-}
-
-function removePlan(id){
-
-fetch(API+"/remove-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({id})
-}).then(loadPlans)
-
-}
-
-/* USER ACTIONS */
-
-function upgrade(email){
-
-const plan=prompt("Enter plan name")
-
-fetch(API+"/update-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email,
-plan_name:plan
-})
-}).then(loadUsers)
-
-}
-
-async function kick(device){
-
-await fetch(API+"/kick",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({device_id:device})
-})
-
-loadActive()
-
-}
-
-function ban(email){
-
-fetch(API+"/suspend",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-}).then(loadActive)
-
-}
-
-/* EXPIRY COLOR */
+/* EXPIRY */
 
 function formatExpiry(date){
 
@@ -618,26 +474,9 @@ const now=new Date()
 
 const days=Math.floor((exp-now)/(1000*60*60*24))
 
-let color="green"
-
-if(days<0) color="red"
-else if(days<=3) color="orange"
-else if(days<=7) color="gold"
-
-return `${exp.toISOString().split("T")[0]}
-<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin:0 6px;"></span>
-${days} days`
+return `${exp.toISOString().split("T")[0]} (${days} days)`
 
 }
-
-/* INITIAL LOAD */
-
-loadStats()
-loadUsers()
-loadPlans()
-loadActive()
-
-setInterval(loadActive,5000)
 
 </script>
 
