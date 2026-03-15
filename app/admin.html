@@ -282,7 +282,7 @@ table.innerHTML+=`
 <td>${u.email}</td>
 <td>${u.plan}</td>
 <td>${u.status}</td>
-<td>${formatExpiry(u.subscription_expiry)}</td>
+<td>${formatExpiryColored(u.subscription_expiry)}</td>
 
 <td class="actions">
 
@@ -512,6 +512,43 @@ const diff = exp - now
 const days = Math.floor(diff / (1000*60*60*24))
 
 return `${exp.toISOString().split("T")[0]} (${days} days)`
+
+}
+
+  function formatExpiryColored(date){
+
+if(!date) return ""
+
+const exp = new Date(date)
+const now = new Date()
+
+const diff = exp - now
+
+const days = Math.floor(diff / (1000*60*60*24))
+
+const expDate = exp.toISOString().split("T")[0]
+
+let color="green"
+
+if(days < 0){
+color="red"
+}
+else if(days <= 3){
+color="orange"
+}
+else if(days <= 7){
+color="gold"
+}
+else{
+color="green"
+}
+
+return `
+${expDate}
+<span style="color:${color}; font-weight:bold">
+(${days} days)
+</span>
+`
 
 }
 
