@@ -13,6 +13,46 @@ background:#f3f4f6;
 display:flex;
 }
 
+/* LOGIN */
+
+#loginPage{
+position:fixed;
+width:100%;
+height:100%;
+background:#111827;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+}
+
+.login-box{
+background:#1f2937;
+padding:40px;
+border-radius:10px;
+width:320px;
+}
+
+.login-box input{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:none;
+border-radius:5px;
+}
+
+.login-box button{
+width:100%;
+padding:10px;
+background:#22c55e;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* SIDEBAR */
+
 .sidebar{
 width:230px;
 background:#111827;
@@ -23,7 +63,7 @@ position:fixed;
 
 .sidebar h2{
 text-align:center;
-padding:20px;
+padding:20px 0;
 }
 
 .sidebar button{
@@ -40,6 +80,8 @@ cursor:pointer;
 background:#1f2937;
 }
 
+/* MAIN */
+
 .main{
 margin-left:230px;
 padding:30px;
@@ -54,6 +96,8 @@ margin-bottom:25px;
 box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* CARDS */
+
 .cards{
 display:flex;
 gap:20px;
@@ -65,6 +109,8 @@ background:#f9fafb;
 padding:20px;
 border-radius:8px;
 }
+
+/* TABLE */
 
 table{
 width:100%;
@@ -82,6 +128,12 @@ th{
 background:#f1f5f9;
 }
 
+.actions button{
+margin-right:6px;
+}
+
+/* BUTTON */
+
 button{
 background:#22c55e;
 border:none;
@@ -95,9 +147,28 @@ button:hover{
 background:#16a34a;
 }
 
+/* PAGINATION */
+
 .pagination{
 margin-top:10px;
 text-align:right;
+}
+
+.pagination button{
+margin-left:5px;
+}
+
+/* TOAST */
+
+.toast{
+position:fixed;
+top:20px;
+right:20px;
+background:#22c55e;
+color:white;
+padding:12px 20px;
+border-radius:6px;
+display:none;
 }
 
 .flag{
@@ -111,6 +182,27 @@ margin-right:6px;
 
 <body>
 
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+<div class="login-box">
+
+<h2>Admin Login</h2>
+
+<input id="adminUser" placeholder="Username">
+<input id="adminPass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+</div>
+
+<div id="panel" style="display:none;width:100%;">
+
 <div class="sidebar">
 
 <h2>TIRI Admin</h2>
@@ -118,10 +210,13 @@ margin-right:6px;
 <button onclick="show('dashboard')">Dashboard</button>
 <button onclick="show('users')">Users</button>
 <button onclick="show('active')">Active (<span id="onlineCount">0</span>)</button>
+<button onclick="show('plans')">Plans</button>
 
 </div>
 
 <div class="main">
+
+<!-- DASHBOARD -->
 
 <div id="dashboard" class="section">
 
@@ -139,19 +234,35 @@ margin-right:6px;
 <h2 id="statSessions">0</h2>
 </div>
 
+<div class="card">
+<h3>Expired</h3>
+<h2 id="statExpired">0</h2>
+</div>
+
+<div class="card">
+<h3>Revenue</h3>
+<h2>$<span id="statRevenue">0</span></h2>
 </div>
 
 </div>
+
+</div>
+
+<!-- USERS -->
 
 <div id="users" class="section" style="display:none">
 
 <h2>Users</h2>
+
+<input id="searchEmail" placeholder="Search email">
 
 <table id="usersTable"></table>
 
 <div id="userPagination" class="pagination"></div>
 
 </div>
+
+<!-- ACTIVE USERS -->
 
 <div id="active" class="section" style="display:none">
 
@@ -161,13 +272,71 @@ margin-right:6px;
 
 </div>
 
+<!-- PLANS -->
+
+<div id="plans" class="section" style="display:none">
+
+<h2>Plans</h2>
+
+<table id="plansTable"></table>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
 
 const API="https://admin.tiriwifi.qzz.io"
 
-let token=prompt("Admin Token")
+let token=""
+let currentPage=1
+
+function notify(msg){
+
+const t=document.getElementById("toast")
+t.innerText=msg
+t.style.display="block"
+
+setTimeout(()=>t.style.display="none",3000)
+
+}
+
+/* LOGIN */
+
+async function login(){
+
+const res=await fetch(API+"/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:adminUser.value,
+password:adminPass.value
+})
+})
+
+const data=await res.json()
+
+if(data.token){
+
+token=data.token
+
+loginPage.style.display="none"
+panel.style.display="flex"
+
+loadStats()
+loadUsers(1)
+loadActive()
+loadPlans()
+
+}else{
+alert("Invalid login")
+}
+
+}
+
+/* NAV */
 
 function show(id){
 
@@ -178,11 +347,33 @@ document.getElementById(id).style.display="block"
 
 }
 
+/* STATS */
+
+async function loadStats(){
+
+const res=await fetch(API+"/stats",{headers:{Authorization:token}})
+const data=await res.json()
+
+statUsers.innerText=data.total_users
+statSessions.innerText=data.active_sessions
+statExpired.innerText=data.expired_users
+statRevenue.innerText=data.revenue
+
+}
+
 /* USERS */
 
 async function loadUsers(page){
 
-const res=await fetch(API+"/users?page="+page,{headers:{Authorization:token}})
+currentPage=page
+
+const search=searchEmail.value||""
+
+const res=await fetch(
+API+"/users?page="+page+"&search="+search,
+{headers:{Authorization:token}}
+)
+
 const data=await res.json()
 
 const table=usersTable
@@ -192,6 +383,7 @@ table.innerHTML=`
 <th>Email</th>
 <th>Plan</th>
 <th>Status</th>
+<th>Expiry</th>
 <th>Action</th>
 </tr>
 `
@@ -204,11 +396,11 @@ table.innerHTML+=`
 <td>${u.email}</td>
 <td>${u.plan}</td>
 <td>${u.status}</td>
+<td>${u.subscription_expiry||""}</td>
 
-<td>
+<td class="actions">
 
-<button>Update</button>
-<button>Upgrade</button>
+<button onclick="upgrade('${u.email}')">Upgrade</button>
 
 </td>
 
@@ -216,6 +408,30 @@ table.innerHTML+=`
 `
 
 })
+
+renderPagination(data.total,page)
+
+}
+
+/* PAGINATION */
+
+function renderPagination(total,page){
+
+const pages=Math.ceil(total/10)
+
+let html=""
+
+if(page>1)
+html+=`<button onclick="loadUsers(${page-1})">Prev</button>`
+
+for(let i=1;i<=pages;i++){
+html+=`<button onclick="loadUsers(${i})">${i}</button>`
+}
+
+if(page<pages)
+html+=`<button onclick="loadUsers(${page+1})">Next</button>`
+
+userPagination.innerHTML=html
 
 }
 
@@ -290,6 +506,8 @@ Authorization:token,
 body:JSON.stringify({device_id:device})
 })
 
+notify("Device kicked")
+
 loadActive()
 
 }
@@ -307,14 +525,19 @@ Authorization:token,
 body:JSON.stringify({email})
 })
 
+notify("User banned")
+
 loadActive()
 
 }
 
-setInterval(loadActive,5000)
+/* SEARCH */
 
-loadUsers(1)
-loadActive()
+searchEmail.addEventListener("input",()=>loadUsers(1))
+
+/* AUTO REFRESH */
+
+setInterval(loadActive,5000)
 
 </script>
 
