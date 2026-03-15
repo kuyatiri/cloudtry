@@ -366,6 +366,35 @@ Revenue
 
 </div>
 
+<!-- ADD PLAN MODAL -->
+  
+<div class="modal" id="addPlanModal">
+
+<div class="modalBox">
+
+<h3>Add Plan</h3>
+
+<input id="planName" placeholder="Plan Name">
+<input id="planDevices" type="number" placeholder="Devices">
+<input id="planDuration" type="number" placeholder="Duration (days)">
+<input id="planPrice" type="number" placeholder="Price">
+
+<textarea id="planDescription" placeholder="Description"></textarea>
+
+<div class="modalActions">
+
+<button onclick="closeModal()">Cancel</button>
+
+<button onclick="document.getElementById('addPlanModal').style.display='flex'">
+Add Plan
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 <script>
 
 const API="https://admin.tiriwifi.qzz.io"
@@ -606,6 +635,7 @@ table.innerHTML=`
 <tr>
 <th>Name</th>
 <th>Devices</th>
+<th>Duration</th>
 <th>Price</th>
 <th>Description</th>
 <th>Action</th>
@@ -619,7 +649,8 @@ table.innerHTML+=`
 
 <td>${p.name}</td>
 <td>${p.devices}</td>
-<td>${p.price}</td>
+<td>${p.duration_days} days</td>
+<td>$${p.price}</td>
 <td>${p.description || ""}</td>
 
 <td>
@@ -628,10 +659,12 @@ table.innerHTML+=`
 ${p.id},
 '${p.name}',
 ${p.devices},
+${p.duration_days},
 ${p.price},
 '${p.description||""}'
 )">
-Update</button>
+Update
+</button>
 
 <button onclick="removePlan(${p.id})">
 Remove
@@ -645,7 +678,7 @@ Remove
 })
 
 }
-
+  
 async function loadUpgradePlans(){
 
 const res = await fetch(API+"/plans?page=1",{
@@ -912,6 +945,57 @@ function closeModal(){
 
 document.querySelectorAll(".modal")
 .forEach(m=>m.style.display="none")
+
+}
+
+/* ADD PLAN */
+
+async function addPlan(){
+
+const name=document.getElementById("planName").value
+const devices=document.getElementById("planDevices").value
+const duration=document.getElementById("planDuration").value
+const price=document.getElementById("planPrice").value
+const description=document.getElementById("planDescription").value
+
+if(!name || !devices || !duration || !price){
+
+notify("All fields are required")
+
+return
+
+}
+
+const res=await fetch(API+"/add-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name,
+devices,
+duration_days:duration,
+price,
+description
+})
+})
+
+const data=await res.json()
+
+if(data.status){
+
+notify("Plan added successfully")
+
+closeModal()
+
+loadPlans()
+
+}else{
+
+notify(data.error || "Failed to add plan")
+
+}
 
 }
 
