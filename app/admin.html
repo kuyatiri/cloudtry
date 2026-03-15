@@ -120,8 +120,11 @@ margin-top:10px
 <div class="stats">
 
 <div>Users: <span id="statUsers">0</span></div>
+
 <div>Active Sessions: <span id="statSessions">0</span></div>
+
 <div>Expired Users: <span id="statExpired">0</span></div>
+
 <div>Revenue: $<span id="statRevenue">0</span></div>
 
 </div>
@@ -230,19 +233,26 @@ loadPlans()
 
 async function loadStats(){
 
-const res=await fetch(API+"/stats",{
-headers:{Authorization:token}
+const res = await fetch(API + "/stats", {
+headers:{ Authorization: token }
 })
 
-const data=await res.json()
+const data = await res.json()
 
-statUsers.innerText=data.total_users
-statSessions.innerText=data.active_sessions
-statExpired.innerText=data.expired_users
-statRevenue.innerText=data.revenue
+document.getElementById("statUsers").innerText =
+data.total_users ?? 0
+
+document.getElementById("statSessions").innerText =
+data.active_sessions ?? 0
+
+document.getElementById("statExpired").innerText =
+data.expired_users ?? 0
+
+document.getElementById("statRevenue").innerText =
+data.revenue ?? 0
 
 }
-
+  
 /* USERS */
 
 async function loadUsers(p=1){
