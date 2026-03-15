@@ -9,80 +9,32 @@
 body{
 font-family:Arial;
 background:#f3f4f6;
-margin:0;
-padding:40px
-}
-
-h1{
-text-align:center;
-margin-bottom:40px
+padding:30px
 }
 
 .section{
 background:white;
 padding:20px;
-border-radius:8px;
 margin-bottom:30px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1)
-}
-
-.stats{
-display:flex;
-gap:40px;
-font-size:18px
-}
-
-.searchbar{
-display:flex;
-gap:10px;
-margin-bottom:15px
-}
-
-.searchbar input{
-flex:1;
-padding:8px
-}
-
-button{
-padding:8px 14px;
-border:none;
-background:#22c55e;
-color:white;
-border-radius:4px;
-cursor:pointer
-}
-
-button:hover{
-background:#16a34a
+border-radius:6px
 }
 
 table{
 width:100%;
-border-collapse:collapse;
-margin-top:10px
+border-collapse:collapse
 }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #ddd;
-text-align:left
+td,th{
+padding:8px;
+border-bottom:1px solid #ddd
 }
 
-th{
-background:#f8fafc
-}
-
-.actions button{
-margin-right:6px
-}
-
-#login{
-max-width:300px;
-margin:auto
-}
-
-#dashboard{
-display:none
+button{
+padding:6px 10px;
+background:#22c55e;
+border:none;
+color:white;
+cursor:pointer
 }
 
 </style>
@@ -93,84 +45,43 @@ display:none
 
 <h1>TIRI IPTV Admin Dashboard</h1>
 
-<div id="login" class="section">
+<div class="section">
 
-<h3>Admin Login</h3>
+<h3>Statistics</h3>
 
-<input id="user" placeholder="username"><br><br>
-<input id="pass" type="password" placeholder="password"><br><br>
-
-<button onclick="login()">Login</button>
+<div id="stats"></div>
 
 </div>
-
-<div id="dashboard">
-
-<!-- STATS -->
 
 <div class="section">
 
-<h2>Statistics</h2>
+<h3>Users Dashboard</h3>
 
-<div class="stats">
+<input id="search" placeholder="Search email">
 
-<div>Users: <span id="statUsers">0</span></div>
-<div>Active Sessions: <span id="statSessions">0</span></div>
-<div>Expired Users: <span id="statExpired">0</span></div>
+<select id="sort">
+<option value="id">Newest</option>
+<option value="expiry">Expiry</option>
+<option value="plan">Plan</option>
+<option value="email">Email</option>
+</select>
+
+<button onclick="loadUsers()">Refresh</button>
+
+<table id="usersTable"></table>
+
+<div id="pagination"></div>
+
+<button onclick="bulkBan()">Ban Selected</button>
+<button onclick="bulkActivate()">Activate Selected</button>
 
 </div>
-
-</div>
-
-<!-- USERS -->
 
 <div class="section">
 
-<h2>Users Dashboard</h2>
+<h3>Plans Dashboard</h3>
 
-<div class="searchbar">
-
-<input id="searchEmail" placeholder="Name or Email">
-
-<button onclick="searchUser()">Search</button>
-
-</div>
-
-<table id="usersTable">
-
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Plan</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-
-</table>
-
-</div>
-
-<!-- PLANS -->
-
-<div class="section">
-
-<h2>Plans Dashboard</h2>
-
-<button onclick="loadPlans()">Add</button>
-
-<table id="plansTable">
-
-<tr>
-<th>Plan No</th>
-<th>Description</th>
-<th>Devices</th>
-<th>Price</th>
-<th>Action</th>
-</tr>
-
-</table>
-
-</div>
+<table id="plansTable"></table>
 
 </div>
 
@@ -179,198 +90,162 @@ display:none
 const API="https://admin.tiriwifi.qzz.io"
 
 let token=""
+let page=1
+let selected=[]
 
 async function login(){
 
-const res = await fetch(API+"/login",{
+const res=await fetch(API+"/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:user.value,
-password:pass.value
+username:"admin",
+password:"admin"
 })
 })
 
-const data = await res.json()
-
-if(data.token){
+const data=await res.json()
 
 token=data.token
 
-document.getElementById("login").style.display="none"
-document.getElementById("dashboard").style.display="block"
-
 loadStats()
-
-}else{
-
-alert("Login failed")
-
-}
+loadUsers()
 
 }
 
 async function loadStats(){
 
-const res = await fetch(API+"/stats",{
+const res=await fetch(API+"/stats",{
 headers:{Authorization:token}
 })
 
-const data = await res.json()
+const data=await res.json()
 
-statUsers.innerText=data.total_users
-statSessions.innerText=data.active_sessions
-statExpired.innerText=data.expired_users
+stats.innerHTML=`
+Users: ${data.total_users}<br>
+Active Sessions: ${data.active_sessions}<br>
+Expired Users: ${data.expired_users}<br>
+Revenue: $${data.revenue}
+`
 
 }
 
-async function searchUser(){
+async function loadUsers(p=1){
 
-const email=searchEmail.value
+page=p
 
-const res=await fetch(API+"/user?email="+email,{
-headers:{Authorization:token}
-})
+const search=document.getElementById("search").value
+const sort=document.getElementById("sort").value
 
-const user=await res.json()
+const res=await fetch(
+API+"/users?page="+p+"&search="+search+"&sort="+sort,
+{headers:{Authorization:token}}
+)
+
+const data=await res.json()
 
 const table=document.getElementById("usersTable")
 
 table.innerHTML=`
 <tr>
-<th>Name</th>
+<th></th>
 <th>Email</th>
 <th>Plan</th>
 <th>Status</th>
-<th>Action</th>
+<th>Expiry</th>
 </tr>
 `
 
-if(user.error)return
-
-const daysRemaining = Math.floor(
-(new Date(user.subscription_expiry)-Date.now())/86400000
-)
+data.users.forEach(u=>{
 
 table.innerHTML+=`
 <tr>
 
-<td>${user.name}</td>
-
-<td>${user.email}</td>
-
-<td>${user.plan}</td>
-
-<td>${user.status} (${daysRemaining} days)</td>
-
-<td class="actions">
-
-<button onclick="updatePlan('${user.email}')">Update</button>
-
-<button onclick="suspend('${user.email}')">Ban</button>
-
-<button onclick="kick('${user.id}')">Kick</button>
-
+<td>
+<input type="checkbox"
+onclick="toggle(${u.id})">
 </td>
+
+<td>${u.email}</td>
+<td>${u.plan}</td>
+<td>${u.status}</td>
+<td>${u.subscription_expiry||""}</td>
 
 </tr>
 `
 
+})
+
+renderPagination(data.total,p)
+
 }
 
-async function updatePlan(email){
+function renderPagination(total,page){
 
-const plan=prompt("Enter plan (trial/basic/standard/premium)")
+const pages=Math.ceil(total/10)
 
-await fetch(API+"/update-plan",{
+let html=""
+
+if(page>1)
+html+=`<button onclick="loadUsers(${page-1})">Prev</button>`
+
+for(let i=1;i<=pages;i++){
+html+=`<button onclick="loadUsers(${i})">${i}</button>`
+}
+
+if(page<pages)
+html+=`<button onclick="loadUsers(${page+1})">Next</button>`
+
+pagination.innerHTML=html
+
+}
+
+function toggle(id){
+
+if(selected.includes(id))
+selected=selected.filter(x=>x!=id)
+else
+selected.push(id)
+
+}
+
+async function bulkBan(){
+
+await fetch(API+"/bulk",{
 method:"POST",
 headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-email:email,
-plan_name:plan
+ids:selected,
+action:"ban"
 })
 })
 
-alert("Plan updated")
+loadUsers()
 
 }
 
-async function suspend(email){
+async function bulkActivate(){
 
-await fetch(API+"/suspend",{
+await fetch(API+"/bulk",{
 method:"POST",
 headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({email})
+body:JSON.stringify({
+ids:selected,
+action:"activate"
+})
 })
 
-alert("User banned")
+loadUsers()
 
 }
 
-async function kick(user_id){
-
-const res=await fetch(API+"/devices?user_id="+user_id,{
-headers:{Authorization:token}
-})
-
-const devices=await res.json()
-
-for(let d of devices){
-
-await fetch(API+"/kick",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({device_id:d.device_id})
-})
-
-}
-
-alert("All devices kicked")
-
-}
-
-async function loadPlans(){
-
-const res=await fetch(API+"/plans",{
-headers:{Authorization:token}
-})
-
-const plans=await res.json()
-
-const table=document.getElementById("plansTable")
-
-plans.forEach(p=>{
-
-table.innerHTML+=`
-<tr>
-
-<td>${p.id}</td>
-<td>${p.name}</td>
-<td>${p.devices}</td>
-<td>${p.price}</td>
-
-<td>
-
-<button>Update</button>
-<button>Remove</button>
-
-</td>
-
-</tr>
-`
-
-})
-
-}
+login()
 
 </script>
 
