@@ -154,7 +154,7 @@ margin-top:10px;
 text-align:right;
 }
 
-/* MODALS */
+/* MODAL */
 
 .modal{
 display:none;
@@ -163,22 +163,34 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.4);
+background:rgba(0,0,0,0.5);
 align-items:center;
 justify-content:center;
+z-index:999;
 }
 
 .modalBox{
 background:white;
-padding:20px;
-border-radius:8px;
-width:350px;
+padding:25px;
+border-radius:10px;
+width:360px;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
 
-.modalBox input,select,textarea{
+.modalBox input,
+.modalBox select,
+.modalBox textarea{
 width:100%;
-padding:8px;
+padding:10px;
 margin-bottom:10px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+.modalActions{
+display:flex;
+justify-content:flex-end;
+gap:10px;
 }
 
 /* TOAST */
@@ -322,10 +334,12 @@ Revenue
 <input id="editUserId" type="hidden">
 <input id="editName" placeholder="Name">
 <input id="editEmail" placeholder="Email">
-<input id="editPassword" placeholder="Password">
+<input id="editPassword" placeholder="New Password">
 
-<button onclick="saveUser()">Save</button>
+<div class="modalActions">
 <button onclick="closeModal()">Cancel</button>
+<button onclick="saveUser()">Save</button>
+</div>
 
 </div>
 
@@ -343,29 +357,10 @@ Revenue
 
 <select id="upgradePlan"></select>
 
+<div class="modalActions">
+<button onclick="closeModal()">Cancel</button>
 <button onclick="confirmUpgrade()">Upgrade</button>
-<button onclick="closeModal()">Cancel</button>
-
 </div>
-
-</div>
-
-<!-- PLAN MODAL -->
-
-<div class="modal" id="planModal">
-
-<div class="modalBox">
-
-<h3 id="planTitle">Add Plan</h3>
-
-<input id="planId" type="hidden">
-<input id="planName" placeholder="Name">
-<input id="planDevices" placeholder="Devices">
-<input id="planPrice" placeholder="Price">
-<textarea id="planDesc" placeholder="Description"></textarea>
-
-<button onclick="savePlan()">Save</button>
-<button onclick="closeModal()">Cancel</button>
 
 </div>
 
@@ -378,13 +373,14 @@ const API="https://admin.tiriwifi.qzz.io"
 let token=""
 let userPage=1
 
-/* TOAST */
-
 function notify(msg){
+
 const t=document.getElementById("toast")
 t.innerText=msg
 t.style.display="block"
+
 setTimeout(()=>t.style.display="none",3000)
+
 }
 
 /* LOGIN */
@@ -415,8 +411,6 @@ loadActive()
 loadPlans()
 loadUpgradePlans()
 
-}else{
-alert("Invalid login")
 }
 
 }
@@ -432,17 +426,36 @@ document.getElementById(id).style.display="block"
 
 }
 
-/* STATS */
+/* EXPIRY FORMAT */
 
-async function loadStats(){
+function formatExpiry(date){
 
-const res=await fetch(API+"/stats",{headers:{Authorization:token}})
-const data=await res.json()
+if(!date) return ""
 
-statUsers.innerText=data.total_users
-statSessions.innerText=data.active_sessions
-statExpired.innerText=data.expired_users
-statRevenue.innerText=data.revenue
+const exp = new Date(date)
+const now = new Date()
+
+const diff = exp - now
+const days = Math.floor(diff / (1000*60*60*24))
+
+let color="green"
+
+if(days < 0) color="red"
+else if(days <= 3) color="orange"
+else if(days <= 7) color="gold"
+
+return `
+${exp.toISOString().split("T")[0]}
+<span style="
+display:inline-block;
+width:10px;
+height:10px;
+border-radius:50%;
+background:${color};
+margin:0 6px;
+"></span>
+${days} days
+`
 
 }
 
@@ -478,7 +491,7 @@ table.innerHTML+=`
 <td>${u.email}</td>
 <td>${u.plan}</td>
 <td>${u.status}</td>
-<td>${u.subscription_expiry||""}</td>
+<td>${formatExpiry(u.subscription_expiry)}</td>
 
 <td class="actions">
 
@@ -553,87 +566,9 @@ table.innerHTML+=`
 
 }
 
-/* PLANS */
+/* LIVE REFRESH */
 
-async function loadPlans(){
-
-const res=await fetch(API+"/plans?page=1",{headers:{Authorization:token}})
-const data=await res.json()
-
-const table=plansTable
-
-table.innerHTML=`
-<tr>
-<th>Name</th>
-<th>Devices</th>
-<th>Price</th>
-<th>Description</th>
-<th>Action</th>
-</tr>
-`
-
-data.plans.forEach(p=>{
-
-table.innerHTML+=`
-<tr>
-
-<td>${p.name}</td>
-<td>${p.devices}</td>
-<td>${p.price}</td>
-<td>${p.description||""}</td>
-
-<td>
-
-<button onclick="editPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">
-Update
-</button>
-
-<button onclick="removePlan(${p.id})">
-Remove
-</button>
-
-</td>
-
-</tr>
-`
-
-})
-
-}
-
-/* MODALS */
-
-function openUpdateUser(id,name,email){
-
-editUserId.value=id
-editName.value=name
-editEmail.value=email
-
-updateUserModal.style.display="flex"
-
-}
-
-function openUpgrade(email){
-
-upgradeEmail.value=email
-upgradeModal.style.display="flex"
-
-}
-
-function openAddPlan(){
-
-planTitle.innerText="Add Plan"
-
-planModal.style.display="flex"
-
-}
-
-function closeModal(){
-
-document.querySelectorAll(".modal")
-.forEach(m=>m.style.display="none")
-
-}
+setInterval(loadActive,4000)
 
 </script>
 
