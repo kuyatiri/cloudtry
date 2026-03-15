@@ -261,6 +261,7 @@ table.innerHTML=`
 <th>Plan</th>
 <th>Status</th>
 <th>Expiry</th>
+<th>Action</th>
 </tr>
 `
 
@@ -275,6 +276,16 @@ table.innerHTML+=`
 <td>${u.plan}</td>
 <td>${u.status}</td>
 <td>${u.subscription_expiry||""}</td>
+
+<td class="actions">
+
+<button onclick="updateUserPlan('${u.email}')">Update</button>
+
+<button onclick="banUser('${u.email}')">Ban</button>
+
+<button onclick="kickUser(${u.id})">Kick</button>
+
+</td>
 
 </tr>
 `
@@ -364,13 +375,24 @@ loadUsers()
 
 async function loadPlans(){
 
-const res=await fetch(API+"/plans?page=1",{
+const res = await fetch(API+"/plans?page=1",{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const data = await res.json()
 
 const table=document.getElementById("plansTable")
+
+/* reset table first */
+table.innerHTML=`
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Devices</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+`
 
 data.plans.forEach(p=>{
 
@@ -412,6 +434,62 @@ body:JSON.stringify({
 name,devices,price
 })
 }).then(loadPlans)
+
+}
+
+  function updateUserPlan(email){
+
+const plan=prompt("Enter new plan")
+
+fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+email,
+plan_name:plan
+})
+}).then(loadUsers)
+
+}
+
+function banUser(email){
+
+fetch(API+"/suspend",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email})
+}).then(loadUsers)
+
+}
+
+async function kickUser(user_id){
+
+const res=await fetch(API+"/devices?user_id="+user_id,{
+headers:{Authorization:token}
+})
+
+const devices=await res.json()
+
+for(let d of devices){
+
+await fetch(API+"/kick",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({device_id:d.device_id})
+})
+
+}
+
+alert("User devices kicked")
 
 }
 
