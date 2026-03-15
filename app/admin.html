@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>TIRI Admin</title>
 
 <style>
@@ -17,7 +16,7 @@ padding:40px
 background:#1e293b;
 padding:20px;
 border-radius:10px;
-max-width:400px;
+max-width:500px;
 margin:auto
 }
 
@@ -39,13 +38,19 @@ button:hover{
 background:#16a34a
 }
 
+pre{
+background:#020617;
+padding:10px
+}
+
 #dashboard{
 display:none
 }
 
-pre{
-background:#020617;
-padding:10px
+.stat{
+display:flex;
+justify-content:space-between;
+margin-top:5px
 }
 
 </style>
@@ -67,13 +72,19 @@ padding:10px
 
 <div class="card" id="dashboard">
 
-<h2>TIRI Dashboard</h2>
+<h2>TIRI Admin Panel</h2>
+
+<h3>Statistics</h3>
+
+<div id="stats"></div>
+
+<hr>
 
 <input id="email" placeholder="User Email">
 
 <button onclick="searchUser()">Search User</button>
 
-<pre id="info"></pre>
+<pre id="userInfo"></pre>
 
 <select id="plan">
 <option>trial</option>
@@ -84,7 +95,10 @@ padding:10px
 
 <button onclick="updatePlan()">Change Plan</button>
 
-<h3>Active Devices</h3>
+<button onclick="suspend()">Suspend User</button>
+<button onclick="activate()">Activate User</button>
+
+<h3>Devices</h3>
 
 <button onclick="loadDevices()">Load Devices</button>
 
@@ -97,8 +111,7 @@ padding:10px
 const API="https://admin.tiriwifi.qzz.io"
 
 let token=""
-
-/* LOGIN */
+let currentUser=null
 
 async function login(){
 
@@ -106,8 +119,8 @@ const res=await fetch(API+"/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:document.getElementById("user").value,
-password:document.getElementById("pass").value
+username:user.value,
+password:pass.value
 })
 })
 
@@ -117,39 +130,46 @@ if(data.token){
 
 token=data.token
 
-document.getElementById("login").style.display="none"
-document.getElementById("dashboard").style.display="block"
+login.style.display="none"
+dashboard.style.display="block"
+
+loadStats()
 
 }
 
 }
 
-/* SEARCH USER */
+async function loadStats(){
+
+const res=await fetch(API+"/stats",{headers:{Authorization:token}})
+
+const data=await res.json()
+
+stats.innerHTML=`
+<div class="stat">Users: ${data.total_users}</div>
+<div class="stat">Active Sessions: ${data.active_sessions}</div>
+<div class="stat">Expired Users: ${data.expired_users}</div>
+`
+
+}
 
 async function searchUser(){
 
-const email=document.getElementById("email").value
-
-const res=await fetch(API+"/user?email="+email,{
+const res=await fetch(API+"/user?email="+email.value,{
 headers:{Authorization:token}
 })
 
 const data=await res.json()
 
-window.currentUser=data
+currentUser=data
 
-document.getElementById("info").textContent=
-JSON.stringify(data,null,2)
+userInfo.textContent=JSON.stringify(data,null,2)
 
 }
 
-/* UPDATE PLAN */
-
 async function updatePlan(){
 
-const plan=document.getElementById("plan").value
-
-const res=await fetch(API+"/update-plan",{
+await fetch(API+"/update-plan",{
 method:"POST",
 headers:{
 Authorization:token,
@@ -157,11 +177,9 @@ Authorization:token,
 },
 body:JSON.stringify({
 email:currentUser.email,
-plan_name:plan
+plan_name:plan.value
 })
 })
-
-const data=await res.json()
 
 alert("Plan updated")
 
@@ -169,7 +187,35 @@ searchUser()
 
 }
 
-/* LOAD DEVICES */
+async function suspend(){
+
+await fetch(API+"/suspend",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email:currentUser.email})
+})
+
+alert("User suspended")
+
+}
+
+async function activate(){
+
+await fetch(API+"/activate",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email:currentUser.email})
+})
+
+alert("User activated")
+
+}
 
 async function loadDevices(){
 
@@ -179,13 +225,11 @@ headers:{Authorization:token}
 
 const data=await res.json()
 
-document.getElementById("devices").textContent=
-JSON.stringify(data,null,2)
+devices.textContent=JSON.stringify(data,null,2)
 
 }
 
 </script>
 
 </body>
-
 </html>
