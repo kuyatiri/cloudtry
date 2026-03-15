@@ -8,46 +8,94 @@
 
 body{
 font-family:Arial;
-background:#f3f4f6;
 margin:0;
-padding:40px
+background:#f3f4f6;
+display:flex
 }
 
-h1{
+/* SIDEBAR */
+
+.sidebar{
+width:220px;
+background:#111827;
+color:white;
+height:100vh;
+padding-top:20px;
+position:fixed
+}
+
+.sidebar h2{
 text-align:center;
-margin-bottom:40px
+margin-bottom:30px
+}
+
+.sidebar button{
+display:block;
+width:100%;
+background:none;
+border:none;
+color:white;
+padding:15px;
+text-align:left;
+cursor:pointer
+}
+
+.sidebar button:hover{
+background:#1f2937
+}
+
+/* MAIN */
+
+.main{
+margin-left:220px;
+padding:30px;
+width:100%
 }
 
 .section{
 background:white;
 padding:20px;
 border-radius:8px;
-margin-bottom:30px;
+margin-bottom:25px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1)
 }
 
-.stats{
+/* STATS */
+
+.cards{
 display:flex;
-gap:40px;
+gap:20px
+}
+
+.card{
+flex:1;
+background:#f9fafb;
+padding:20px;
+border-radius:6px;
 font-size:18px
 }
 
-.searchbar{
-display:flex;
-gap:10px;
-margin-bottom:15px
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse
 }
 
-.searchbar input{
-flex:1;
-padding:8px
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd
+}
+
+th{
+background:#f1f5f9
 }
 
 button{
-padding:8px 14px;
-border:none;
 background:#22c55e;
 color:white;
+border:none;
+padding:6px 12px;
 border-radius:4px;
 cursor:pointer
 }
@@ -56,41 +104,7 @@ button:hover{
 background:#16a34a
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #ddd;
-text-align:left
-}
-
-th{
-background:#f8fafc
-}
-
-.actions button{
-margin-right:6px
-}
-
-#login{
-max-width:300px;
-margin:auto
-}
-
-#dashboard{
-display:none
-}
-
-.pagination{
-text-align:right;
-margin-top:10px
-}
-
-/* MODAL */
+/* MODALS */
 
 .modal{
 display:none;
@@ -112,7 +126,6 @@ width:350px
 }
 
 .modal-box input,
-.modal-box select,
 .modal-box textarea{
 width:100%;
 padding:8px;
@@ -125,38 +138,46 @@ margin-bottom:10px
 
 <body>
 
-<h1>TIRI IPTV Admin Dashboard</h1>
+<div class="sidebar">
 
-<!-- LOGIN -->
+<h2>TIRI Admin</h2>
 
-<div id="login" class="section">
-
-<h3>Admin Login</h3>
-
-<input id="user" placeholder="username"><br><br>
-<input id="pass" type="password" placeholder="password"><br><br>
-
-<button onclick="login()">Login</button>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('users')">Users</button>
+<button onclick="show('active')">Active Users</button>
+<button onclick="show('plans')">Plans</button>
 
 </div>
 
-<div id="dashboard">
+<div class="main">
 
-<!-- STATS -->
+<!-- DASHBOARD -->
 
-<div class="section">
+<div id="dashboard" class="section">
 
-<h2>Statistics</h2>
+<h2>Dashboard</h2>
 
-<div class="stats">
+<div class="cards">
 
-<div>Users: <span id="statUsers">0</span></div>
+<div class="card">
+Users
+<h2 id="statUsers">0</h2>
+</div>
 
-<div>Active Sessions: <span id="statSessions">0</span></div>
+<div class="card">
+Active Sessions
+<h2 id="statSessions">0</h2>
+</div>
 
-<div>Expired Users: <span id="statExpired">0</span></div>
+<div class="card">
+Expired Users
+<h2 id="statExpired">0</h2>
+</div>
 
-<div>Revenue: $<span id="statRevenue">0</span></div>
+<div class="card">
+Revenue
+<h2>$<span id="statRevenue">0</span></h2>
+</div>
 
 </div>
 
@@ -164,38 +185,21 @@ margin-bottom:10px
 
 <!-- USERS -->
 
-<div class="section">
+<div id="users" class="section" style="display:none">
 
-<h2>Users Dashboard</h2>
-
-<div class="searchbar">
+<h2>Users</h2>
 
 <input id="searchEmail" placeholder="Search email">
 
-<select id="sort">
-<option value="id">Newest</option>
-<option value="expiry">Expiry</option>
-<option value="plan">Plan</option>
-<option value="email">Email</option>
-</select>
-
-<button onclick="loadUsers()">Refresh</button>
-
-</div>
-
 <table id="usersTable"></table>
-
-<div id="usersPagination" class="pagination"></div>
 
 </div>
 
 <!-- ACTIVE USERS -->
 
-<div class="section">
+<div id="active" class="section" style="display:none">
 
 <h2>Active Users</h2>
-
-<button onclick="loadActive()">Refresh</button>
 
 <table id="activeTable">
 
@@ -213,9 +217,9 @@ margin-bottom:10px
 
 <!-- PLANS -->
 
-<div class="section">
+<div id="plans" class="section" style="display:none">
 
-<h2>Plans Dashboard</h2>
+<h2>Plans</h2>
 
 <button onclick="openAddPlan()">Add Plan</button>
 
@@ -235,7 +239,7 @@ margin-bottom:10px
 
 <input id="editName" placeholder="Name">
 <input id="editEmail" placeholder="Email">
-<input id="editPassword" type="password" placeholder="New Password">
+<input id="editPassword" placeholder="Password">
 
 <button onclick="saveUser()">Save</button>
 <button onclick="closeModal()">Cancel</button>
@@ -273,9 +277,9 @@ margin-bottom:10px
 <h3>Edit Plan</h3>
 
 <input id="editPlanId" type="hidden">
-<input id="editPlanName" placeholder="Name">
-<input id="editPlanDevices" placeholder="Devices">
-<input id="editPlanPrice" placeholder="Price">
+<input id="editPlanName">
+<input id="editPlanDevices">
+<input id="editPlanPrice">
 <textarea id="editPlanDesc"></textarea>
 
 <button onclick="savePlan()">Save</button>
@@ -289,38 +293,16 @@ margin-bottom:10px
 
 const API="https://admin.tiriwifi.qzz.io"
 
-let token=""
-let page=1
-let editingUser=null
+let token=prompt("Admin Token")
 
-/* LOGIN */
+/* NAVIGATION */
 
-async function login(){
+function show(id){
 
-const res=await fetch(API+"/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-username:user.value,
-password:pass.value
-})
-})
+document.querySelectorAll(".section")
+.forEach(s=>s.style.display="none")
 
-const data=await res.json()
-
-if(data.token){
-
-token=data.token
-
-login.style.display="none"
-dashboard.style.display="block"
-
-loadStats()
-loadUsers()
-loadPlans()
-loadActive()
-
-}
+document.getElementById(id).style.display="block"
 
 }
 
@@ -340,17 +322,9 @@ statRevenue.innerText=data.revenue
 
 /* USERS */
 
-async function loadUsers(p=1){
+async function loadUsers(){
 
-page=p
-
-const search=searchEmail.value
-const sort=document.getElementById("sort").value
-
-const res=await fetch(API+"/users?page="+p+"&search="+search+"&sort="+sort,{
-headers:{Authorization:token}
-})
-
+const res=await fetch(API+"/users?page=1",{headers:{Authorization:token}})
 const data=await res.json()
 
 const table=document.getElementById("usersTable")
@@ -375,11 +349,15 @@ table.innerHTML+=`
 <td>${u.status}</td>
 <td>${formatExpiry(u.subscription_expiry)}</td>
 
-<td class="actions">
+<td>
 
-<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">Update</button>
+<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">
+Update
+</button>
 
-<button onclick="upgrade('${u.email}')">Upgrade</button>
+<button onclick="upgrade('${u.email}')">
+Upgrade
+</button>
 
 </td>
 
@@ -398,16 +376,6 @@ const res=await fetch(API+"/online",{headers:{Authorization:token}})
 const data=await res.json()
 
 const table=document.getElementById("activeTable")
-
-table.innerHTML=`
-<tr>
-<th>Email</th>
-<th>Device</th>
-<th>IP</th>
-<th>Last Login</th>
-<th>Action</th>
-</tr>
-`
 
 data.forEach(u=>{
 
@@ -444,7 +412,6 @@ const table=document.getElementById("plansTable")
 
 table.innerHTML=`
 <tr>
-<th>ID</th>
 <th>Name</th>
 <th>Devices</th>
 <th>Price</th>
@@ -458,7 +425,6 @@ data.plans.forEach(p=>{
 table.innerHTML+=`
 <tr>
 
-<td>${p.id}</td>
 <td>${p.name}</td>
 <td>${p.devices}</td>
 <td>${p.price}</td>
@@ -466,9 +432,13 @@ table.innerHTML+=`
 
 <td>
 
-<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">Update</button>
+<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">
+Update
+</button>
 
-<button onclick="removePlan(${p.id})">Remove</button>
+<button onclick="removePlan(${p.id})">
+Remove
+</button>
 
 </td>
 
@@ -479,19 +449,7 @@ table.innerHTML+=`
 
 }
 
-/* MODALS */
-
-function openEditUser(id,name,email){
-
-editingUser=id
-
-editName.value=name
-editEmail.value=email
-editPassword.value=""
-
-editUserModal.style.display="flex"
-
-}
+/* MODAL FUNCTIONS */
 
 function openAddPlan(){
 addPlanModal.style.display="flex"
@@ -509,137 +467,21 @@ editPlanModal.style.display="flex"
 
 }
 
+function openEditUser(id,name,email){
+
+editingUser=id
+
+editName.value=name
+editEmail.value=email
+
+editUserModal.style.display="flex"
+
+}
+
 function closeModal(){
 
-document.querySelectorAll(".modal").forEach(m=>m.style.display="none")
-
-}
-
-/* SAVE USER */
-
-async function saveUser(){
-
-await fetch(API+"/update-user",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-id:editingUser,
-name:editName.value,
-email:editEmail.value,
-password:editPassword.value
-})
-})
-
-closeModal()
-loadUsers(page)
-
-}
-
-/* ADD PLAN */
-
-async function addPlan(){
-
-await fetch(API+"/add-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-name:planName.value,
-devices:planDevices.value,
-price:planPrice.value,
-description:planDesc.value
-})
-})
-
-closeModal()
-loadPlans()
-
-}
-
-/* UPDATE PLAN */
-
-async function savePlan(){
-
-await fetch(API+"/update-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-id:editPlanId.value,
-name:editPlanName.value,
-devices:editPlanDevices.value,
-price:editPlanPrice.value,
-description:editPlanDesc.value
-})
-})
-
-closeModal()
-loadPlans()
-
-}
-
-/* REMOVE PLAN */
-
-function removePlan(id){
-
-fetch(API+"/remove-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({id})
-}).then(loadPlans)
-
-}
-
-/* ACTIONS */
-
-function upgrade(email){
-
-const plan=prompt("Enter plan name")
-
-fetch(API+"/update-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email,plan_name:plan})
-})
-
-}
-
-function kick(device){
-
-fetch(API+"/kick",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({device_id:device})
-}).then(loadActive)
-
-}
-
-function ban(email){
-
-fetch(API+"/suspend",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-}).then(loadActive)
+document.querySelectorAll(".modal")
+.forEach(m=>m.style.display="none")
 
 }
 
@@ -652,8 +494,7 @@ if(!date) return ""
 const exp=new Date(date)
 const now=new Date()
 
-const diff=exp-now
-const days=Math.floor(diff/(1000*60*60*24))
+const days=Math.floor((exp-now)/(1000*60*60*24))
 
 let color="green"
 
@@ -661,11 +502,20 @@ if(days<0) color="red"
 else if(days<=3) color="orange"
 else if(days<=7) color="gold"
 
-return `${exp.toISOString().split("T")[0]} 
+return `${exp.toISOString().split("T")[0]}
 <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin:0 6px;"></span>
 ${days} days`
 
 }
+
+/* INITIAL LOAD */
+
+loadStats()
+loadUsers()
+loadPlans()
+loadActive()
+
+setInterval(loadActive,5000)
 
 </script>
 
