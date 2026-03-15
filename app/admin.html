@@ -1,51 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>TIRI IPTV Admin</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#0f172a;
-color:white;
-padding:30px
+background:#f3f4f6;
+margin:0;
+padding:40px
 }
 
-.container{
-max-width:900px;
-margin:auto
+h1{
+text-align:center;
+margin-bottom:40px
 }
 
-.card{
-background:#1e293b;
+.section{
+background:white;
 padding:20px;
-border-radius:10px;
-margin-bottom:20px
+border-radius:8px;
+margin-bottom:30px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1)
 }
 
-input,select,button{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:none
+.stats{
+display:flex;
+gap:40px;
+font-size:18px
+}
+
+.searchbar{
+display:flex;
+gap:10px;
+margin-bottom:15px
+}
+
+.searchbar input{
+flex:1;
+padding:8px
 }
 
 button{
+padding:8px 14px;
+border:none;
 background:#22c55e;
 color:white;
+border-radius:4px;
 cursor:pointer
 }
 
 button:hover{
 background:#16a34a
-}
-
-pre{
-background:#020617;
-padding:10px;
-overflow:auto
 }
 
 table{
@@ -54,22 +62,27 @@ border-collapse:collapse;
 margin-top:10px
 }
 
-td,th{
-padding:8px;
-border-bottom:1px solid #334155
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:left
 }
 
 th{
-text-align:left
+background:#f8fafc
+}
+
+.actions button{
+margin-right:6px
+}
+
+#login{
+max-width:300px;
+margin:auto
 }
 
 #dashboard{
 display:none
-}
-
-.stat{
-font-size:18px;
-margin-top:5px
 }
 
 </style>
@@ -78,14 +91,14 @@ margin-top:5px
 
 <body>
 
-<div class="container">
+<h1>TIRI IPTV Admin Dashboard</h1>
 
-<div class="card" id="login">
+<div id="login" class="section">
 
-<h2>Admin Login</h2>
+<h3>Admin Login</h3>
 
-<input id="user" placeholder="username">
-<input id="pass" type="password" placeholder="password">
+<input id="user" placeholder="username"><br><br>
+<input id="pass" type="password" placeholder="password"><br><br>
 
 <button onclick="login()">Login</button>
 
@@ -93,58 +106,69 @@ margin-top:5px
 
 <div id="dashboard">
 
-<div class="card">
+<!-- STATS -->
+
+<div class="section">
 
 <h2>Statistics</h2>
 
-<div id="stats"></div>
+<div class="stats">
+
+<div>Users: <span id="statUsers">0</span></div>
+<div>Active Sessions: <span id="statSessions">0</span></div>
+<div>Expired Users: <span id="statExpired">0</span></div>
 
 </div>
 
-<div class="card">
+</div>
 
-<h2>User Management</h2>
+<!-- USERS -->
 
-<input id="email" placeholder="User Email">
+<div class="section">
 
-<button onclick="searchUser()">Search User</button>
+<h2>Users Dashboard</h2>
 
-<pre id="userInfo"></pre>
+<div class="searchbar">
 
-<select id="plan">
-<option value="trial">trial</option>
-<option value="basic">basic</option>
-<option value="standard">standard</option>
-<option value="premium">premium</option>
-</select>
+<input id="searchEmail" placeholder="Name or Email">
 
-<button onclick="updatePlan()">Change Plan</button>
-
-<button onclick="suspendUser()">Suspend User</button>
-
-<button onclick="activateUser()">Activate User</button>
+<button onclick="searchUser()">Search</button>
 
 </div>
 
-<div class="card">
+<table id="usersTable">
 
-<h2>Active Devices</h2>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Plan</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
 
-<button onclick="loadDevices()">Load Devices</button>
-
-<table id="devicesTable"></table>
-
-</div>
-
-<div class="card">
-
-<h2>Live Online Users</h2>
-
-<button onclick="loadOnline()">Refresh</button>
-
-<table id="onlineTable"></table>
+</table>
 
 </div>
+
+<!-- PLANS -->
+
+<div class="section">
+
+<h2>Plans Dashboard</h2>
+
+<button onclick="loadPlans()">Add</button>
+
+<table id="plansTable">
+
+<tr>
+<th>Plan No</th>
+<th>Description</th>
+<th>Devices</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+
+</table>
 
 </div>
 
@@ -155,18 +179,15 @@ margin-top:5px
 const API="https://admin.tiriwifi.qzz.io"
 
 let token=""
-let currentUser=null
 
 async function login(){
 
 const res = await fetch(API+"/login",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:document.getElementById("user").value,
-password:document.getElementById("pass").value
+username:user.value,
+password:pass.value
 })
 })
 
@@ -180,11 +201,10 @@ document.getElementById("login").style.display="none"
 document.getElementById("dashboard").style.display="block"
 
 loadStats()
-loadOnline()
 
 }else{
 
-alert("Invalid login")
+alert("Login failed")
 
 }
 
@@ -198,44 +218,69 @@ headers:{Authorization:token}
 
 const data = await res.json()
 
-document.getElementById("stats").innerHTML=`
-<div class="stat">Total Users: ${data.total_users}</div>
-<div class="stat">Active Sessions: ${data.active_sessions}</div>
-<div class="stat">Expired Users: ${data.expired_users}</div>
-`
+statUsers.innerText=data.total_users
+statSessions.innerText=data.active_sessions
+statExpired.innerText=data.expired_users
 
 }
 
 async function searchUser(){
 
-const email=document.getElementById("email").value
+const email=searchEmail.value
 
 const res=await fetch(API+"/user?email="+email,{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const user=await res.json()
 
-if(data.error){
-alert(data.error)
-return
+const table=document.getElementById("usersTable")
+
+table.innerHTML=`
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Plan</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+`
+
+if(user.error)return
+
+const daysRemaining = Math.floor(
+(new Date(user.subscription_expiry)-Date.now())/86400000
+)
+
+table.innerHTML+=`
+<tr>
+
+<td>${user.name}</td>
+
+<td>${user.email}</td>
+
+<td>${user.plan}</td>
+
+<td>${user.status} (${daysRemaining} days)</td>
+
+<td class="actions">
+
+<button onclick="updatePlan('${user.email}')">Update</button>
+
+<button onclick="suspend('${user.email}')">Ban</button>
+
+<button onclick="kick('${user.id}')">Kick</button>
+
+</td>
+
+</tr>
+`
+
 }
 
-currentUser=data
+async function updatePlan(email){
 
-document.getElementById("userInfo").textContent=
-JSON.stringify(data,null,2)
-
-}
-
-async function updatePlan(){
-
-if(!currentUser){
-alert("Search user first")
-return
-}
-
-const plan=document.getElementById("plan").value
+const plan=prompt("Enter plan (trial/basic/standard/premium)")
 
 await fetch(API+"/update-plan",{
 method:"POST",
@@ -244,20 +289,16 @@ Authorization:token,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-email:currentUser.email,
+email:email,
 plan_name:plan
 })
 })
 
 alert("Plan updated")
 
-searchUser()
-
 }
 
-async function suspendUser(){
-
-if(!currentUser)return
+async function suspend(email){
 
 await fetch(API+"/suspend",{
 method:"POST",
@@ -265,74 +306,22 @@ headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-email:currentUser.email
-})
+body:JSON.stringify({email})
 })
 
-alert("User suspended")
+alert("User banned")
 
 }
 
-async function activateUser(){
+async function kick(user_id){
 
-if(!currentUser)return
-
-await fetch(API+"/activate",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email:currentUser.email
-})
-})
-
-alert("User activated")
-
-}
-
-async function loadDevices(){
-
-if(!currentUser){
-alert("Search user first")
-return
-}
-
-const res=await fetch(API+"/devices?user_id="+currentUser.id,{
+const res=await fetch(API+"/devices?user_id="+user_id,{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const devices=await res.json()
 
-let html=`<tr>
-<th>Device</th>
-<th>IP</th>
-<th>Last Login</th>
-<th></th>
-</tr>`
-
-data.forEach(d=>{
-
-html+=`
-<tr>
-<td>${d.device_type}</td>
-<td>${d.ip_address}</td>
-<td>${d.last_login}</td>
-<td>
-<button onclick="kick('${d.device_id}')">Kick</button>
-</td>
-</tr>
-`
-
-})
-
-document.getElementById("devicesTable").innerHTML=html
-
-}
-
-async function kick(id){
+for(let d of devices){
 
 await fetch(API+"/kick",{
 method:"POST",
@@ -340,46 +329,48 @@ headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({device_id:id})
+body:JSON.stringify({device_id:d.device_id})
 })
-
-loadDevices()
 
 }
 
-async function loadOnline(){
+alert("All devices kicked")
 
-const res=await fetch(API+"/online",{
+}
+
+async function loadPlans(){
+
+const res=await fetch(API+"/plans",{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const plans=await res.json()
 
-let html=`<tr>
-<th>User</th>
-<th>IP</th>
-<th>Device</th>
-<th>Last Activity</th>
-</tr>`
+const table=document.getElementById("plansTable")
 
-data.forEach(u=>{
+plans.forEach(p=>{
 
-html+=`
+table.innerHTML+=`
 <tr>
-<td>${u.email}</td>
-<td>${u.ip_address}</td>
-<td>${u.device_type}</td>
-<td>${u.last_login}</td>
+
+<td>${p.id}</td>
+<td>${p.name}</td>
+<td>${p.devices}</td>
+<td>${p.price}</td>
+
+<td>
+
+<button>Update</button>
+<button>Remove</button>
+
+</td>
+
 </tr>
 `
 
 })
 
-document.getElementById("onlineTable").innerHTML=html
-
 }
-
-setInterval(loadOnline,5000)
 
 </script>
 
