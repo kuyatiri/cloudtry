@@ -85,8 +85,9 @@ margin:auto
 display:none
 }
 
-.pagination button{
-margin-right:5px
+.pagination{
+text-align:right;
+margin-top:10px
 }
 
 </style>
@@ -150,10 +151,16 @@ margin-right:5px
 
 <table id="usersTable"></table>
 
-<div class="pagination" id="usersPagination"></div>
+<div style="display:flex; justify-content:space-between; margin-top:10px;">
 
+<div>
 <button onclick="bulkBan()">Ban Selected</button>
 <button onclick="bulkActivate()">Activate Selected</button>
+</div>
+
+<div id="usersPagination" class="pagination"></div>
+
+</div>
 
 </div>
 
@@ -275,7 +282,7 @@ table.innerHTML+=`
 <td>${u.email}</td>
 <td>${u.plan}</td>
 <td>${u.status}</td>
-<td>${u.subscription_expiry||""}</td>
+<td>${formatExpiry(u.subscription_expiry)}</td>
 
 <td class="actions">
 
@@ -490,6 +497,21 @@ body:JSON.stringify({device_id:d.device_id})
 }
 
 alert("User devices kicked")
+
+}
+
+  function formatExpiry(date){
+
+if(!date) return ""
+
+const exp = new Date(date)
+const now = new Date()
+
+const diff = exp - now
+
+const days = Math.floor(diff / (1000*60*60*24))
+
+return `${exp.toISOString().split("T")[0]} (${days} days)`
 
 }
 
