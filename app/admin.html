@@ -368,6 +368,7 @@ Revenue
 
 <!-- ADD PLAN MODAL -->
   
+<!-- ADD PLAN MODAL -->
 <div class="modal" id="addPlanModal">
 
 <div class="modalBox">
@@ -384,12 +385,15 @@ Revenue
 <div class="modalActions">
 
 <button onclick="closeModal()">Cancel</button>
-
 <button onclick="addPlan()">Add Plan</button>
 
 </div>
 
 </div>
+
+</div>
+
+  
 <!-- EDIT PLAN MODAL -->
   
 <div class="modal" id="editPlanModal">
@@ -894,6 +898,19 @@ document.getElementById("addPlanModal").style.display="flex"
 
 /* EDIT PLAN */
 
+function openEditPlan(id,name,devices,duration,price,desc){
+
+document.getElementById("editPlanId").value=id
+document.getElementById("editPlanName").value=name
+document.getElementById("editPlanDevices").value=devices
+document.getElementById("editPlanDuration").value=duration
+document.getElementById("editPlanPrice").value=price
+document.getElementById("editPlanDescription").value=desc
+
+document.getElementById("editPlanModal").style.display="flex"
+
+}
+
 async function updatePlan(){
 
 const id=document.getElementById("editPlanId").value
@@ -1022,6 +1039,9 @@ notify(data.error || "Failed to add plan")
 
 setInterval(loadActive,4000)
 setInterval(loadStats,10000)
+searchEmail.addEventListener("input",()=>{
+loadUsers(1)
+})
   
 </script>
 
