@@ -90,6 +90,35 @@ text-align:right;
 margin-top:10px
 }
 
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
+align-items:center;
+justify-content:center
+}
+
+.modal-box{
+background:white;
+padding:20px;
+border-radius:8px;
+width:350px
+}
+
+.modal-box input,
+.modal-box select,
+.modal-box textarea{
+width:100%;
+padding:8px;
+margin-bottom:10px
+}
+
 </style>
 
 </head>
@@ -97,6 +126,8 @@ margin-top:10px
 <body>
 
 <h1>TIRI IPTV Admin Dashboard</h1>
+
+<!-- LOGIN -->
 
 <div id="login" class="section">
 
@@ -111,7 +142,7 @@ margin-top:10px
 
 <div id="dashboard">
 
-<!-- STATISTICS -->
+<!-- STATS -->
 
 <div class="section">
 
@@ -131,62 +162,9 @@ margin-top:10px
 
 </div>
 
-<!-- USERS DASHBOARD -->
+<!-- USERS -->
 
 <div class="section">
-
-<!-- EDIT USER MODAL -->
-
-<div id="editModal" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.4);
-justify-content:center;
-align-items:center;
-">
-
-<div style="
-background:white;
-padding:20px;
-border-radius:8px;
-width:350px;
-">
-
-<h3>Edit User</h3>
-
-<label>Name</label>
-<input id="editName" style="width:100%;padding:6px">
-
-<label>Email</label>
-<input id="editEmail" style="width:100%;padding:6px">
-
-<label>Password (leave blank to keep)</label>
-<input id="editPassword" type="password" style="width:100%;padding:6px">
-
-<label>Plan</label>
-<select id="editPlan" style="width:100%;padding:6px">
-<option value="trial">Trial</option>
-<option value="basic">Basic</option>
-<option value="standard">Standard</option>
-<option value="premium">Premium</option>
-</select>
-
-<br><br>
-
-<div style="display:flex;justify-content:space-between">
-
-<button onclick="saveUser()">Save</button>
-<button onclick="closeModal()" style="background:#ef4444">Cancel</button>
-
-</div>
-
-</div>
-
-</div>
 
 <h2>Users Dashboard</h2>
 
@@ -207,38 +185,101 @@ width:350px;
 
 <table id="usersTable"></table>
 
-<div style="display:flex; justify-content:space-between; margin-top:10px;">
-
-<div>
-<button onclick="bulkBan()">Ban Selected</button>
-<button onclick="bulkActivate()">Activate Selected</button>
-</div>
-
 <div id="usersPagination" class="pagination"></div>
 
 </div>
 
+<!-- ACTIVE USERS -->
+
+<div class="section">
+
+<h2>Active Users</h2>
+
+<button onclick="loadActive()">Refresh</button>
+
+<table id="activeTable">
+
+<tr>
+<th>Email</th>
+<th>Device</th>
+<th>IP</th>
+<th>Last Login</th>
+<th>Action</th>
+</tr>
+
+</table>
+
 </div>
 
-<!-- PLANS DASHBOARD -->
+<!-- PLANS -->
 
 <div class="section">
 
 <h2>Plans Dashboard</h2>
 
-<button onclick="addPlan()">Add Plan</button>
+<button onclick="openAddPlan()">Add Plan</button>
 
-<table id="plansTable">
+<table id="plansTable"></table>
 
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Devices</th>
-<th>Price</th>
-<th>Action</th>
-</tr>
+</div>
 
-</table>
+</div>
+
+<!-- EDIT USER MODAL -->
+
+<div class="modal" id="editUserModal">
+
+<div class="modal-box">
+
+<h3>Edit User</h3>
+
+<input id="editName" placeholder="Name">
+<input id="editEmail" placeholder="Email">
+<input id="editPassword" type="password" placeholder="New Password">
+
+<button onclick="saveUser()">Save</button>
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+<!-- ADD PLAN MODAL -->
+
+<div class="modal" id="addPlanModal">
+
+<div class="modal-box">
+
+<h3>Add Plan</h3>
+
+<input id="planName" placeholder="Name">
+<input id="planDevices" placeholder="Devices">
+<input id="planPrice" placeholder="Price">
+<textarea id="planDesc" placeholder="Description"></textarea>
+
+<button onclick="addPlan()">Save</button>
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+<!-- EDIT PLAN MODAL -->
+
+<div class="modal" id="editPlanModal">
+
+<div class="modal-box">
+
+<h3>Edit Plan</h3>
+
+<input id="editPlanId" type="hidden">
+<input id="editPlanName" placeholder="Name">
+<input id="editPlanDevices" placeholder="Devices">
+<input id="editPlanPrice" placeholder="Price">
+<textarea id="editPlanDesc"></textarea>
+
+<button onclick="savePlan()">Save</button>
+<button onclick="closeModal()">Cancel</button>
 
 </div>
 
@@ -250,7 +291,7 @@ const API="https://admin.tiriwifi.qzz.io"
 
 let token=""
 let page=1
-let selected=[]
+let editingUser=null
 
 /* LOGIN */
 
@@ -271,12 +312,13 @@ if(data.token){
 
 token=data.token
 
-document.getElementById("login").style.display="none"
-document.getElementById("dashboard").style.display="block"
+login.style.display="none"
+dashboard.style.display="block"
 
 loadStats()
 loadUsers()
 loadPlans()
+loadActive()
 
 }
 
@@ -286,26 +328,16 @@ loadPlans()
 
 async function loadStats(){
 
-const res = await fetch(API + "/stats", {
-headers:{ Authorization: token }
-})
+const res=await fetch(API+"/stats",{headers:{Authorization:token}})
+const data=await res.json()
 
-const data = await res.json()
-
-document.getElementById("statUsers").innerText =
-data.total_users ?? 0
-
-document.getElementById("statSessions").innerText =
-data.active_sessions ?? 0
-
-document.getElementById("statExpired").innerText =
-data.expired_users ?? 0
-
-document.getElementById("statRevenue").innerText =
-data.revenue ?? 0
+statUsers.innerText=data.total_users
+statSessions.innerText=data.active_sessions
+statExpired.innerText=data.expired_users
+statRevenue.innerText=data.revenue
 
 }
-  
+
 /* USERS */
 
 async function loadUsers(p=1){
@@ -315,10 +347,9 @@ page=p
 const search=searchEmail.value
 const sort=document.getElementById("sort").value
 
-const res=await fetch(
-API+"/users?page="+p+"&search="+search+"&sort="+sort,
-{headers:{Authorization:token}}
-)
+const res=await fetch(API+"/users?page="+p+"&search="+search+"&sort="+sort,{
+headers:{Authorization:token}
+})
 
 const data=await res.json()
 
@@ -326,7 +357,6 @@ const table=document.getElementById("usersTable")
 
 table.innerHTML=`
 <tr>
-<th></th>
 <th>Email</th>
 <th>Plan</th>
 <th>Status</th>
@@ -340,20 +370,16 @@ data.users.forEach(u=>{
 table.innerHTML+=`
 <tr>
 
-<td><input type="checkbox" onclick="toggle(${u.id})"></td>
-
 <td>${u.email}</td>
 <td>${u.plan}</td>
 <td>${u.status}</td>
-<td>${formatExpiryColored(u.subscription_expiry)}</td>
+<td>${formatExpiry(u.subscription_expiry)}</td>
 
 <td class="actions">
 
-<button onclick="openEditUser(${u.id},'${u.name}','${u.email}','${u.plan}')">Update</button>
+<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">Update</button>
 
-<button onclick="banUser('${u.email}')">Ban</button>
-
-<button onclick="kickUser(${u.id})">Kick</button>
+<button onclick="upgrade('${u.email}')">Upgrade</button>
 
 </td>
 
@@ -362,82 +388,48 @@ table.innerHTML+=`
 
 })
 
-renderPagination(data.total,p)
-
 }
 
-/* PAGINATION */
+/* ACTIVE USERS */
 
-function renderPagination(total,page){
+async function loadActive(){
 
-const pages=Math.ceil(total/10)
+const res=await fetch(API+"/online",{headers:{Authorization:token}})
+const data=await res.json()
 
-let html=""
+const table=document.getElementById("activeTable")
 
-if(page>1)
-html+=`<button onclick="loadUsers(${page-1})">Prev</button>`
+table.innerHTML=`
+<tr>
+<th>Email</th>
+<th>Device</th>
+<th>IP</th>
+<th>Last Login</th>
+<th>Action</th>
+</tr>
+`
 
-for(let i=1;i<=pages;i++){
-html+=`<button onclick="loadUsers(${i})">${i}</button>`
-}
+data.forEach(u=>{
 
-if(page<pages)
-html+=`<button onclick="loadUsers(${page+1})">Next</button>`
+table.innerHTML+=`
+<tr>
 
-usersPagination.innerHTML=html
+<td>${u.email}</td>
+<td>${u.device_type}</td>
+<td>${u.ip_address}</td>
+<td>${u.last_login}</td>
 
-}
+<td>
 
-/* LIVE SEARCH */
+<button onclick="kick('${u.device_id}')">Kick</button>
+<button onclick="ban('${u.email}')">Ban</button>
 
-searchEmail.addEventListener("input",()=>{
-loadUsers(1)
+</td>
+
+</tr>
+`
+
 })
-
-/* BULK ACTIONS */
-
-function toggle(id){
-
-if(selected.includes(id))
-selected=selected.filter(x=>x!=id)
-else
-selected.push(id)
-
-}
-
-async function bulkBan(){
-
-await fetch(API+"/bulk",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-ids:selected,
-action:"ban"
-})
-})
-
-loadUsers()
-
-}
-
-async function bulkActivate(){
-
-await fetch(API+"/bulk",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-ids:selected,
-action:"activate"
-})
-})
-
-loadUsers()
 
 }
 
@@ -445,21 +437,18 @@ loadUsers()
 
 async function loadPlans(){
 
-const res = await fetch(API+"/plans?page=1",{
-headers:{Authorization:token}
-})
-
-const data = await res.json()
+const res=await fetch(API+"/plans?page=1",{headers:{Authorization:token}})
+const data=await res.json()
 
 const table=document.getElementById("plansTable")
 
-/* reset table first */
 table.innerHTML=`
 <tr>
 <th>ID</th>
 <th>Name</th>
 <th>Devices</th>
 <th>Price</th>
+<th>Description</th>
 <th>Action</th>
 </tr>
 `
@@ -473,10 +462,12 @@ table.innerHTML+=`
 <td>${p.name}</td>
 <td>${p.devices}</td>
 <td>${p.price}</td>
+<td>${p.description||""}</td>
 
 <td>
 
-<button onclick="updatePlan(${p.id})">Update</button>
+<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">Update</button>
+
 <button onclick="removePlan(${p.id})">Remove</button>
 
 </td>
@@ -488,157 +479,45 @@ table.innerHTML+=`
 
 }
 
-function addPlan(){
+/* MODALS */
 
-const name=prompt("Plan name")
-const devices=prompt("Devices")
-const price=prompt("Price")
+function openEditUser(id,name,email){
 
-fetch(API+"/add-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-name,devices,price
-})
-}).then(loadPlans)
+editingUser=id
+
+editName.value=name
+editEmail.value=email
+editPassword.value=""
+
+editUserModal.style.display="flex"
 
 }
 
-  function updateUserPlan(email){
-
-const plan=prompt("Enter new plan")
-
-fetch(API+"/update-plan",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email,
-plan_name:plan
-})
-}).then(loadUsers)
-
+function openAddPlan(){
+addPlanModal.style.display="flex"
 }
 
-function banUser(email){
+function openEditPlan(id,name,devices,price,desc){
 
-fetch(API+"/suspend",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-}).then(loadUsers)
+editPlanId.value=id
+editPlanName.value=name
+editPlanDevices.value=devices
+editPlanPrice.value=price
+editPlanDesc.value=desc
 
-}
-
-async function kickUser(user_id){
-
-const res=await fetch(API+"/devices?user_id="+user_id,{
-headers:{Authorization:token}
-})
-
-const devices=await res.json()
-
-for(let d of devices){
-
-await fetch(API+"/kick",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({device_id:d.device_id})
-})
-
-}
-
-alert("User devices kicked")
-
-}
-
-  function formatExpiry(date){
-
-if(!date) return ""
-
-const exp = new Date(date)
-const now = new Date()
-
-const diff = exp - now
-
-const days = Math.floor(diff / (1000*60*60*24))
-
-return `${exp.toISOString().split("T")[0]} (${days} days)`
-
-}
-
-function formatExpiryColored(date){
-
-if(!date) return ""
-
-const exp = new Date(date)
-const now = new Date()
-
-const diff = exp - now
-const days = Math.floor(diff / (1000*60*60*24))
-
-const expDate = exp.toISOString().split("T")[0]
-
-let color="green"
-
-if(days < 0) color="red"
-else if(days <= 3) color="orange"
-else if(days <= 7) color="gold"
-else color="green"
-
-return `
-${expDate}
-<span style="
-display:inline-block;
-width:10px;
-height:10px;
-border-radius:50%;
-background:${color};
-margin:0 6px;
-"></span>
-${days} days
-`
-
-}
-
-let editingUserId=null
-
-function openEditUser(id,name,email,plan){
-
-editingUserId=id
-
-document.getElementById("editName").value=name||""
-document.getElementById("editEmail").value=email||""
-document.getElementById("editPlan").value=plan||"basic"
-document.getElementById("editPassword").value=""
-
-document.getElementById("editModal").style.display="flex"
+editPlanModal.style.display="flex"
 
 }
 
 function closeModal(){
 
-document.getElementById("editModal").style.display="none"
+document.querySelectorAll(".modal").forEach(m=>m.style.display="none")
 
 }
 
-async function saveUser(){
+/* SAVE USER */
 
-const name=document.getElementById("editName").value
-const email=document.getElementById("editEmail").value
-const password=document.getElementById("editPassword").value
-const plan=document.getElementById("editPlan").value
+async function saveUser(){
 
 await fetch(API+"/update-user",{
 method:"POST",
@@ -647,21 +526,147 @@ Authorization:token,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-id:editingUserId,
-name,
-email,
-password,
-plan
+id:editingUser,
+name:editName.value,
+email:editEmail.value,
+password:editPassword.value
 })
 })
 
 closeModal()
-
 loadUsers(page)
 
 }
 
-  setInterval(loadStats,10000)
+/* ADD PLAN */
+
+async function addPlan(){
+
+await fetch(API+"/add-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:planName.value,
+devices:planDevices.value,
+price:planPrice.value,
+description:planDesc.value
+})
+})
+
+closeModal()
+loadPlans()
+
+}
+
+/* UPDATE PLAN */
+
+async function savePlan(){
+
+await fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+id:editPlanId.value,
+name:editPlanName.value,
+devices:editPlanDevices.value,
+price:editPlanPrice.value,
+description:editPlanDesc.value
+})
+})
+
+closeModal()
+loadPlans()
+
+}
+
+/* REMOVE PLAN */
+
+function removePlan(id){
+
+fetch(API+"/remove-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({id})
+}).then(loadPlans)
+
+}
+
+/* ACTIONS */
+
+function upgrade(email){
+
+const plan=prompt("Enter plan name")
+
+fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email,plan_name:plan})
+})
+
+}
+
+function kick(device){
+
+fetch(API+"/kick",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({device_id:device})
+}).then(loadActive)
+
+}
+
+function ban(email){
+
+fetch(API+"/suspend",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email})
+}).then(loadActive)
+
+}
+
+/* EXPIRY COLOR */
+
+function formatExpiry(date){
+
+if(!date) return ""
+
+const exp=new Date(date)
+const now=new Date()
+
+const diff=exp-now
+const days=Math.floor(diff/(1000*60*60*24))
+
+let color="green"
+
+if(days<0) color="red"
+else if(days<=3) color="orange"
+else if(days<=7) color="gold"
+
+return `${exp.toISOString().split("T")[0]} 
+<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin:0 6px;"></span>
+${days} days`
+
+}
+
 </script>
 
 </body>
