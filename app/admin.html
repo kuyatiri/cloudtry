@@ -697,9 +697,10 @@ ${p.price},
 Update
 </button>
 
-<button onclick="removePlan(${p.id})">
-Remove
-</button>
+${p.name.toLowerCase() === "trial" 
+? `<span style="color:gray">Protected</span>`
+: `<button onclick="removePlan(${p.id})">Remove</button>`
+}
 
 </td>
 
@@ -906,6 +907,22 @@ document.getElementById("editPlanDevices").value=devices
 document.getElementById("editPlanDuration").value=duration
 document.getElementById("editPlanPrice").value=price
 document.getElementById("editPlanDescription").value=desc
+
+/* LOCK FIELDS FOR TRIAL */
+
+if(name.toLowerCase()=="trial"){
+
+document.getElementById("editPlanName").disabled=true
+document.getElementById("editPlanPrice").disabled=true
+document.getElementById("editPlanDescription").disabled=true
+
+}else{
+
+document.getElementById("editPlanName").disabled=false
+document.getElementById("editPlanPrice").disabled=false
+document.getElementById("editPlanDescription").disabled=false
+
+}
 
 document.getElementById("editPlanModal").style.display="flex"
 
