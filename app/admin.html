@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>TIRI Admin</title>
+<title>TIRI IPTV Admin</title>
 
 <style>
 
@@ -9,15 +9,19 @@ body{
 font-family:Arial;
 background:#0f172a;
 color:white;
-padding:40px
+padding:30px
+}
+
+.container{
+max-width:900px;
+margin:auto
 }
 
 .card{
 background:#1e293b;
 padding:20px;
 border-radius:10px;
-max-width:500px;
-margin:auto
+margin-bottom:20px
 }
 
 input,select,button{
@@ -40,7 +44,23 @@ background:#16a34a
 
 pre{
 background:#020617;
-padding:10px
+padding:10px;
+overflow:auto
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px
+}
+
+td,th{
+padding:8px;
+border-bottom:1px solid #334155
+}
+
+th{
+text-align:left
 }
 
 #dashboard{
@@ -48,8 +68,7 @@ display:none
 }
 
 .stat{
-display:flex;
-justify-content:space-between;
+font-size:18px;
 margin-top:5px
 }
 
@@ -58,6 +77,8 @@ margin-top:5px
 </head>
 
 <body>
+
+<div class="container">
 
 <div class="card" id="login">
 
@@ -70,15 +91,19 @@ margin-top:5px
 
 </div>
 
-<div class="card" id="dashboard">
+<div id="dashboard">
 
-<h2>TIRI Admin Panel</h2>
+<div class="card">
 
-<h3>Statistics</h3>
+<h2>Statistics</h2>
 
 <div id="stats"></div>
 
-<hr>
+</div>
+
+<div class="card">
+
+<h2>User Management</h2>
 
 <input id="email" placeholder="User Email">
 
@@ -87,22 +112,41 @@ margin-top:5px
 <pre id="userInfo"></pre>
 
 <select id="plan">
-<option>trial</option>
-<option>basic</option>
-<option>standard</option>
-<option>premium</option>
+<option value="trial">trial</option>
+<option value="basic">basic</option>
+<option value="standard">standard</option>
+<option value="premium">premium</option>
 </select>
 
 <button onclick="updatePlan()">Change Plan</button>
 
-<button onclick="suspend()">Suspend User</button>
-<button onclick="activate()">Activate User</button>
+<button onclick="suspendUser()">Suspend User</button>
 
-<h3>Devices</h3>
+<button onclick="activateUser()">Activate User</button>
+
+</div>
+
+<div class="card">
+
+<h2>Active Devices</h2>
 
 <button onclick="loadDevices()">Load Devices</button>
 
-<pre id="devices"></pre>
+<table id="devicesTable"></table>
+
+</div>
+
+<div class="card">
+
+<h2>Live Online Users</h2>
+
+<button onclick="loadOnline()">Refresh</button>
+
+<table id="onlineTable"></table>
+
+</div>
+
+</div>
 
 </div>
 
@@ -115,17 +159,14 @@ let currentUser=null
 
 async function login(){
 
-const username = document.getElementById("user").value
-const password = document.getElementById("pass").value
-
 const res = await fetch(API+"/login",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-username:username,
-password:password
+username:document.getElementById("user").value,
+password:document.getElementById("pass").value
 })
 })
 
@@ -133,12 +174,13 @@ const data = await res.json()
 
 if(data.token){
 
-token = data.token
+token=data.token
 
-document.getElementById("login").style.display = "none"
-document.getElementById("dashboard").style.display = "block"
+document.getElementById("login").style.display="none"
+document.getElementById("dashboard").style.display="block"
 
 loadStats()
+loadOnline()
 
 }else{
 
@@ -150,12 +192,14 @@ alert("Invalid login")
 
 async function loadStats(){
 
-const res=await fetch(API+"/stats",{headers:{Authorization:token}})
+const res = await fetch(API+"/stats",{
+headers:{Authorization:token}
+})
 
-const data=await res.json()
+const data = await res.json()
 
-stats.innerHTML=`
-<div class="stat">Users: ${data.total_users}</div>
+document.getElementById("stats").innerHTML=`
+<div class="stat">Total Users: ${data.total_users}</div>
 <div class="stat">Active Sessions: ${data.active_sessions}</div>
 <div class="stat">Expired Users: ${data.expired_users}</div>
 `
@@ -164,19 +208,34 @@ stats.innerHTML=`
 
 async function searchUser(){
 
-const res=await fetch(API+"/user?email="+email.value,{
+const email=document.getElementById("email").value
+
+const res=await fetch(API+"/user?email="+email,{
 headers:{Authorization:token}
 })
 
 const data=await res.json()
 
+if(data.error){
+alert(data.error)
+return
+}
+
 currentUser=data
 
-userInfo.textContent=JSON.stringify(data,null,2)
+document.getElementById("userInfo").textContent=
+JSON.stringify(data,null,2)
 
 }
 
 async function updatePlan(){
+
+if(!currentUser){
+alert("Search user first")
+return
+}
+
+const plan=document.getElementById("plan").value
 
 await fetch(API+"/update-plan",{
 method:"POST",
@@ -186,7 +245,7 @@ Authorization:token,
 },
 body:JSON.stringify({
 email:currentUser.email,
-plan_name:plan.value
+plan_name:plan
 })
 })
 
@@ -196,7 +255,9 @@ searchUser()
 
 }
 
-async function suspend(){
+async function suspendUser(){
+
+if(!currentUser)return
 
 await fetch(API+"/suspend",{
 method:"POST",
@@ -204,14 +265,18 @@ headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({email:currentUser.email})
+body:JSON.stringify({
+email:currentUser.email
+})
 })
 
 alert("User suspended")
 
 }
 
-async function activate(){
+async function activateUser(){
+
+if(!currentUser)return
 
 await fetch(API+"/activate",{
 method:"POST",
@@ -219,7 +284,9 @@ headers:{
 Authorization:token,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({email:currentUser.email})
+body:JSON.stringify({
+email:currentUser.email
+})
 })
 
 alert("User activated")
@@ -233,15 +300,86 @@ alert("Search user first")
 return
 }
 
-const res = await fetch(API+"/devices?user_id="+currentUser.id,{
+const res=await fetch(API+"/devices?user_id="+currentUser.id,{
 headers:{Authorization:token}
 })
 
-const data = await res.json()
+const data=await res.json()
 
-devices.textContent = JSON.stringify(data,null,2)
+let html=`<tr>
+<th>Device</th>
+<th>IP</th>
+<th>Last Login</th>
+<th></th>
+</tr>`
+
+data.forEach(d=>{
+
+html+=`
+<tr>
+<td>${d.device_type}</td>
+<td>${d.ip_address}</td>
+<td>${d.last_login}</td>
+<td>
+<button onclick="kick('${d.device_id}')">Kick</button>
+</td>
+</tr>
+`
+
+})
+
+document.getElementById("devicesTable").innerHTML=html
 
 }
+
+async function kick(id){
+
+await fetch(API+"/kick",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({device_id:id})
+})
+
+loadDevices()
+
+}
+
+async function loadOnline(){
+
+const res=await fetch(API+"/online",{
+headers:{Authorization:token}
+})
+
+const data=await res.json()
+
+let html=`<tr>
+<th>User</th>
+<th>IP</th>
+<th>Device</th>
+<th>Last Activity</th>
+</tr>`
+
+data.forEach(u=>{
+
+html+=`
+<tr>
+<td>${u.email}</td>
+<td>${u.ip_address}</td>
+<td>${u.device_type}</td>
+<td>${u.last_login}</td>
+</tr>
+`
+
+})
+
+document.getElementById("onlineTable").innerHTML=html
+
+}
+
+setInterval(loadOnline,5000)
 
 </script>
 
