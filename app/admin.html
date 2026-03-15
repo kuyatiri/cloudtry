@@ -201,17 +201,7 @@ Revenue
 
 <h2>Active Users</h2>
 
-<table id="activeTable">
-
-<tr>
-<th>Email</th>
-<th>Device</th>
-<th>IP</th>
-<th>Last Login</th>
-<th>Action</th>
-</tr>
-
-</table>
+<table id="activeTable"></table>
 
 </div>
 
@@ -294,6 +284,7 @@ Revenue
 const API="https://admin.tiriwifi.qzz.io"
 
 let token=prompt("Admin Token")
+let editingUser=null
 
 /* NAVIGATION */
 
@@ -351,13 +342,9 @@ table.innerHTML+=`
 
 <td>
 
-<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">
-Update
-</button>
+<button onclick="openEditUser(${u.id},'${u.name}','${u.email}')">Update</button>
 
-<button onclick="upgrade('${u.email}')">
-Upgrade
-</button>
+<button onclick="upgrade('${u.email}')">Upgrade</button>
 
 </td>
 
@@ -376,6 +363,16 @@ const res=await fetch(API+"/online",{headers:{Authorization:token}})
 const data=await res.json()
 
 const table=document.getElementById("activeTable")
+
+table.innerHTML=`
+<tr>
+<th>Email</th>
+<th>Device</th>
+<th>IP</th>
+<th>Last Login</th>
+<th>Action</th>
+</tr>
+`
 
 data.forEach(u=>{
 
@@ -432,13 +429,9 @@ table.innerHTML+=`
 
 <td>
 
-<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">
-Update
-</button>
+<button onclick="openEditPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">Update</button>
 
-<button onclick="removePlan(${p.id})">
-Remove
-</button>
+<button onclick="removePlan(${p.id})">Remove</button>
 
 </td>
 
@@ -449,7 +442,7 @@ Remove
 
 }
 
-/* MODAL FUNCTIONS */
+/* MODALS */
 
 function openAddPlan(){
 addPlanModal.style.display="flex"
@@ -482,6 +475,135 @@ function closeModal(){
 
 document.querySelectorAll(".modal")
 .forEach(m=>m.style.display="none")
+
+}
+
+/* USER SAVE */
+
+async function saveUser(){
+
+await fetch(API+"/update-user",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+id:editingUser,
+name:editName.value,
+email:editEmail.value,
+password:editPassword.value
+})
+})
+
+closeModal()
+loadUsers()
+
+}
+
+/* PLAN ACTIONS */
+
+async function addPlan(){
+
+await fetch(API+"/add-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:planName.value,
+devices:planDevices.value,
+price:planPrice.value,
+description:planDesc.value
+})
+})
+
+closeModal()
+loadPlans()
+
+}
+
+async function savePlan(){
+
+await fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+id:editPlanId.value,
+name:editPlanName.value,
+devices:editPlanDevices.value,
+price:editPlanPrice.value,
+description:editPlanDesc.value
+})
+})
+
+closeModal()
+loadPlans()
+
+}
+
+function removePlan(id){
+
+fetch(API+"/remove-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({id})
+}).then(loadPlans)
+
+}
+
+/* USER ACTIONS */
+
+function upgrade(email){
+
+const plan=prompt("Enter plan name")
+
+fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+email,
+plan_name:plan
+})
+}).then(loadUsers)
+
+}
+
+async function kick(device){
+
+await fetch(API+"/kick",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({device_id:device})
+})
+
+loadActive()
+
+}
+
+function ban(email){
+
+fetch(API+"/suspend",{
+method:"POST",
+headers:{
+Authorization:token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({email})
+}).then(loadActive)
 
 }
 
