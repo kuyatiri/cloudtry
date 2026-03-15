@@ -465,13 +465,17 @@ async function loadUsers(page){
 
 userPage=page
 
-const res=await fetch(API+"/users?page="+page,{
+const search = document.getElementById("searchEmail").value || ""
+
+const res = await fetch(
+API+"/users?page="+page+"&search="+encodeURIComponent(search),
+{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const data = await res.json()
 
-const table=usersTable
+const table = usersTable
 
 table.innerHTML=`
 <tr>
@@ -489,7 +493,7 @@ table.innerHTML+=`
 <tr>
 
 <td>${u.email}</td>
-<td>${u.plan}</td>
+<td>${u.plan || "-"}</td>
 <td>${u.status}</td>
 <td>${formatExpiry(u.subscription_expiry)}</td>
 
@@ -511,7 +515,7 @@ Upgrade
 })
 
 }
-
+  
 /* ACTIVE USERS */
 
 async function loadActive(){
@@ -540,7 +544,7 @@ try{
 const g=await fetch(API+"/geo?ip="+u.ip_address)
 const geo=await g.json()
 
-flag=`<span class="flag">${geo.flag}</span>${geo.country}`
+flag=`<span class="flag">${geo.flag || "🌍"}</span>${geo.country || "Unknown"}`
 
 }catch{}
 
@@ -566,10 +570,356 @@ table.innerHTML+=`
 
 }
 
+async function loadStats(){
+
+const res = await fetch(API+"/stats",{
+headers:{Authorization:token}
+})
+
+const data = await res.json()
+
+document.getElementById("statUsers").innerText =
+data.total_users ?? 0
+
+document.getElementById("statSessions").innerText =
+data.active_sessions ?? 0
+
+document.getElementById("statExpired").innerText =
+data.expired_users ?? 0
+
+document.getElementById("statRevenue").innerText =
+data.revenue ?? 0
+
+}
+
+async function loadPlans(){
+
+const res = await fetch(API+"/plans?page=1",{
+headers:{Authorization:token}
+})
+
+const data = await res.json()
+
+const table = document.getElementById("plansTable")
+
+table.innerHTML=`
+<tr>
+<th>Name</th>
+<th>Devices</th>
+<th>Price</th>
+<th>Description</th>
+<th>Action</th>
+</tr>
+`
+
+data.plans.forEach(p=>{
+
+table.innerHTML+=`
+<tr>
+
+<td>${p.name}</td>
+<td>${p.devices}</td>
+<td>${p.price}</td>
+<td>${p.description || ""}</td>
+
+<td>
+
+<button onclick="openEditPlan(
+${p.id},
+'${p.name}',
+${p.devices},
+${p.price},
+'${p.description||""}'
+)">
+Update</button>
+
+<button onclick="removePlan(${p.id})">
+Remove
+</button>
+
+</td>
+
+</tr>
+`
+
+})
+
+}
+
+async function loadUpgradePlans(){
+
+const res = await fetch(API+"/plans?page=1",{
+headers:{Authorization:token}
+})
+
+const data = await res.json()
+
+const select = document.getElementById("upgradePlan")
+
+select.innerHTML=""
+
+data.plans.forEach(p=>{
+
+select.innerHTML+=`
+<option value="${p.name}">
+${p.name} (${p.devices} devices)
+</option>
+`
+
+})
+
+}
+
+/* UPDATE USER MODAL */
+
+function openUpdateUser(id,name,email){
+
+document.getElementById("editUserId").value=id
+document.getElementById("editName").value=name
+document.getElementById("editEmail").value=email
+document.getElementById("editPassword").value=""
+
+document.getElementById("updateUserModal").style.display="flex"
+
+}
+
+/* SAVE USER */
+
+async function saveUser(){
+
+const id=document.getElementById("editUserId").value
+const name=document.getElementById("editName").value
+const email=document.getElementById("editEmail").value
+const password=document.getElementById("editPassword").value
+
+const res=await fetch(API+"/update-user",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+id,
+name,
+email,
+password
+})
+})
+
+const data=await res.json()
+
+if(data.status){
+
+notify("User updated")
+
+closeModal()
+
+loadUsers(userPage)
+
+}else{
+
+notify(data.error || "Update failed")
+
+}
+
+}
+
+/* UPGRADE MODAL */
+
+function openUpgrade(email){
+
+document.getElementById("upgradeEmail").value=email
+
+document.getElementById("upgradeModal").style.display="flex"
+
+}
+
+/* CONFIRM UPGRADE */
+
+async function confirmUpgrade(){
+
+const email=document.getElementById("upgradeEmail").value
+const plan=document.getElementById("upgradePlan").value
+
+const res=await fetch(API+"/update-user",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+email,
+plan
+})
+})
+
+const data=await res.json()
+
+if(data.status){
+
+notify("Plan upgraded")
+
+closeModal()
+
+loadUsers(userPage)
+
+}else{
+
+notify(data.error || "Upgrade failed")
+
+}
+
+}
+
+/* KICK DEVICE */
+
+async function kick(device){
+
+if(!confirm("Kick this device?")) return
+
+await fetch(API+"/kick",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+device_id:device
+})
+})
+
+notify("Device kicked")
+
+loadActive()
+
+}
+
+/* BAN USER */
+
+async function ban(email){
+
+if(!confirm("Ban this user?")) return
+
+await fetch(API+"/suspend",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+email
+})
+})
+
+notify("User banned")
+
+loadUsers(userPage)
+loadActive()
+
+}
+
+/* ADD PLAN MODAL */
+
+function openAddPlan(){
+
+const name=prompt("Plan name")
+const devices=prompt("Devices")
+const price=prompt("Price")
+const description=prompt("Description")
+
+if(!name) return
+
+fetch(API+"/add-plan",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+name,
+devices,
+price,
+description
+})
+})
+.then(()=>{
+
+notify("Plan added")
+
+loadPlans()
+
+})
+
+}
+
+/* EDIT PLAN */
+
+function openEditPlan(id,name,devices,price,desc){
+
+const newName=prompt("Plan name",name)
+const newDevices=prompt("Devices",devices)
+const newPrice=prompt("Price",price)
+const newDesc=prompt("Description",desc)
+
+fetch(API+"/update-plan",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({
+id,
+name:newName,
+devices:newDevices,
+price:newPrice,
+description:newDesc
+})
+})
+.then(()=>{
+
+notify("Plan updated")
+
+loadPlans()
+
+})
+
+}
+
+/* REMOVE PLAN */
+
+async function removePlan(id){
+
+if(!confirm("Remove this plan?")) return
+
+await fetch(API+"/remove-plan",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:token
+},
+body:JSON.stringify({id})
+})
+
+notify("Plan removed")
+
+loadPlans()
+
+}
+
+/* CLOSE MODAL */
+
+function closeModal(){
+
+document.querySelectorAll(".modal")
+.forEach(m=>m.style.display="none")
+
+}
+
 /* LIVE REFRESH */
 
 setInterval(loadActive,4000)
-
+setInterval(loadStats,10000)
+  
 </script>
 
 </body>
