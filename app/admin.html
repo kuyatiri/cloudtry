@@ -228,13 +228,18 @@ alert("User activated")
 
 async function loadDevices(){
 
-const res=await fetch(API+"/devices?user_id="+currentUser.id,{
+if(!currentUser){
+alert("Search user first")
+return
+}
+
+const res = await fetch(API+"/devices?user_id="+currentUser.id,{
 headers:{Authorization:token}
 })
 
-const data=await res.json()
+const data = await res.json()
 
-devices.textContent=JSON.stringify(data,null,2)
+devices.textContent = JSON.stringify(data,null,2)
 
 }
 
