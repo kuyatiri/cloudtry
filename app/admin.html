@@ -115,25 +115,34 @@ let currentUser=null
 
 async function login(){
 
-const res=await fetch(API+"/login",{
+const username = document.getElementById("user").value
+const password = document.getElementById("pass").value
+
+const res = await fetch(API+"/login",{
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify({
-username:user.value,
-password:pass.value
+username:username,
+password:password
 })
 })
 
-const data=await res.json()
+const data = await res.json()
 
 if(data.token){
 
-token=data.token
+token = data.token
 
-login.style.display="none"
-dashboard.style.display="block"
+document.getElementById("login").style.display = "none"
+document.getElementById("dashboard").style.display = "block"
 
 loadStats()
+
+}else{
+
+alert("Invalid login")
 
 }
 
