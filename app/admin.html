@@ -23,25 +23,25 @@ background:#111827;
 display:flex;
 align-items:center;
 justify-content:center;
-color:white;
 }
 
-.login-box{
+.loginBox{
 background:#1f2937;
 padding:40px;
 border-radius:10px;
 width:320px;
+color:white;
 }
 
-.login-box input{
+.loginBox input{
 width:100%;
 padding:10px;
-margin-bottom:12px;
+margin-bottom:10px;
 border:none;
 border-radius:5px;
 }
 
-.login-box button{
+.loginBox button{
 width:100%;
 padding:10px;
 background:#22c55e;
@@ -154,8 +154,31 @@ margin-top:10px;
 text-align:right;
 }
 
-.pagination button{
-margin-left:5px;
+/* MODALS */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
+align-items:center;
+justify-content:center;
+}
+
+.modalBox{
+background:white;
+padding:20px;
+border-radius:8px;
+width:350px;
+}
+
+.modalBox input,select,textarea{
+width:100%;
+padding:8px;
+margin-bottom:10px;
 }
 
 /* TOAST */
@@ -182,18 +205,18 @@ margin-right:6px;
 
 <body>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
 
 <!-- LOGIN -->
 
 <div id="loginPage">
 
-<div class="login-box">
+<div class="loginBox">
 
 <h2>Admin Login</h2>
 
-<input id="adminUser" placeholder="Username">
-<input id="adminPass" type="password" placeholder="Password">
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
@@ -201,7 +224,7 @@ margin-right:6px;
 
 </div>
 
-<div id="panel" style="display:none;width:100%;">
+<div id="panel" style="display:none;width:100%">
 
 <div class="sidebar">
 
@@ -209,7 +232,7 @@ margin-right:6px;
 
 <button onclick="show('dashboard')">Dashboard</button>
 <button onclick="show('users')">Users</button>
-<button onclick="show('active')">Active (<span id="onlineCount">0</span>)</button>
+<button onclick="show('active')">Active Users</button>
 <button onclick="show('plans')">Plans</button>
 
 </div>
@@ -225,22 +248,22 @@ margin-right:6px;
 <div class="cards">
 
 <div class="card">
-<h3>Total Users</h3>
+Users
 <h2 id="statUsers">0</h2>
 </div>
 
 <div class="card">
-<h3>Active Sessions</h3>
+Active
 <h2 id="statSessions">0</h2>
 </div>
 
 <div class="card">
-<h3>Expired</h3>
+Expired
 <h2 id="statExpired">0</h2>
 </div>
 
 <div class="card">
-<h3>Revenue</h3>
+Revenue
 <h2>$<span id="statRevenue">0</span></h2>
 </div>
 
@@ -258,7 +281,7 @@ margin-right:6px;
 
 <table id="usersTable"></table>
 
-<div id="userPagination" class="pagination"></div>
+<div id="usersPagination" class="pagination"></div>
 
 </div>
 
@@ -278,9 +301,71 @@ margin-right:6px;
 
 <h2>Plans</h2>
 
+<button onclick="openAddPlan()">Add Plan</button>
+
 <table id="plansTable"></table>
 
 </div>
+
+</div>
+
+</div>
+
+<!-- UPDATE USER MODAL -->
+
+<div class="modal" id="updateUserModal">
+
+<div class="modalBox">
+
+<h3>Update User</h3>
+
+<input id="editUserId" type="hidden">
+<input id="editName" placeholder="Name">
+<input id="editEmail" placeholder="Email">
+<input id="editPassword" placeholder="Password">
+
+<button onclick="saveUser()">Save</button>
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+<!-- UPGRADE MODAL -->
+
+<div class="modal" id="upgradeModal">
+
+<div class="modalBox">
+
+<h3>Upgrade Plan</h3>
+
+<input id="upgradeEmail" type="hidden">
+
+<select id="upgradePlan"></select>
+
+<button onclick="confirmUpgrade()">Upgrade</button>
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+<!-- PLAN MODAL -->
+
+<div class="modal" id="planModal">
+
+<div class="modalBox">
+
+<h3 id="planTitle">Add Plan</h3>
+
+<input id="planId" type="hidden">
+<input id="planName" placeholder="Name">
+<input id="planDevices" placeholder="Devices">
+<input id="planPrice" placeholder="Price">
+<textarea id="planDesc" placeholder="Description"></textarea>
+
+<button onclick="savePlan()">Save</button>
+<button onclick="closeModal()">Cancel</button>
 
 </div>
 
@@ -291,16 +376,15 @@ margin-right:6px;
 const API="https://admin.tiriwifi.qzz.io"
 
 let token=""
-let currentPage=1
+let userPage=1
+
+/* TOAST */
 
 function notify(msg){
-
 const t=document.getElementById("toast")
 t.innerText=msg
 t.style.display="block"
-
 setTimeout(()=>t.style.display="none",3000)
-
 }
 
 /* LOGIN */
@@ -311,8 +395,8 @@ const res=await fetch(API+"/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:adminUser.value,
-password:adminPass.value
+username:user.value,
+password:pass.value
 })
 })
 
@@ -329,6 +413,7 @@ loadStats()
 loadUsers(1)
 loadActive()
 loadPlans()
+loadUpgradePlans()
 
 }else{
 alert("Invalid login")
@@ -365,14 +450,11 @@ statRevenue.innerText=data.revenue
 
 async function loadUsers(page){
 
-currentPage=page
+userPage=page
 
-const search=searchEmail.value||""
-
-const res=await fetch(
-API+"/users?page="+page+"&search="+search,
-{headers:{Authorization:token}}
-)
+const res=await fetch(API+"/users?page="+page,{
+headers:{Authorization:token}
+})
 
 const data=await res.json()
 
@@ -400,7 +482,13 @@ table.innerHTML+=`
 
 <td class="actions">
 
-<button onclick="upgrade('${u.email}')">Upgrade</button>
+<button onclick="openUpdateUser(${u.id},'${u.name}','${u.email}')">
+Update
+</button>
+
+<button onclick="openUpgrade('${u.email}')">
+Upgrade
+</button>
 
 </td>
 
@@ -408,30 +496,6 @@ table.innerHTML+=`
 `
 
 })
-
-renderPagination(data.total,page)
-
-}
-
-/* PAGINATION */
-
-function renderPagination(total,page){
-
-const pages=Math.ceil(total/10)
-
-let html=""
-
-if(page>1)
-html+=`<button onclick="loadUsers(${page-1})">Prev</button>`
-
-for(let i=1;i<=pages;i++){
-html+=`<button onclick="loadUsers(${i})">${i}</button>`
-}
-
-if(page<pages)
-html+=`<button onclick="loadUsers(${page+1})">Next</button>`
-
-userPagination.innerHTML=html
 
 }
 
@@ -441,8 +505,6 @@ async function loadActive(){
 
 const res=await fetch(API+"/online",{headers:{Authorization:token}})
 const data=await res.json()
-
-onlineCount.innerText=data.length
 
 const table=activeTable
 
@@ -462,10 +524,10 @@ let flag="🌍"
 
 try{
 
-const geo=await fetch(API+"/geo?ip="+u.ip_address)
-const g=await geo.json()
+const g=await fetch(API+"/geo?ip="+u.ip_address)
+const geo=await g.json()
 
-flag=`<span class="flag">${g.flag}</span>${g.country}`
+flag=`<span class="flag">${geo.flag}</span>${geo.country}`
 
 }catch{}
 
@@ -491,53 +553,87 @@ table.innerHTML+=`
 
 }
 
-/* ACTIONS */
+/* PLANS */
 
-async function kick(device){
+async function loadPlans(){
 
-if(!confirm("Kick device?")) return
+const res=await fetch(API+"/plans?page=1",{headers:{Authorization:token}})
+const data=await res.json()
 
-await fetch(API+"/kick",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({device_id:device})
+const table=plansTable
+
+table.innerHTML=`
+<tr>
+<th>Name</th>
+<th>Devices</th>
+<th>Price</th>
+<th>Description</th>
+<th>Action</th>
+</tr>
+`
+
+data.plans.forEach(p=>{
+
+table.innerHTML+=`
+<tr>
+
+<td>${p.name}</td>
+<td>${p.devices}</td>
+<td>${p.price}</td>
+<td>${p.description||""}</td>
+
+<td>
+
+<button onclick="editPlan(${p.id},'${p.name}',${p.devices},${p.price},'${p.description||""}')">
+Update
+</button>
+
+<button onclick="removePlan(${p.id})">
+Remove
+</button>
+
+</td>
+
+</tr>
+`
+
 })
-
-notify("Device kicked")
-
-loadActive()
 
 }
 
-async function ban(email){
+/* MODALS */
 
-if(!confirm("Ban user?")) return
+function openUpdateUser(id,name,email){
 
-await fetch(API+"/suspend",{
-method:"POST",
-headers:{
-Authorization:token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-})
+editUserId.value=id
+editName.value=name
+editEmail.value=email
 
-notify("User banned")
-
-loadActive()
+updateUserModal.style.display="flex"
 
 }
 
-/* SEARCH */
+function openUpgrade(email){
 
-searchEmail.addEventListener("input",()=>loadUsers(1))
+upgradeEmail.value=email
+upgradeModal.style.display="flex"
 
-/* AUTO REFRESH */
+}
 
-setInterval(loadActive,5000)
+function openAddPlan(){
+
+planTitle.innerText="Add Plan"
+
+planModal.style.display="flex"
+
+}
+
+function closeModal(){
+
+document.querySelectorAll(".modal")
+.forEach(m=>m.style.display="none")
+
+}
 
 </script>
 
