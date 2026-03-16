@@ -563,7 +563,7 @@ table.innerHTML+=`
 Update
 </button>
 
-<button onclick="openUpgrade('${u.email}')">
+<button onclick="openUpgrade(${u.id})">
 Upgrade
 </button>
 
@@ -791,10 +791,9 @@ notify(data.error || "Update failed")
 
 /* UPGRADE MODAL */
 
-function openUpgrade(email){
+function openUpgrade(id){
 
-document.getElementById("upgradeEmail").value=email
-
+document.getElementById("upgradeEmail").value=id
 document.getElementById("upgradeModal").style.display="flex"
 
 }
@@ -802,31 +801,33 @@ document.getElementById("upgradeModal").style.display="flex"
 /* CONFIRM UPGRADE */
 
 async function confirmUpgrade(){
+async function confirmUpgrade(){
 
-const email=document.getElementById("upgradeEmail").value
-const plan=document.getElementById("upgradePlan").value
+const id = document.getElementById("upgradeEmail").value
+const plan = document.getElementById("upgradePlan").value
 
-const res=await fetch(API+"/update-user",{
+const res = await fetch(API + "/update-user",{
 method:"POST",
 headers:{
 "Content-Type":"application/json",
 Authorization:token
 },
 body:JSON.stringify({
-email,
-plan
+id:id,
+plan:plan
 })
 })
 
-const data=await res.json()
+const data = await res.json()
 
 if(data.status){
 
-notify("Plan upgraded")
+notify("Plan upgraded successfully")
 
 closeModal()
 
 loadUsers(userPage)
+loadStats()
 
 }else{
 
