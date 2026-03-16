@@ -597,34 +597,53 @@ table.innerHTML=`
 
 for(let u of data){
 
-let flag="🌍"
+let warning=""
 
-try{
+if(u.sharing){
 
-const g=await fetch(API+"/geo?ip="+u.ip_address)
-const geo=await g.json()
+warning=`
+<div style="color:red;font-weight:bold">
+⚠ Account sharing suspected
+</div>
+`
 
-flag=`<span class="flag">${geo.flag || "🌍"}</span>${geo.country || "Unknown"}`
+}
 
-}catch{}
+u.devices.forEach(d=>{
 
 table.innerHTML+=`
+
 <tr>
 
 <td>${u.email}</td>
-<td>${flag}</td>
-<td>${u.device_type}</td>
-<td>${u.ip_address}</td>
+
+<td>
+<span class="flag">${d.flag}</span>
+${d.country}
+</td>
+
+<td>${d.device_type}</td>
+
+<td>${d.ip_address}</td>
 
 <td>
 
-<button onclick="kick('${u.device_id}')">Kick</button>
+<button onclick="kick('${d.device_id}')">Kick</button>
 <button onclick="ban('${u.email}')">Ban</button>
 
 </td>
 
 </tr>
+
+<tr>
+
+<td colspan="5">${warning}</td>
+
+</tr>
+
 `
+
+})
 
 }
 
