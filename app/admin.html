@@ -815,6 +815,8 @@ notify(data.error || "Update failed")
 function openUpgrade(id){
 
 document.getElementById("upgradeUserId").value = id
+document.getElementById("upgradeTxid").value = ""
+
 document.getElementById("upgradeModal").style.display = "flex"
 
 }
@@ -823,8 +825,14 @@ document.getElementById("upgradeModal").style.display = "flex"
 
 async function confirmUpgrade(){
 
-const id = document.getElementById("upgradeEmail").value
+const id = document.getElementById("upgradeUserId").value
 const plan = document.getElementById("upgradePlan").value
+const txid = document.getElementById("upgradeTxid").value
+
+if(!txid){
+notify("Transaction ID required")
+return
+}
 
 const res = await fetch(API + "/update-user",{
 method:"POST",
@@ -834,7 +842,8 @@ Authorization:token
 },
 body:JSON.stringify({
 id:id,
-plan:plan
+plan:plan,
+txid:txid
 })
 })
 
@@ -856,7 +865,6 @@ notify(data.error || "Upgrade failed")
 }
 
 }
-
 /* KICK DEVICE */
 
 async function kick(device){
