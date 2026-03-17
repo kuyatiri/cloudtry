@@ -388,11 +388,13 @@ This Month
 <h3>Add Plan</h3>
 
 <input id="planName" placeholder="Plan Name">
-<input id="planDevices" type="number" placeholder="Devices">
+<input id="planDevices" type="number" placeholder="Concurrent Devices">
+<input id="planRegisteredDevices" type="number" placeholder="Max Registered Devices">
 <input id="planDuration" type="number" placeholder="Duration (days)">
 <input id="planPrice" type="number" placeholder="Price">
-
 <textarea id="planDescription" placeholder="Description"></textarea>
+<input id="planAllowedDevices" placeholder="Allowed Devices JSON (optional)">
+
 
 <div class="modalActions">
 
@@ -1040,21 +1042,20 @@ document.querySelectorAll(".modal")
 
 async function addPlan(){
 
-const name=document.getElementById("planName").value
-const devices=document.getElementById("planDevices").value
-const duration=document.getElementById("planDuration").value
-const price=document.getElementById("planPrice").value
-const description=document.getElementById("planDescription").value
+const name = document.getElementById("planName").value
+const devices = document.getElementById("planDevices").value
+const registered = document.getElementById("planRegisteredDevices").value
+const duration = document.getElementById("planDuration").value
+const price = document.getElementById("planPrice").value
+const description = document.getElementById("planDescription").value
+const allowed = document.getElementById("planAllowedDevices").value || "[]"
 
-if(!name || !devices || !duration || !price){
-
+if(!name || !devices || !registered || !duration || !price){
 notify("All fields are required")
-
 return
-
 }
 
-const res=await fetch(API+"/add-plan",{
+const res = await fetch(API+"/add-plan",{
 method:"POST",
 headers:{
 Authorization:token,
@@ -1063,26 +1064,22 @@ Authorization:token,
 body:JSON.stringify({
 name,
 devices,
-duration_days:duration,
+registered_devices: registered,
+allowed_devices: allowed,
+duration_days: duration,
 price,
 description
 })
 })
 
-const data=await res.json()
+const data = await res.json()
 
 if(data.status){
-
 notify("Plan added successfully")
-
 closeModal()
-
 loadPlans()
-
 }else{
-
 notify(data.error || "Failed to add plan")
-
 }
 
 }
