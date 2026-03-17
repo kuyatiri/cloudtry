@@ -420,10 +420,12 @@ This Month
 
 <input id="editPlanName" placeholder="Plan Name">
 <input id="editPlanDevices" type="number" placeholder="Devices">
+<input id="editPlanRegisteredDevices" type="number" placeholder="Max Registered Devices">
 <input id="editPlanDuration" type="number" placeholder="Duration (days)">
 <input id="editPlanPrice" type="number" placeholder="Price">
 
 <textarea id="editPlanDescription" placeholder="Description"></textarea>
+<input id="editPlanAllowedDevices" placeholder="Allowed Devices JSON">
 
 <div class="modalActions">
 
@@ -695,6 +697,7 @@ table.innerHTML=`
 <tr>
 <th>Name</th>
 <th>Devices</th>
+<th>Registered</th>
 <th>Duration</th>
 <th>Price</th>
 <th>Description</th>
@@ -709,6 +712,7 @@ table.innerHTML+=`
 
 <td>${p.name}</td>
 <td>${p.devices}</td>
+<td>${p.registered_devices || 0}</td>
 <td>${p.duration_days} days</td>
 <td>₱${p.price}</td>
 <td>${p.description || ""}</td>
@@ -721,7 +725,9 @@ ${p.id},
 ${p.devices},
 ${p.duration_days},
 ${p.price},
-'${p.description||""}'
+'${p.description||""}',
+${p.registered_devices || 0},
+'${p.allowed_devices || "[]"}'
 )">
 Update
 </button>
@@ -936,35 +942,32 @@ document.getElementById("addPlanModal").style.display="flex"
 
 /* EDIT PLAN */
 
-function openEditPlan(id,name,devices,duration,price,desc){
+function openEditPlan(id,name,devices,duration,price,desc,registered,allowed){
 
 document.getElementById("editPlanId").value=id
 document.getElementById("editPlanName").value=name
 document.getElementById("editPlanDevices").value=devices
+document.getElementById("editPlanRegisteredDevices").value=registered || 0
 document.getElementById("editPlanDuration").value=duration
 document.getElementById("editPlanPrice").value=price
 document.getElementById("editPlanDescription").value=desc
+document.getElementById("editPlanAllowedDevices").value=allowed || "[]"
 
-/* LOCK FIELDS FOR TRIAL */
-
+/* TRIAL LOCK */
 if(name.toLowerCase()=="trial"){
-
 document.getElementById("editPlanName").disabled=true
 document.getElementById("editPlanPrice").disabled=true
 document.getElementById("editPlanDescription").disabled=true
-
 }else{
-
 document.getElementById("editPlanName").disabled=false
 document.getElementById("editPlanPrice").disabled=false
 document.getElementById("editPlanDescription").disabled=false
-
 }
 
 document.getElementById("editPlanModal").style.display="flex"
 
 }
-
+  
 async function updatePlan(){
 
 const id=document.getElementById("editPlanId").value
@@ -973,6 +976,8 @@ const devices=document.getElementById("editPlanDevices").value
 const duration=document.getElementById("editPlanDuration").value
 const price=document.getElementById("editPlanPrice").value
 const description=document.getElementById("editPlanDescription").value
+const registered = document.getElementById("editPlanRegisteredDevices").value
+const allowed = document.getElementById("editPlanAllowedDevices").value || "[]"
 
 const res=await fetch(API+"/update-plan",{
 method:"POST",
@@ -984,6 +989,8 @@ body:JSON.stringify({
 id,
 name,
 devices,
+registered_devices: registered,
+allowed_devices: allowed,
 duration_days:duration,
 price,
 description
