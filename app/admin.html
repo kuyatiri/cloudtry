@@ -438,6 +438,20 @@ This Month
 
 </div>
 
+<div class="modal" id="deviceModal">
+<div class="modalBox" style="width:500px">
+
+<h3>User Devices</h3>
+
+<div id="deviceList"></div>
+
+<div class="modalActions">
+<button onclick="closeModal()">Close</button>
+</div>
+
+</div>
+</div>
+
   
 
 </div>
@@ -583,8 +597,11 @@ Update
 Upgrade
 </button>
 
-</td>
+<button onclick="openDevices(${u.id})">
+Devices
+</button>
 
+</td>
 </tr>
 `
 
@@ -1087,6 +1104,64 @@ closeModal()
 loadPlans()
 }else{
 notify(data.error || "Failed to add plan")
+}
+
+}
+
+async function openDevices(userId){
+
+document.getElementById("deviceModal").style.display="flex"
+
+const res = await fetch(API+"/devices?user_id="+userId,{
+headers:{Authorization:token}
+})
+
+const data = await res.json()
+
+const container = document.getElementById("deviceList")
+
+container.innerHTML=""
+
+let countries = new Set()
+
+data.forEach(d=>{
+
+countries.add(d.country)
+
+container.innerHTML += `
+<div style="
+border-bottom:1px solid #eee;
+padding:10px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<div>
+<b>${d.device_type}</b><br>
+<span class="flag">${d.flag}</span> ${d.country}<br>
+<small>${d.ip_address}</small>
+</div>
+
+<div>
+<button onclick="kick('${d.device_id}')">
+Kick
+</button>
+</div>
+
+</div>
+`
+
+})
+
+/* SHARING WARNING */
+
+if(countries.size > 1){
+container.innerHTML += `
+<div style="color:red;font-weight:bold;margin-top:10px">
+⚠ Account sharing detected (${countries.size} countries)
+</div>
+`
 }
 
 }
