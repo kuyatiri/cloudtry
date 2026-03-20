@@ -1,9 +1,7 @@
-What’s New in TIRI IPTV v1.1.3
+TIRI IPTV v3.0.0 
 
-        • Optimized channel switching speed
-        • Enhanced video playback stability
-        • General bug fixes and performance improvements
-        • Fixed security vulnerability
+  • General bug fixes and performance improvements  
+  • Fixed security vulnerability
 
 I am constantly working to improve your viewing experience.
-Donation: GCash #: 09351180083
+GCash#: 09351180083
