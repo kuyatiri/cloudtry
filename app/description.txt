@@ -1,4 +1,4 @@
-TIRI IPTV v3.0.1 
+TIRI IPTV v3.0.2 
 
   • General bug fixes and performance improvements  
   • Fixed security vulnerability
