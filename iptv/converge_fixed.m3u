@@ -1,0 +1,478 @@
+#EXTM3U
+
+#EXTM3U url-tvg=" https://epgshare01.online/epgshare01/epg_ripper_PH1.xml.gz, https://epgshare01.online/epgshare01/epg_ripper_PH2.xml.gz, https://epgshare01.online/epgshare01/epg_ripper_ID1.xml.gz, https://epgshare01.online/epgshare01/epg_ripper_MY1.xml.gz, https://epgshare01.online/epgshare01/epg_ripper_HK1.xml.gz, https://epgshare01.online/epgshare01/epg_ripper_US1.xml.gz"
+
+
+#EXTINF:-1 tvg-id="ch00000090990000001064" tvg-name="ch00000090990000001064" tvg-logo="" group-title="Converge",ch00000090990000001064
+http://161.49.17.3:6610/001/2/ch00000090990000001064/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="HBO.ph" tvg-name="HBO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/c1/HBO.svg/revision/latest?cb=20250930051253" group-title="Converge",HBO
+http://161.49.17.3:6610/001/2/ch00000090990000001065/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CNN.ph" tvg-name="CNN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/52/CNN_%282014%29.svg/revision/latest?cb=20251028170524" group-title="Converge",CNN
+http://161.49.17.3:6610/001/2/ch00000090990000001073/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="History.ph" tvg-name="History" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e8/History_2021.png/revision/latest?cb=20240302050750" group-title="Converge",History
+http://161.49.17.3:6610/001/2/ch00000090990000001074/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Lifetime.ph" tvg-name="Lifetime" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/11/Lifetime_2020.svg/revision/latest?cb=20200203171509" group-title="Converge",Lifetime
+http://161.49.17.3:6610/001/2/ch00000090990000001075/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CELESTIALMOVIEPINOY.ph" tvg-name="CELESTIAL MOVIES PINOY" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/3f/Celesy.jpg/revision/latest?cb=20181127075032" group-title="Converge",CELESTIAL MOVIES PINOY
+http://161.49.17.3:6610/001/2/ch00000090990000001077/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PinoyBoxOffice.ph" tvg-name="PBO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/84/PBO_PNG-og_image.svg/revision/latest?cb=20251213093959" group-title="Converge",PBO
+http://161.49.17.3:6610/001/2/ch00000090990000001078/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="VivaCinema.ph" tvg-name="VIVA CINEMA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1b/Viva_Cinema_2021.svg/revision/latest?cb=20251129113801" group-title="Converge",VIVA CINEMA
+http://161.49.17.3:6610/001/2/ch00000090990000001079/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Tagalized.Movie.Channel.ph" tvg-name="TMC" tvg-logo="https://i.imgur.com/6mNCite.png" group-title="Converge",TMC
+http://161.49.17.3:6610/001/2/ch00000090990000001080/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="SolarSports.ph" tvg-name="SOLAR SPORTS" tvg-logo="https://static.wikia.nocookie.net/russel/images/2/2b/Solar_Sports_Logo_2024.png/revision/latest/scale-to-width-down/1000?cb=20250913144545" group-title="Converge",SOLAR SPORTS
+http://161.49.17.3:6610/001/2/ch00000090990000001081/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="OneSports.ph" tvg-name="ONE SPORTS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/73/One_Sports_%282020%29.svg/revision/latest?cb=20240801110958" group-title="Converge",ONE SPORTS
+http://161.49.17.3:6610/001/2/ch00000090990000001083/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="OneNews.ph" tvg-name="ONE NEWS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1e/One_News_%282020%29.svg/revision/latest?cb=20240621072547" group-title="Converge",ONE NEWS
+http://161.49.17.3:6610/001/2/ch00000090990000001084/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PTV.ph" tvg-name="PTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/78/PTV4-LOGO-2017.svg/revision/latest?cb=20241213115802" group-title="Converge",PTV
+http://161.49.17.3:6610/001/2/ch00000090990000001086/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="a2z.Channel.11.ph" tvg-name="A2Z" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/fa/A2Z_Channel_11_%281%29.png/revision/latest?cb=20251216061454" group-title="Converge",A2Z
+http://161.49.17.3:6610/001/2/ch00000090990000001087/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Tv5.ph" tvg-name="TV5" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/8b/TV5_2026_HQ.png/revision/latest?cb=20260427104129" group-title="Converge",TV5
+http://161.49.17.3:6610/001/2/ch00000090990000001088/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="IBC13.ph" tvg-name="IBC 13" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/f5/IBC_13_Logo_2012.png/revision/latest?cb=20170830080345" group-title="Converge",IBC 13
+http://161.49.17.3:6610/001/2/ch00000090990000001089/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Net25.ph" tvg-name="NET 25" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/42/Net_25_Wordmark_2D_Logo_2022.webp/revision/latest?cb=20231204122829" group-title="Converge",NET 25
+http://161.49.17.3:6610/001/2/ch00000090990000001090/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Untv.ph" tvg-name="UNTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/09/UNTV2016.svg/revision/latest?cb=20241111073929" group-title="Converge",UNTV
+http://161.49.17.3:6610/001/2/ch00000090990000001091/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="IncTV.ph" tvg-name="INC TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/ae/INC_TV_New_Logo.png/revision/latest?cb=20220903100749" group-title="Converge",INC TV
+http://161.49.17.3:6610/001/2/ch00000090990000001092/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Gma7" tvg-name="GMA 7" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/aa/GMA_Network_2024_logo.png/revision/latest?cb=20250327013147" group-title="Converge",GMA 7
+http://161.49.17.3:6610/001/2/ch00000090990000001093/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="rptv.ph" tvg-name="RPTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/2/21/Blast_Sports_Logo_2024.png" group-title="Converge",RPTV
+http://161.49.17.3:6610/001/2/ch00000090990000001094/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BBCNews.ph" tvg-name="BBC NEWS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a2/BBC_News_2022_%28Alt%29.svg/revision/latest?cb=20220326124147" group-title="Converge",BBC NEWS
+http://161.49.17.3:6610/001/2/ch00000090990000001095/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="WarnerTV.ph" tvg-name="WARNER TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a2/WarnerTVAsia.png/revision/latest?cb=20180325001201" group-title="Converge",WARNER TV
+http://161.49.17.3:6610/001/2/ch00000090990000001096/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PinoyXtreme" tvg-name="Pinoy Xtreme" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/8c/PINOY-EXTREME-CHANNEL-LOGO-MARCH-2011.jpg/revision/latest?cb=20180717203144" group-title="Converge",Pinoy Xtreme
+http://161.49.17.3:6610/001/2/ch00000090990000001098/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RAIITALIA" tvg-name="RAI ITALIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/8a/Rai_Italia_-_Logo_2017.svg/revision/latest?cb=20181119001645" group-title="Converge",RAI ITALIA
+http://161.49.17.3:6610/001/2/ch00000090990000001099/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="FashionTV.ph" tvg-name="FASHION TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/0e/FASHION_TV_2017.png/revision/latest?cb=20191026175440" group-title="Converge",FASHION TV
+http://161.49.17.3:6610/001/2/ch00000090990000001102/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LIGHTTV" tvg-name="LIGHT TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/bd/Light_TV_Black_Logo_2025.png/revision/latest/scale-to-width-down/300?cb=20260120115350" group-title="Converge",LIGHT TV
+http://161.49.17.3:6610/001/2/ch00000090990000001103/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="EWTN" tvg-name="EWTN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/b0/EWTN.svg/revision/latest?cb=20260302223902" group-title="Converge",EWTN
+http://161.49.17.3:6610/001/2/ch00000090990000001104/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="FOXNEWS" tvg-name="FOX NEWS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/39/Fox_News_Channel_%282017%29.svg/revision/latest?cb=20250114204200" group-title="Converge",FOX NEWS
+http://161.49.17.3:6610/001/2/ch00000090990000001105/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CNA.ph" tvg-name="CHANNEL NEWS ASIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/5f/CNA_2019.svg/revision/latest?cb=20230219122811" group-title="Converge",CHANNEL NEWS ASIA
+http://161.49.17.3:6610/001/2/ch00000090990000001106/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Arirang.ph" tvg-name="ARIRANG" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/9/94/Arirang_TV_Logo.svg/revision/latest?cb=20210828042411" group-title="Converge",ARIRANG
+http://161.49.17.3:6610/001/2/ch00000090990000001107/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Cinemax.ph" tvg-name="CINEMAX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/60/Cinemax_%28Black_%26_Red%29.svg/revision/latest?cb=20201205115034" group-title="Converge",CINEMAX
+http://161.49.17.3:6610/001/2/ch00000090990000001108/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ALIW23CHANNEL" tvg-name="ALIW23 CHANNEL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a4/ALIW-Channel-23.png/revision/latest?cb=20230131085711" group-title="Converge",ALIW23 CHANNEL
+http://161.49.17.3:6610/001/2/ch00000090990000001109/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CGTNDOCUMENTARY" tvg-name="CGTN DOCUMENTARY" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/36/CGTN_Documentary_II.svg/revision/latest?cb=20210818143837" group-title="Converge",CGTN DOCUMENTARY
+http://161.49.17.3:6610/001/2/ch00000090990000001110/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Abc.Australia.ph" tvg-name="ABC AUSTRALIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/bc/ABCAustralia.svg/revision/latest?cb=20180702124934" group-title="Converge",ABC AUSTRALIA
+http://161.49.17.3:6610/001/2/ch00000090990000001111/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TVE" tvg-name="TVE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/d4/Logotipo_de_Televisi%C3%B3n_Espa%C3%B1ola.svg/revision/latest?cb=20191129173802" group-title="Converge",TVE
+http://161.49.17.3:6610/001/2/ch00000090990000001112/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PHOENIXCHINESE" tvg-name="PHOENIX CHINESE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/ea/PhoenixTV_logo.svg/revision/latest?cb=20211019062944" group-title="Converge",PHOENIX CHINESE
+http://161.49.17.3:6610/001/2/ch00000090990000001113/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MINDANOW" tvg-name="MINDANOW" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/35/Mindanow_Network_logo.png/revision/latest?cb=20250715022837" group-title="Converge",MINDANOW
+http://161.49.17.3:6610/001/2/ch00000090990000001123/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BILYONARYO.ph" tvg-name="BILYONARYO NEWS HD" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/ce/BilyonaryoNewsChannel_Logo_-_Black_%282024%29.png/revision/latest?cb=20241201080834" group-title="Converge",BILYONARYO NEWS HD
+http://161.49.17.3:6610/001/2/ch00000090990000001124/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CARTOONITO" tvg-name="CARTOONITO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/67/Cartoonito_logo_2021.svg/revision/latest/scale-to-width-down/300?cb=20211112214721" group-title="Converge",CARTOONITO
+http://161.49.17.3:6610/001/2/ch00000090990000001125/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="premier_footballhd" tvg-name="PREMIER FOOTBALL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/b0/PremierFootball_logo.png/revision/latest?cb=20210901165134" group-title="Converge",PREMIER FOOTBALL
+http://161.49.17.3:6610/001/2/ch00000090990000001127/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="VEGASLIFE" tvg-name="VEGAS LIFE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/6d/453067739_3793881440880086_423513722425415211_n.png/revision/latest?cb=20260430045534" group-title="Converge",VEGAS LIFE
+http://161.49.17.3:6610/001/2/ch00000090990000001134/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PremierSports.ph" tvg-name="PREMIER SPORTS" tvg-logo="https://i.imgur.com/GTfUEnU.png" group-title="Converge",PREMIER SPORTS
+http://161.49.17.3:6610/001/2/ch00000090990000001135/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="GTV" tvg-name="GTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/ff/GTV_%28Philippines%29_2021-present.svg/revision/latest?cb=20230511044034" group-title="Converge",GTV
+http://161.49.17.3:6610/001/2/ch00000090990000001143/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CrimeAndInvestigation.ph" tvg-name="CRIME+INVESTIGATION" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/37/C%26I_logo.svg/revision/latest?cb=20190613183256" group-title="Converge",CRIME+INVESTIGATION
+http://161.49.17.3:6610/001/2/ch00000090990000001144/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="NHKWorldJapan.ph" tvg-name="NHK WORLD JAPAN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/45/NHK_World-Japan_2020.svg/revision/latest?cb=20221125061006" group-title="Converge",NHK WORLD
+http://161.49.17.3:6610/001/2/ch00000090990000001145/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CGTN.ph" tvg-name="CGTN" tvg-logo="https://logos.fandom.com/wiki/File:CGTN_(China_Global_Television_Network).svg" group-title="Converge",CGTN
+http://161.49.17.3:6610/001/2/ch00000090990000001146/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TBN" tvg-name="TBN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e5/TBNKJNP.svg/revision/latest?cb=20220528205423" group-title="Converge",TBN
+http://161.49.17.3:6610/001/2/ch00000090990000001147/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DDNATIONAL" tvg-name="DD NATIONAL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/2/2a/Ddnational2023.png/revision/latest?cb=20230823123341" group-title="Converge",DD NATIONAL
+http://161.49.17.3:6610/001/2/ch00000090990000001148/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TAPTV" tvg-name="TAP TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e7/TAP_TV_logo.png/revision/latest?cb=20210901163340" group-title="Converge",TAP TV
+http://161.49.17.3:6610/001/2/ch00000090990000001149/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TAPEDGE" tvg-name="TAP EDGE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/77/TAP_Edge_logo.png/revision/latest?cb=20210901164231" group-title="Converge",TAP EDGE
+http://161.49.17.3:6610/001/2/ch00000090990000001150/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TapSports.ph" tvg-name="TAP SPORTS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/df/TAPSports_logo.png/revision/latest?cb=20210901162631" group-title="Converge",TAP SPORTS
+http://161.49.17.3:6610/001/2/ch00000090990000001151/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="HALLYPOP" tvg-name="HALLYPOP" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/2/2e/Hallypop_PH_2024.svg/revision/latest?cb=20251220072128" group-title="Converge",HALLYPOP
+http://161.49.17.3:6610/001/2/ch00000090990000001152/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Bloomberg.ph" tvg-name="BLOOMBERG" tvg-logo="hhttps://static.wikia.nocookie.net/logopedia/images/2/21/Bloomberg_2015.svg/revision/latest?cb=20171125073306" group-title="Converge",BLOOMBERG
+http://161.49.17.3:6610/001/2/ch00000090990000001153/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LIVINGASIA" tvg-name="LIVING ASIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/da/LAC_logo.png/revision/latest?cb=20260423030307" group-title="Converge",LIVING ASIA
+http://161.49.17.3:6610/001/2/ch00000090990000001154/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="SMNI" tvg-name="SMNI" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/df/SMNI39.jpg/revision/latest?cb=20130902104537" group-title="Converge",SMNI
+http://161.49.17.3:6610/001/2/ch00000090990000001155/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Tv5.Monde.ph" tvg-name="TV5MONDE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/db/TV5Monde_2025.svg/revision/latest?cb=20251010001858" group-title="Converge",TV5MONDE
+http://161.49.17.3:6610/001/2/ch00000090990000001156/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="France24.ph" tvg-name="FRANCE 24" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/02/France_24_2013.svg/revision/latest?cb=20210115151030" group-title="Converge",FRANCE 24
+http://161.49.17.3:6610/001/2/ch00000090990000001157/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Cinemaworld" tvg-name="Cinemaworld" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/78/CinemaWorld.png/revision/latest/scale-to-width-down/250?cb=20250323085940" group-title="Converge",Cinemaworld
+http://161.49.17.3:6610/001/2/ch00000090990000001158/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RJTV29" tvg-name="RJTV 29" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/59/Screenshot_2019-08-30_at_5.25.09_PM.png/revision/latest?cb=20200515131159" group-title="Converge",RJTV 29
+http://161.49.17.3:6610/001/2/ch00000090990000001159/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TVMaria.ph" tvg-name="TV MARIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/cd/TV_MARIA_PH.png/revision/latest?cb=20200421061144" group-title="Converge",TV MARIA
+http://161.49.17.3:6610/001/2/ch00000090990000001160/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="HGTV.ph" tvg-name="HGTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a8/HGTV_2010.svg/revision/latest?cb=20231006154546" group-title="Converge",HGTV
+http://161.49.17.3:6610/001/2/ch00000090990000001162/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001163" tvg-name="RadioChannel.ph" tvg-logo="https://raw.githubusercontent.com/iptv-org/logos/master/channels/ch00000090990000001163.png" group-title="Converge",Radio Channel
+http://161.49.17.3:6610/001/2/ch00000090990000001163/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="HUNANTELEVISION" tvg-name="HUNAN TELEVISION" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/61/Hunan_Broadcasting_System_%28Symbol%29.png/revision/latest?cb=20251006125409" group-title="Converge",HUNAN TELEVISION
+http://161.49.17.3:6610/001/2/ch00000090990000001164/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BSFUJI" tvg-name="BS FUJI" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/19/BSFujiLogo.svg/revision/latest/scale-to-width-down/300?cb=20250911112902" group-title="Converge",BS FUJI
+http://161.49.17.3:6610/001/2/ch00000090990000001165/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DEUTSCHEWELLE" tvg-name="DEUTSCHE WELLE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/75/Deutsche_Welle_symbol_2012.svg/revision/latest?cb=20120227170040" group-title="Converge",DEUTSCHE WELLE
+http://161.49.17.3:6610/001/2/ch00000090990000001166/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001173" tvg-name="RadioChannel.ph" tvg-logo="https://raw.githubusercontent.com/iptv-org/logos/master/channels/ch00000090990000001173.png" group-title="Converge",Radio Channel
+http://161.49.17.3:6610/001/2/ch00000090990000001173/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DZRH" tvg-name="DZRH" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/ac/DZRH_New_Logo_%282021%29.svg/revision/latest?cb=20211116221642" group-title="Converge",DZRH
+http://161.49.17.3:6610/001/2/ch00000090990000001174/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ORASNGHIMALA" tvg-name="ORAS NG HIMALA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/54/Oras_ng_Himala_Logo_2022.webp/revision/latest/scale-to-width-down/180?cb=20260301113033" group-title="Converge",ORAS NG HIMALA
+http://161.49.17.3:6610/001/2/ch00000090990000001175/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="SAUDITV" tvg-name="SAUDI TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/c9/Saudi_TV_in_English.webp/revision/latest?cb=20260424185643" group-title="Converge",SAUDI TV
+http://161.49.17.3:6610/001/2/ch00000090990000001176/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ROCKTVOFMANILA" tvg-name="ROCK TV OF MANILA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e5/Rock_Manila_Logo_2023.png/revision/latest?cb=20240316065316" group-title="Converge",ROCK TV OF MANILA
+http://161.49.17.3:6610/001/2/ch00000090990000001177/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CartoonNetwork.ph" tvg-name="CARTOON NETWORK" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/ee/Cartoon_Network_2010.svg/revision/latest?cb=20210726224754" group-title="Converge",CARTOON NETWORK
+http://161.49.17.3:6610/001/2/ch00000090990000001178/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ALLTV" tvg-name="ALL TV2" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/c4/ALLTV2.svg/revision/latest/scale-to-width-down/350?cb=20241207053225" group-title="Converge",ALL TV2
+http://161.49.17.3:6610/001/2/ch00000090990000001179/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TLC" tvg-name="TLC" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/dc/TLC_%282006%29.svg/revision/latest?cb=20210606163834" group-title="Converge",TLC
+http://161.49.17.3:6610/001/2/ch00000090990000001181/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="AXN.ph" tvg-name="AXN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/dc/2016_AXN_logo.svg/revision/latest?cb=20201126064846" group-title="Converge",AXN
+http://161.49.17.3:6610/001/2/ch00000090990000001182/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="3ABN" tvg-name="3ABN" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/66/3ABN_2011_full_name.svg/revision/latest/scale-to-width-down/250?cb=20230917193614" group-title="Converge",3ABN
+http://161.49.17.3:6610/001/2/ch00000090990000001183/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DiscoveryChannel.ph" tvg-name="DISCOVERY CHANNEL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a8/Discovery_Channel_2019.svg/revision/latest?cb=20210519155203" group-title="Converge",DISCOVERY CHANNEL
+http://161.49.17.3:6610/001/2/ch00000090990000001194/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="FILAMTV" tvg-name="FILAM TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/b6/226643803_103704782003180_3045737580842526006_n.jpeg.jpg/revision/latest/scale-to-width-down/270?cb=20260430042048" group-title="Converge",FILAM TV
+http://161.49.17.3:6610/001/2/ch00000090990000001195/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LotusMacau.ph" tvg-name="LOTUS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/ca/Lotus_Macau.png/revision/latest?cb=20221203121515" group-title="Converge",LOTUS MACAU
+http://161.49.17.3:6610/001/2/ch00000090990000001196/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="OnePH.ph" tvg-name="ONE PH" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/08/One_PH_%282020%29.svg/revision/latest?cb=20240621071849" group-title="Converge",ONE PH
+http://161.49.17.3:6610/001/2/ch00000090990000001198/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="USATODAYNEWS" tvg-name="USA TODAY" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/f8/USA_Today_2017.svg/revision/latest?cb=20240701085116" group-title="Converge",USA TODAY
+http://161.49.17.3:6610/001/2/ch00000090990000001199/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DaAiTV" tvg-name="DaAi TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/fc/DAAI_TV.svg/revision/latest?cb=20231119101029" group-title="Converge",DaAi TV
+http://161.49.17.3:6610/001/2/ch00000090990000001201/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="STARCHANNEL1" tvg-name="STAR CHANNEL 1" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/fb/Star_Channel_2021.svg/revision/latest?cb=20230106025850" group-title="Converge",STAR CHANNEL 1
+http://161.49.17.3:6610/001/2/ch00000090990000001202/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="GlobalTrekker.ph" tvg-name="Global Trekker" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/9/92/GlobalTrekker_remaster.svg/revision/latest?cb=20240114082358" group-title="Converge",Global Trekker
+http://161.49.17.3:6610/001/2/ch00000090990000001203/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="PremierSports2.ph" tvg-name="PREMIER SPORTS 2" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/59/PremierSports2_logo.png/revision/latest?cb=20220528091432" group-title="Converge",PREMIER SPORTS 2
+http://161.49.17.3:6610/001/2/ch00000090990000001204/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MANILAHOTEL" tvg-name="MANILA HOTEL" tvg-logo="https://raw.githubusercontent.com/iptv-org/logos/master/channels/manilahotel.png" group-title="Converge",MANILA HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001208/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BSPREMIUM" tvg-name="NHK BS PREMIUM" tvg-logo="https://logos.fandom.com/wiki/File:NHK_BSP_2020logo-miniStack.svg" group-title="Converge",NHK BS PREMIUM
+http://161.49.17.3:6610/001/2/ch00000090990000001213/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="NHKBS" tvg-name="NHK BS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a7/NHK_BS_2023logo.svg/revision/latest?cb=20231201220834 " group-title="Converge",NHK BS
+http://161.49.17.3:6610/001/2/ch00000090990000001214/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="NickJr.ph" tvg-name="NICK Jr." tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/55/Nick_Jr..svg/revision/latest?cb=20251017154510" group-title="Converge",NICK Jr.
+http://161.49.17.3:6610/001/2/ch00000090990000001215/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ANC.ph" tvg-name="ANC HD" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a2/ANC-2015_%28rev2%29.svg/revision/latest?cb=20151026094948" group-title="Converge",ANC HD
+http://161.49.17.3:6610/001/2/ch00000090990000001216/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CCTV4.ph" tvg-name="CCTV4" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/11/CCTV-4_%E4%B8%AD%E6%96%87%E5%9B%BD%E9%99%85.svg/revision/latest?cb=20230517084450" group-title="Converge",CCTV4
+http://161.49.17.3:6610/001/2/ch00000090990000001223/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="GNNTV44" tvg-name="GNN TV44" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/3/33/OneMediaNetworkAug2023Logo.jpg/revision/latest?cb=20230824112358" group-title="Converge",GNN TV44
+http://161.49.17.3:6610/001/2/ch00000090990000001234/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="SOLARFLIX" tvg-name="SOLAR FLIX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/ed/SolarFlix_%282022%29_logo.svg/revision/latest?cb=20220711033713" group-title="Converge",SOLAR FLIX
+http://161.49.17.3:6610/001/2/ch00000090990000001243/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CELESTIALCLASSICMOVIES" tvg-name="CELESTIAL CLASSIC MOVIES" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/b8/CCM_new_Logo.png/revision/latest?cb=20190603053700" group-title="Converge",CELESTIAL CLASSIC MOVIES
+http://161.49.17.3:6610/001/2/ch00000090990000001244/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Motorvision+" tvg-name="Motorvision+" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/6c/Motorvision%2B_2023.svg/revision/latest?cb=20230921083923" group-title="Converge",Motorvision+
+http://161.49.17.3:6610/001/2/ch00000090990000001245/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DZMMTELERADYO" tvg-name="DZMM TELERADYO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/d7/DZMMTeleRadyo_2025.svg/revision/latest?cb=20250618022303" group-title="Converge",DZMM TELERADYO
+http://161.49.17.3:6610/001/2/ch00000090990000001249/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="JEEPNEYTV" tvg-name="JEEPNEY TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/51/JTV2015.svg/revision/latest?cb=20160824071938" group-title="Converge",JEEPNEY TV
+http://161.49.17.3:6610/001/2/ch00000090990000001250/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MYX" tvg-name="MYX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/2/2b/MYX_2021.svg/revision/latest?cb=20210727074831" group-title="Converge",MYX
+http://161.49.17.3:6610/001/2/ch00000090990000001252/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Thrill.ph" tvg-name="THRILL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/c0/Thrill.svg/revision/latest?cb=20231010141408" group-title="Converge",THRILL
+http://161.49.17.3:6610/001/2/ch00000090990000001253/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CINEMO" tvg-name="CINEMO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/0e/Cine_Mo%21.svg/revision/latest?cb=20251220154903" group-title="Converge",CINEMO
+http://161.49.17.3:6610/001/2/ch00000090990000001254/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Kix.ph" tvg-name="KIX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e0/KIX_Logo_2014.jpg/revision/latest?cb=20140607174731" group-title="Converge",KIX
+http://161.49.17.3:6610/001/2/ch00000090990000001263/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="WION" tvg-name="WION" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1f/WION_TV_logo.jpg/revision/latest?cb=20200109055936" group-title="Converge",WION
+http://161.49.17.3:6610/001/2/ch00000090990000001265/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="METRO" tvg-name="METRO" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/64/MetroChannel2018.svg/revision/latest?cb=20250119084733" group-title="Converge",METRO
+http://161.49.17.3:6610/001/2/ch00000090990000001267/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ANC.ph" tvg-name="ANC" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/a/a2/ANC-2015_%28rev2%29.svg/revision/latest?cb=20151026094948" group-title="Converge",ANC
+http://161.49.17.3:6610/001/2/ch00000090990000001274/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CINEMAONE" tvg-name="CINEMA ONE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/42/CinemaOne.svg/revision/latest?cb=20241019090746" group-title="Converge",CINEMA ONE
+http://161.49.17.3:6610/001/2/ch00000090990000001283/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BLASTMOVIES.ph" tvg-name="BLAST MOVIES" tvg-logo="https://i.imgur.com/j6mFj4m.png" group-title="Converge",BLAST MOVIES
+http://161.49.17.3:6610/001/2/ch00000090990000001284/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="KAPAMILYAHD" tvg-name="KAPAMILYA HD" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/4a/ABS_KapCha_Logo.svg/revision/latest?cb=20260417105414" group-title="Converge",KAPAMILYA HD
+http://161.49.17.3:6610/001/2/ch00000090990000001286/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="AQUARIUMCHANNEL" tvg-name="AQUARIUM CHANNEL" tvg-logo="" group-title="Converge",AQUARIUM CHANNEL
+http://161.49.17.3:6610/001/2/ch00000090990000001287/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TAPMOVIES.ph" tvg-name="TAP MOVIES" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1e/TAP_Movies_logo.png/revision/latest/scale-to-width-down/350?cb=20210920125940" group-title="Converge",TAP MOVIES
+http://161.49.17.3:6610/001/2/ch00000090990000001304/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TAPACTIONFLIX.ph" tvg-name="TAP ACTION FLIX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/88/TAP_ActionFlix_logo.png/revision/latest?cb=20210920130656" group-title="Converge",TAP ACTION FLIX
+http://161.49.17.3:6610/001/2/ch00000090990000001305/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Nickelodeon.ph" tvg-name="NICKELODEON" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/07/Nickelodeon_%282009%29.svg/revision/latest?cb=20180306141612" group-title="Converge",NICKELODEON
+http://161.49.17.3:6610/001/2/ch00000090990000001313/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CLTV36" tvg-name="CLTV 36" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/48/Cl_tv_36_ph.png/revision/latest?cb=20130823135759" group-title="Converge",CLTV36
+http://161.49.17.3:6610/001/2/ch00000090990000001314/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Animax.ph" tvg-name="ANIMAX" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/ce/Animax_2016.png/revision/latest?cb=20230226180856" group-title="Converge",ANIMAX
+http://161.49.17.3:6610/001/2/ch00000090990000001315/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ABANTE.ph" tvg-name="ABANTE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/4d/Abante_masthead.svg.png/revision/latest?cb=20241201092744" group-title="Converge",ABANTE
+http://161.49.17.3:6610/001/2/ch00000090990000001317/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RockAction.ph" tvg-name="ROCK ACTION" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/41/Rock_Action.png/revision/latest?cb=20221212024829" group-title="Converge",ROCK ACTION
+http://161.49.17.3:6610/001/2/ch00000090990000001325/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RockEntertainment.ph" tvg-name="ROCK ENTERTAINMENT" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/d/db/ROCK_entertainment_UHD.png/revision/latest?cb=20210911032942" group-title="Converge",ROCK ENTERTAINMENT
+http://161.49.17.3:6610/001/2/ch00000090990000001326/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RADIOMARIA" tvg-name="RADIO MARIA" tvg-logo="https://i.imgur.com/6hGzq0q.jpeg" group-title="Converge",RADIO MARIA
+http://161.49.17.3:6610/001/2/ch00000090990000001327/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CONGRESSTV" tvg-name="CONGRESS TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/7/76/Congress_TV_Logo_2024.png/revision/latest?cb=20250412044228" group-title="Converge",CONGRESS TV
+http://161.49.17.3:6610/001/2/ch00000090990000001328/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DISCOVERYASIA" tvg-name="DISCOVERY ASIA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/ef/Discovery_Asia_logo.svg/revision/latest?cb=20240628061134" group-title="Converge",DISCOVERY ASIA
+http://161.49.17.3:6610/001/2/ch00000090990000001334/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Animal.Planet.ph" tvg-name="ANIMAL PLANET" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/e3/Animal_Planet_2018.svg/revision/latest?cb=20210825085349" group-title="Converge",ANIMAL PLANET
+http://161.49.17.3:6610/001/2/ch00000090990000001335/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="EuroNews" tvg-name="EURO NEWS" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/f/f9/Euronews_2022_Stacked_III.svg/revision/latest?cb=20230131161916" group-title="Converge",EURO NEWS
+http://161.49.17.3:6610/001/2/ch00000090990000001336/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="XINGKONG" tvg-name="XINGKONG" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/51/Xing_Kong.svg/revision/latest?cb=20230402103445" group-title="Converge",XINGKONG
+http://161.49.17.3:6610/001/2/ch00000090990000001337/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="RJTV" tvg-name="RJTV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/5/59/Screenshot_2019-08-30_at_5.25.09_PM.png/revision/latest?cb=20200515131159" group-title="Converge",RJTV
+http://161.49.17.3:6610/001/2/ch00000090990000001338/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ADVISORYCHANNEL" tvg-name="ADVISORY CHANNEL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/b/bd/FiberTV-logo-STB-REV-NEW-2-1.png/revision/latest?cb=20250614050817" group-title="Converge",ADVISORY CHANNEL
+http://161.49.17.3:6610/001/2/ch00000090990000001339/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="KnowledgeChannel.ph" tvg-name="KNOWLEDGE CHANNEL" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/9/9b/Knowledge-Channel.png/revision/latest?cb=20211116165045" group-title="Converge",KNOWLEDGE CHANNEL
+http://161.49.17.3:6610/001/2/ch00000090990000001340/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="Asianfoodnetwork.ph" tvg-name="ASIAN FOOD NETWORK" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/c/c2/Asian_Food_Network_logo_2019.svg/revision/latest?cb=20191129100706" group-title="Converge",ASIAN FOOD NETWORK
+http://161.49.17.3:6610/001/2/ch00000090990000001342/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="AlJazeera.ph" tvg-name="AL JAZEERA" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/0f/Al_Jazeera.svg/revision/latest?cb=20171112085348" group-title="Converge",AL JAZEERA
+http://161.49.17.3:6610/001/2/ch00000090990000001343/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CNBC" tvg-name="CNBC" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/08/CNBC_-_2025.svg/revision/latest?cb=20251213114751" group-title="Converge",CNBC
+http://161.49.17.3:6610/001/2/ch00000090990000001344/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="KBSWorld.ph" tvg-name="KBS WORLD" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/6/63/KBS_World_2009.svg/revision/latest?cb=20230831105001" group-title="Converge",KBS WORLD
+http://161.49.17.3:6610/001/2/ch00000090990000001353/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="EDGESPORT" tvg-name="EDGESPORT" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/4a/Edgesport-logo.jpg/revision/latest?cb=20210901163759" group-title="Converge",EDGESPORT
+http://161.49.17.3:6610/001/2/ch00000090990000001406/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001416" tvg-name="ch00000090990000001416" tvg-logo="" group-title="Converge",ch00000090990000001416
+http://161.49.17.3:6610/001/2/ch00000090990000001416/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LASCASASFILIPINASDEACUZAR" tvg-name="LAS CASAS FILIPINAS DE ACUZAR" tvg-logo="" group-title="Converge",LAS CASAS FILIPINAS DE ACUZAR
+http://161.49.17.3:6610/001/2/ch00000090990000001425/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BESTWESTERNPLUS" tvg-name="BEST WESTERN PLUS" tvg-logo="" group-title="Converge",BEST WESTERN PLUS
+http://161.49.17.3:6610/001/2/ch00000090990000001435/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="BESTWESTERNPLUS" tvg-name="BEST WESTERN PLUS" tvg-logo="" group-title="Converge",BEST WESTERN PLUS
+http://161.49.17.3:6610/001/2/ch00000090990000001436/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LAJOLLA" tvg-name="LA JOLLA" tvg-logo="" group-title="Converge",LA JOLLA
+http://161.49.17.3:6610/001/2/ch00000090990000001438/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="DEVERAHOTEL" tvg-name="DEVERA HOTEL" tvg-logo="" group-title="Converge",DEVERA HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001455/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ACRORESIDENCES" tvg-name="ACRO RESIDENCES" tvg-logo="" group-title="Converge",ACRO RESIDENCES
+http://161.49.17.3:6610/001/2/ch00000090990000001456/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="EDGESPORT" tvg-name="EDGESPORT" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/4/4a/Edgesport-logo.jpg/revision/latest?cb=20210901163759" group-title="Converge",EDGESPORT
+http://161.49.17.3:6610/001/2/ch00000090990000001457/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="FashionTV.ph" tvg-name="FASHION TV" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/0/0e/FASHION_TV_2017.png/revision/latest?cb=20191026175440" group-title="Converge",FASHION TV
+http://161.49.17.3:6610/001/2/ch00000090990000001458/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ROYCEHOTEL&CASINO" tvg-name="ROYCE HOTEL&CASINO" tvg-logo="https://raw.githubusercontent.com/iptv-org/logos/master/channels/roycehotel&casino.png" group-title="Converge",ROYCE HOTEL&CASINO
+http://161.49.17.3:6610/001/2/ch00000090990000001465/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001476" tvg-name="ch00000090990000001476" tvg-logo="" group-title="Converge",ch00000090990000001476
+http://161.49.17.3:6610/001/2/ch00000090990000001476/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001485" tvg-name="ch00000090990000001485" tvg-logo="" group-title="Converge",ch00000090990000001485
+http://161.49.17.3:6610/001/2/ch00000090990000001485/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="TV5.ph" tvg-name="TV5" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/8b/TV5_2026_HQ.png/revision/latest?cb=20260427104129" group-title="Converge",TV5
+http://161.49.17.3:6610/001/2/ch00000090990000001495/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MEZZOLIVE" tvg-name="MEZZO LIVE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/e/ee/Mezzo_Live_HD_%282023%29.svg/revision/latest/scale-to-width-down/250?cb=20230321135207" group-title="Converge",MEZZO LIVE
+http://161.49.17.3:6610/001/2/ch00000090990000001506/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="LOVENATURE" tvg-name="LOVE NATURE" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1d/Love_Nature_TV.png/revision/latest?cb=20151125134652" group-title="Converge",LOVE NATURE
+http://161.49.17.3:6610/001/2/ch00000090990000001515/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CENTURYHOTEL" tvg-name="CENTURY HOTEL" tvg-logo="" group-title="Converge",CENTURY HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001535/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ORCHIDINN" tvg-name="ORCHID INN" tvg-logo="" group-title="Converge",ORCHID INN
+http://161.49.17.3:6610/001/2/ch00000090990000001536/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="WILDORCHIDBEACHRESORT" tvg-name="WILD ORCHID BEACH RESORT" tvg-logo="" group-title="Converge",WILD ORCHID BEACH RESORT
+http://161.49.17.3:6610/001/2/ch00000090990000001537/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MICROTEL" tvg-name="MICROTEL" tvg-logo="" group-title="Converge",MICROTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001538/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="MADISONCROWN" tvg-name="MADISON CROWN" tvg-logo="" group-title="Converge",MADISON CROWN
+http://161.49.17.3:6610/001/2/ch00000090990000001539/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="CLARKTONHOTEL" tvg-name="CLARKTON HOTEL" tvg-logo="" group-title="Converge",CLARKTON HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001545/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="OASISHOTEL" tvg-name="OASIS HOTEL" tvg-logo="" group-title="Converge",OASIS HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001547/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="WILDORCHIDHOTEL" tvg-name="WILD ORCHID HOTEL" tvg-logo="" group-title="Converge",WILD ORCHID HOTEL
+http://161.49.17.3:6610/001/2/ch00000090990000001555/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="FATIMAUNIVERSITYMEDICALCENTER" tvg-name="FATIMA UNIVERSITY MEDICAL CENTER" tvg-logo="" group-title="Converge",FATIMA UNIVERSITY MEDICAL CENTER
+http://161.49.17.3:6610/001/2/ch00000090990000001565/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="JPARKISLAND" tvg-name="JPARK ISLAND" tvg-logo="h" group-title="Converge",JPARK ISLAND
+http://161.49.17.3:6610/001/2/ch00000090990000001575/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001576" tvg-name="ch00000090990000001576" tvg-logo="" group-title="Converge",ch00000090990000001576
+http://161.49.17.3:6610/001/2/ch00000090990000001576/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ch00000090990000001585" tvg-name="ch00000090990000001585" tvg-logo="" group-title="Converge",ch00000090990000001585
+http://161.49.17.3:6610/001/2/ch00000090990000001585/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
+
+#EXTINF:-1 tvg-id="ROY'SHOTELANDCONVENTIONCENTER" tvg-name="ROY'S HOTEL AND CONVENTION CENTER" tvg-logo="" group-title="Converge",ROY'S HOTEL AND CONVENTION CENTER
+http://161.49.17.3:6610/001/2/ch00000090990000001595/index.m3u8?virtualDomain=001.live_hls.zte.com&JITPDRMType=NO&ispcode=55&IASHttpSessionId=SLB408491020260429093158000002
